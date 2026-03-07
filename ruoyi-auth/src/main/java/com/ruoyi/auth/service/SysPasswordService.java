@@ -16,8 +16,7 @@ import com.ruoyi.system.api.domain.SysUser;
  * @author ruoyi
  */
 @Component
-public class SysPasswordService
-{
+public class SysPasswordService {
     @Autowired
     private RedisService redisService;
 
@@ -34,51 +33,41 @@ public class SysPasswordService
      * @param username 用户名
      * @return 缓存键key
      */
-    private String getCacheKey(String username)
-    {
+    private String getCacheKey(String username) {
         return CacheConstants.PWD_ERR_CNT_KEY + username;
     }
 
-    public void validate(SysUser user, String password)
-    {
+    public void validate(SysUser user, String password) {
         String username = user.getUserName();
 
         Integer retryCount = redisService.getCacheObject(getCacheKey(username));
 
-        if (retryCount == null)
-        {
+        if (retryCount == null) {
             retryCount = 0;
         }
 
-        if (retryCount >= Integer.valueOf(maxRetryCount).intValue())
-        {
+        if (retryCount >= Integer.valueOf(maxRetryCount).intValue()) {
             String errMsg = String.format("密码输入错误%s次，帐户锁定%s分钟", maxRetryCount, lockTime);
-            recordLogService.recordLogininfor(username, Constants.LOGIN_FAIL,errMsg);
+            recordLogService.recordLogininfor(username, Constants.LOGIN_FAIL, errMsg);
             throw new ServiceException(errMsg);
         }
 
-        if (!matches(user, password))
-        {
+        if (!matches(user, password)) {
             retryCount = retryCount + 1;
             recordLogService.recordLogininfor(username, Constants.LOGIN_FAIL, String.format("密码输入错误%s次", retryCount));
             redisService.setCacheObject(getCacheKey(username), retryCount, lockTime, TimeUnit.MINUTES);
             throw new ServiceException("用户不存在/密码错误");
-        }
-        else
-        {
+        } else {
             clearLoginRecordCache(username);
         }
     }
 
-    public boolean matches(SysUser user, String rawPassword)
-    {
+    public boolean matches(SysUser user, String rawPassword) {
         return SecurityUtils.matchesPassword(rawPassword, user.getPassword());
     }
 
-    public void clearLoginRecordCache(String loginName)
-    {
-        if (redisService.hasKey(getCacheKey(loginName)))
-        {
+    public void clearLoginRecordCache(String loginName) {
+        if (redisService.hasKey(getCacheKey(loginName))) {
             redisService.deleteObject(getCacheKey(loginName));
         }
     }

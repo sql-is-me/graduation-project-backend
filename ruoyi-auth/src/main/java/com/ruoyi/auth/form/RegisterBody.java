@@ -5,7 +5,6 @@ package com.ruoyi.auth.form;
  * 
  * @author ruoyi
  */
-public class RegisterBody extends LoginBody
-{
+public class RegisterBody extends LoginBody {
 
 }

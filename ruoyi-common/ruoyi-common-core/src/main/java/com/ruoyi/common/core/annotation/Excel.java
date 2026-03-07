@@ -16,8 +16,7 @@ import com.ruoyi.common.core.utils.poi.ExcelHandlerAdapter;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Excel
-{
+public @interface Excel {
     /**
      * 导出时在excel中排序
      */
@@ -52,7 +51,7 @@ public @interface Excel
      * BigDecimal 舍入规则 默认:BigDecimal.ROUND_HALF_EVEN
      */
     @SuppressWarnings("deprecation")
-	public int roundingMode() default BigDecimal.ROUND_HALF_EVEN;
+    public int roundingMode() default BigDecimal.ROUND_HALF_EVEN;
 
     /**
      * 导出时在excel中每个列的高度
@@ -80,7 +79,7 @@ public @interface Excel
     public String prompt() default "";
 
     /**
-     * 是否允许内容换行 
+     * 是否允许内容换行
      */
     public boolean wrapText() default false;
 
@@ -154,34 +153,30 @@ public @interface Excel
      */
     Type type() default Type.ALL;
 
-    public enum Type
-    {
+    public enum Type {
         ALL(0), EXPORT(1), IMPORT(2);
+
         private final int value;
 
-        Type(int value)
-        {
+        Type(int value) {
             this.value = value;
         }
 
-        public int value()
-        {
+        public int value() {
             return this.value;
         }
     }
 
-    public enum ColumnType
-    {
+    public enum ColumnType {
         NUMERIC(0), STRING(1), IMAGE(2), TEXT(3);
+
         private final int value;
 
-        ColumnType(int value)
-        {
+        ColumnType(int value) {
             this.value = value;
         }
 
-        public int value()
-        {
+        public int value() {
             return this.value;
         }
     }
