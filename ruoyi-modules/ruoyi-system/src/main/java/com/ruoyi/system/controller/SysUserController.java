@@ -113,11 +113,32 @@ public class SysUserController extends BaseController {
      * 获取当前用户信息
      */
     @InnerAuth
-    @GetMapping("/info/{username}")
+    @GetMapping("/info/name/{username}")
     public R<LoginUser> info(@PathVariable("username") String username) {
         SysUser sysUser = userService.selectUserByUserName(username);
         if (StringUtils.isNull(sysUser)) {
             return R.fail("用户名或密码错误");
+        }
+        // 角色集合
+        Set<String> roles = permissionService.getRolePermission(sysUser);
+        // 权限集合
+        Set<String> permissions = permissionService.getMenuPermission(sysUser);
+        LoginUser sysUserVo = new LoginUser();
+        sysUserVo.setSysUser(sysUser);
+        sysUserVo.setRoles(roles);
+        sysUserVo.setPermissions(permissions);
+        return R.ok(sysUserVo);
+    }
+
+    /**
+     * 根据用户ID获取用户信息
+     */
+    @InnerAuth
+    @GetMapping("/info/id/{userId}")
+    public R<LoginUser> infoById(@PathVariable("userId") Long userId) {
+        SysUser sysUser = userService.selectUserById(userId);
+        if (StringUtils.isNull(sysUser)) {
+            return R.fail("用户不存在");
         }
         // 角色集合
         Set<String> roles = permissionService.getRolePermission(sysUser);
@@ -139,6 +160,22 @@ public class SysUserController extends BaseController {
         String username = sysUser.getUserName();
         if (!("true".equals(configService.selectConfigByKey("sys.account.registerUser")))) {
             return R.fail("当前系统没有开启注册功能！");
+        }
+        if (!userService.checkUserNameUnique(sysUser)) {
+            return R.fail("保存用户'" + username + "'失败，注册账号已存在");
+        }
+        return R.ok(userService.registerUser(sysUser));
+    }
+
+    /**
+     * 注册管理员用户信息（仅内部调用）
+     */
+    @InnerAuth
+    @PostMapping("/register/admin")
+    public R<Boolean> registerAdmin(@RequestBody SysUser sysUser) {
+        String username = sysUser.getUserName();
+        if (!"STORE".equals(sysUser.getAdminType())) {
+            return R.fail("仅允许注册门店管理员");
         }
         if (!userService.checkUserNameUnique(sysUser)) {
             return R.fail("保存用户'" + username + "'失败，注册账号已存在");

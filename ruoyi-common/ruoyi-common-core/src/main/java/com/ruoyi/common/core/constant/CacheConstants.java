@@ -56,4 +56,9 @@ public class CacheConstants
      * 登录IP黑名单 cache key
      */
     public static final String SYS_LOGIN_BLACKIPLIST = SYS_CONFIG_KEY + "sys.login.blackIPList";
+
+    /**
+     * 管理员邀请码有效期（分钟）
+     */
+    public static final long ADMIN_INVITE_EXPIRE_MINUTES = 30;
 }
