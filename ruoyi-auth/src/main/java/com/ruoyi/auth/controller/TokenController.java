@@ -5,11 +5,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.ruoyi.auth.dto.LoginDTO;
-import com.ruoyi.auth.dto.UserRegisterDTO;
+import com.ruoyi.auth.form.LoginBody;
+import com.ruoyi.auth.form.RegisterBody;
 import com.ruoyi.auth.service.SysLoginService;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.utils.JwtUtils;
@@ -19,9 +17,13 @@ import com.ruoyi.common.security.service.TokenService;
 import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.model.LoginUser;
 
+/**
+ * token 控制
+ * 
+ * @author ruoyi
+ */
 @RestController
-@RequestMapping("/user")
-public class UserController {
+public class TokenController {
     @Autowired
     private TokenService tokenService;
 
@@ -29,7 +31,7 @@ public class UserController {
     private SysLoginService sysLoginService;
 
     @PostMapping("login")
-    public R<?> login(@RequestBody LoginDTO form) {
+    public R<?> login(@RequestBody LoginBody form) {
         // 用户登录
         LoginUser userInfo = sysLoginService.login(form.getUsername(), form.getPassword());
         // 获取登录token
@@ -61,7 +63,7 @@ public class UserController {
     }
 
     @PostMapping("register")
-    public R<?> register(@RequestBody UserRegisterDTO registerBody) {
+    public R<?> register(@RequestBody RegisterBody registerBody) {
         // 用户注册
         sysLoginService.register(registerBody.getUsername(), registerBody.getPassword());
         return R.ok();

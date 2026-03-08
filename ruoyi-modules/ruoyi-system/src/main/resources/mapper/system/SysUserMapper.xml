@@ -7,9 +7,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <resultMap type="SysUser" id="SysUserResult">
         <id     property="userId"        column="user_id"         />
         <result property="deptId"        column="dept_id"         />
-        <result property="adminType"     column="admin_type"      />
-        <result property="referrerId"    column="referrer_id"     />
-        <result property="storeId"       column="store_id"        />
         <result property="userName"      column="user_name"       />
         <result property="nickName"      column="nick_name"       />
         <result property="email"         column="email"           />
@@ -51,7 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 	
 	<sql id="selectUserVo">
-        select u.user_id, u.dept_id, u.admin_type, u.referrer_id, u.store_id, u.user_name, u.nick_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.pwd_update_date, u.create_by, u.create_time, u.remark, 
+        select u.user_id, u.dept_id, u.user_name, u.nick_name, u.email, u.avatar, u.phonenumber, u.password, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.pwd_update_date, u.create_by, u.create_time, u.remark, 
         d.dept_id, d.parent_id, d.ancestors, d.dept_name, d.order_num, d.leader, d.status as dept_status,
         r.role_id, r.role_name, r.role_key, r.role_sort, r.data_scope, r.status as role_status
         from sys_user u
@@ -61,7 +58,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </sql>
     
     <select id="selectUserList" parameterType="SysUser" resultMap="SysUserResult">
-		select u.user_id, u.dept_id, u.admin_type, u.referrer_id, u.store_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, d.dept_name, d.leader from sys_user u
+		select u.user_id, u.dept_id, u.nick_name, u.user_name, u.email, u.avatar, u.phonenumber, u.sex, u.status, u.del_flag, u.login_ip, u.login_date, u.create_by, u.create_time, u.remark, d.dept_name, d.leader from sys_user u
 		left join sys_dept d on u.dept_id = d.dept_id
 		where u.del_flag = '0'
 		<if test="userId != null and userId != 0">
@@ -150,9 +147,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  		insert into sys_user(
  			<if test="userId != null and userId != 0">user_id,</if>
  			<if test="deptId != null and deptId != 0">dept_id,</if>
- 			<if test="adminType != null and adminType != ''">admin_type,</if>
- 			<if test="referrerId != null and referrerId != 0">referrer_id,</if>
- 			<if test="storeId != null and storeId != 0">store_id,</if>
  			<if test="userName != null and userName != ''">user_name,</if>
  			<if test="nickName != null and nickName != ''">nick_name,</if>
  			<if test="email != null and email != ''">email,</if>
@@ -168,9 +162,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  		)values(
  			<if test="userId != null and userId != ''">#{userId},</if>
  			<if test="deptId != null and deptId != ''">#{deptId},</if>
- 			<if test="adminType != null and adminType != ''">#{adminType},</if>
- 			<if test="referrerId != null and referrerId != 0">#{referrerId},</if>
- 			<if test="storeId != null and storeId != 0">#{storeId},</if>
  			<if test="userName != null and userName != ''">#{userName},</if>
  			<if test="nickName != null and nickName != ''">#{nickName},</if>
  			<if test="email != null and email != ''">#{email},</if>
@@ -190,9 +181,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  		update sys_user
  		<set>
  			<if test="deptId != 0">dept_id = #{deptId},</if>
- 			<if test="adminType != null and adminType != ''">admin_type = #{adminType},</if>
- 			<if test="referrerId != null and referrerId != 0">referrer_id = #{referrerId},</if>
- 			<if test="storeId != null and storeId != 0">store_id = #{storeId},</if>
  			<if test="nickName != null and nickName != ''">nick_name = #{nickName},</if>
  			<if test="email != null ">email = #{email},</if>
  			<if test="phonenumber != null ">phonenumber = #{phonenumber},</if>

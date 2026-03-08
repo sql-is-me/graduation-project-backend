@@ -1,6 +1,7 @@
 package com.ruoyi.system.api.domain;
 
 import java.util.Date;
+import java.util.List;
 import jakarta.validation.constraints.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
@@ -8,6 +9,7 @@ import com.ruoyi.common.core.annotation.Excel;
 import com.ruoyi.common.core.annotation.Excel.ColumnType;
 import com.ruoyi.common.core.annotation.Excel.Type;
 import com.ruoyi.common.core.constant.UserConstants;
+import com.ruoyi.common.core.annotation.Excels;
 import com.ruoyi.common.core.web.domain.BaseEntity;
 import com.ruoyi.common.core.xss.Xss;
 
@@ -26,15 +28,6 @@ public class SysUser extends BaseEntity {
     /** 部门ID */
     @Excel(name = "部门编号", type = Type.IMPORT)
     private Long deptId;
-
-    /** 管理员类型（TOP/STORE） */
-    private String adminType;
-
-    /** 推荐人ID */
-    private Long referrerId;
-
-    /** 门店ID */
-    private Long storeId;
 
     /** 用户账号 */
     @Excel(name = "登录名称")
@@ -80,12 +73,15 @@ public class SysUser extends BaseEntity {
     /** 密码最后更新时间 */
     private Date pwdUpdateDate;
 
-    // /** 部门对象 */
-    // @Excels({
-    // @Excel(name = "部门名称", targetAttr = "deptName", type = Type.EXPORT),
-    // @Excel(name = "部门负责人", targetAttr = "leader", type = Type.EXPORT)
-    // })
-    // private SysDept dept;
+    /** 部门对象 */
+    @Excels({
+            @Excel(name = "部门名称", targetAttr = "deptName", type = Type.EXPORT),
+            @Excel(name = "部门负责人", targetAttr = "leader", type = Type.EXPORT)
+    })
+    private SysDept dept;
+
+    /** 角色对象 */
+    private List<SysRole> roles;
 
     /** 角色组 */
     private Long[] roleIds;
@@ -122,30 +118,6 @@ public class SysUser extends BaseEntity {
 
     public void setDeptId(Long deptId) {
         this.deptId = deptId;
-    }
-
-    public String getAdminType() {
-        return adminType;
-    }
-
-    public void setAdminType(String adminType) {
-        this.adminType = adminType;
-    }
-
-    public Long getReferrerId() {
-        return referrerId;
-    }
-
-    public void setReferrerId(Long referrerId) {
-        this.referrerId = referrerId;
-    }
-
-    public Long getStoreId() {
-        return storeId;
-    }
-
-    public void setStoreId(Long storeId) {
-        this.storeId = storeId;
     }
 
     @Xss(message = "用户昵称不能包含脚本字符")
@@ -252,6 +224,22 @@ public class SysUser extends BaseEntity {
         this.pwdUpdateDate = pwdUpdateDate;
     }
 
+    public SysDept getDept() {
+        return dept;
+    }
+
+    public void setDept(SysDept dept) {
+        this.dept = dept;
+    }
+
+    public List<SysRole> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<SysRole> roles) {
+        this.roles = roles;
+    }
+
     public Long[] getRoleIds() {
         return roleIds;
     }
@@ -281,9 +269,6 @@ public class SysUser extends BaseEntity {
         return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
                 .append("userId", getUserId())
                 .append("deptId", getDeptId())
-                .append("adminType", getAdminType())
-                .append("referrerId", getReferrerId())
-                .append("storeId", getStoreId())
                 .append("userName", getUserName())
                 .append("nickName", getNickName())
                 .append("email", getEmail())
@@ -301,6 +286,7 @@ public class SysUser extends BaseEntity {
                 .append("updateBy", getUpdateBy())
                 .append("updateTime", getUpdateTime())
                 .append("remark", getRemark())
+                .append("dept", getDept())
                 .toString();
     }
 }
