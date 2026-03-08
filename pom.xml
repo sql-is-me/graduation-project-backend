@@ -216,6 +216,7 @@
     </dependencyManagement>
 
     <modules>
+        <module>admin-service</module>
         <module>ruoyi-auth</module>
         <module>ruoyi-gateway</module>
         <module>ruoyi-visual</module>

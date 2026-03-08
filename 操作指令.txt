@@ -1,4 +1,0 @@
-cd C:\myTools\nacos\bin
-startup.cmd -m standalone
-
-Sql0424isbest!
