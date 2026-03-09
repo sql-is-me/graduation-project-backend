@@ -18,11 +18,6 @@ public class AdminRegisterDTO {
     private String password;
 
     /**
-     * 推荐人ID
-     */
-    private Long referrerId;
-
-    /**
      * 邀请码
      */
     private String inviteCode;

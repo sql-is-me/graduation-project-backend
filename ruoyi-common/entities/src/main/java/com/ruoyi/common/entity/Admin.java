@@ -51,7 +51,7 @@ public class Admin {
     /**
      * 性别（0男 1女 2未知）
      */
-    private String sex = "0"; // 默认未知
+    private String sex = "2"; // 默认未知
 
     /**
      * 头像URL地址
@@ -104,4 +104,8 @@ public class Admin {
      */
     @TableField(fill = FieldFill.INSERT_UPDATE, value = "update_time")
     private Date updateTime;
+
+    public boolean isTopAdmin() {
+        return Integer.parseInt(getAdminType()) == 0;
+    }
 }

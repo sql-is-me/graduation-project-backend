@@ -70,10 +70,10 @@
             <artifactId>kaptcha</artifactId>
         </dependency>
 
-        <!-- RuoYi Common Redis-->
+        <!-- Tools-->
         <dependency>
             <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-common-redis</artifactId>
+            <artifactId>tools</artifactId>
         </dependency>
 
         <!-- Springdoc -->

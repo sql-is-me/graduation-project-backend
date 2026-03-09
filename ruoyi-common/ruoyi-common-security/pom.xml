@@ -28,10 +28,10 @@
             <artifactId>ruoyi-api-system</artifactId>
         </dependency>
 
-        <!-- RuoYi Common Redis-->
+        <!-- Tools-->
         <dependency>
             <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-common-redis</artifactId>
+            <artifactId>tools</artifactId>
         </dependency>
 
     </dependencies>

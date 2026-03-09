@@ -1,4 +1,4 @@
-package com.ruoyi.common.utils;
+package com.ruoyi.common.verifier;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

@@ -2,6 +2,8 @@ package com.ruoyi.admin.service;
 
 import java.util.Map;
 
+import com.ruoyi.admin.dto.AdminRegisterDTO;
+
 import jakarta.servlet.http.HttpServletRequest;;
 
 /**
@@ -22,4 +24,14 @@ public interface AuthService {
      * 刷新token时间
      */
     public void refreshToken(HttpServletRequest request);
+
+    /**
+     * 管理员注册
+     */
+    public void register(AdminRegisterDTO dto);
+
+    /**
+     * 生成管理员注册邀请码
+     */
+    public String generateInviteCode(HttpServletRequest request, Long storeId);
 }
