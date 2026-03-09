@@ -76,13 +76,6 @@
             <artifactId>tools</artifactId>
         </dependency>
 
-        <!-- Springdoc -->
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
-            <version>${springdoc.version}</version>
-        </dependency>
-
     </dependencies>
 
     <build>

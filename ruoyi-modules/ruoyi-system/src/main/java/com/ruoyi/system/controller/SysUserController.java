@@ -36,7 +36,6 @@ import com.ruoyi.system.api.domain.SysDept;
 import com.ruoyi.system.api.domain.SysRole;
 import com.ruoyi.system.api.domain.SysUser;
 import com.ruoyi.system.api.model.LoginUser;
-import com.ruoyi.system.service.ISysConfigService;
 import com.ruoyi.system.service.ISysDeptService;
 import com.ruoyi.system.service.ISysPermissionService;
 import com.ruoyi.system.service.ISysPostService;
@@ -66,8 +65,6 @@ public class SysUserController extends BaseController {
     @Autowired
     private ISysPermissionService permissionService;
 
-    @Autowired
-    private ISysConfigService configService;
 
     @Autowired
     private TokenService tokenService;
@@ -137,9 +134,9 @@ public class SysUserController extends BaseController {
     @PostMapping("/register")
     public R<Boolean> register(@RequestBody SysUser sysUser) {
         String username = sysUser.getUserName();
-        if (!("true".equals(configService.selectConfigByKey("sys.account.registerUser")))) {
-            return R.fail("当前系统没有开启注册功能！");
-        }
+        // if (!("true".equals(configService.selectConfigByKey("sys.account.registerUser")))) {
+        //     return R.fail("当前系统没有开启注册功能！");
+        // }
         if (!userService.checkUserNameUnique(sysUser)) {
             return R.fail("保存用户'" + username + "'失败，注册账号已存在");
         }
