@@ -1,6 +1,6 @@
 package com.ruoyi.admin.service;
 
-import com.ruoyi.common.entity.Admin;
+import java.util.Map;
 
 import jakarta.servlet.http.HttpServletRequest;;
 
@@ -11,10 +11,15 @@ public interface AuthService {
     /**
      * 管理员登录
      */
-    public Admin login(String username, String password);
+    public Map<String, Object> login(String username, String password);
 
     /**
      * 退出登录
      */
     public void logout(HttpServletRequest request);
+
+    /**
+     * 刷新token时间
+     */
+    public void refreshToken(HttpServletRequest request);
 }

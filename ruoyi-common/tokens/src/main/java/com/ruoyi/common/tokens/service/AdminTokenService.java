@@ -99,7 +99,15 @@ public class AdminTokenService {
      */
     public String getAOToken() {
         HttpServletRequest request = ServletUtils.getRequest();
+        return SecurityUtils.getToken(request);
+    }
 
+    /**
+     * 获取当前登录管理员的token
+     *
+     * @return token
+     */
+    public String getAOToken(HttpServletRequest request) {
         return SecurityUtils.getToken(request);
     }
 

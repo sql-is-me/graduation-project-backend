@@ -1,18 +1,12 @@
 package com.ruoyi.admin.service.Impl;
 
-import java.util.Set;
+import java.util.Map;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ruoyi.common.entity.Admin;
-import com.ruoyi.common.security.auth.AuthUtil;
-import com.ruoyi.common.security.utils.SecurityUtils;
-
-import jakarta.servlet.http.HttpServletRequest;
-
 import com.ruoyi.admin.mapper.AdminMapper;
 import com.ruoyi.admin.service.AuthService;
-import com.ruoyi.admin.utils.PWCheckUtils;
 import com.ruoyi.common.core.constant.Constants;
 import com.ruoyi.common.core.constant.UserConstants;
 import com.ruoyi.common.core.enums.AccountStatus;
@@ -21,7 +15,9 @@ import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.JwtUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.ip.IpUtils;
-import com.ruoyi.common.tokens.service.AdminTokenService;;
+import com.ruoyi.common.entity.Admin;
+import com.ruoyi.common.tokens.service.AdminTokenService;
+import com.ruoyi.common.utils.PWCheckUtils;
 
 /**
  * 管理员登录与注册服务
@@ -41,12 +37,10 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private AdminTokenService adminTokenService;
 
-    private static final String ADMIN_TYPE_STORE = "STORE";
-
     /**
      * 管理员登录
      */
-    public Admin login(String username, String password) {
+    public Map<String, Object> login(String username, String password) {
         Admin admin;
         try {
             if (StringUtils.isAnyBlank(username, password)) {
@@ -80,7 +74,7 @@ public class AuthServiceImpl implements AuthService {
 
         admin = updateLoginInfo(admin);
 
-        return admin;
+        return adminTokenService.createToken(admin);
     }
 
     /**
@@ -105,9 +99,17 @@ public class AuthServiceImpl implements AuthService {
             String username = JwtUtils.getUserName(token);
             // 删除用户缓存记录
             adminTokenService.delAdminOnline(token);
-            
+
             recordLogService.recordLogininfor(username, Constants.LOGOUT, "退出成功");
         }
+    }
+
+    /**
+     * 刷新当前管理员Token
+     */
+    public void refreshToken(HttpServletRequest request) {
+        String token = adminTokenService.getAOToken(request);
+        adminTokenService.refreshToken(adminTokenService.getAO(token));
     }
 
     // IP黑名单校验

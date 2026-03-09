@@ -1,10 +1,10 @@
-package com.ruoyi.admin.utils;
+package com.ruoyi.common.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.concurrent.TimeUnit;
 
-import com.ruoyi.admin.entity.Admin;
+import com.ruoyi.common.entity.Admin;
 import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.redis.service.RedisService;
 

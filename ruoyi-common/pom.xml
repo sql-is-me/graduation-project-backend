@@ -19,6 +19,7 @@
         <module>ruoyi-common-datasource</module>
         <module>tokens</module>
         <module>entities</module>
+        <module>utils</module>
     </modules>
 
     <artifactId>ruoyi-common</artifactId>

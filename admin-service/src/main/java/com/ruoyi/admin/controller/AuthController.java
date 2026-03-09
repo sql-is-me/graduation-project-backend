@@ -1,6 +1,7 @@
 package com.ruoyi.admin.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -9,16 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ruoyi.admin.dto.LoginDTO;
-import com.ruoyi.common.entity.Admin;
-import com.ruoyi.admin.service.AdminLoginService;
 import com.ruoyi.admin.service.AuthService;
 import com.ruoyi.common.core.domain.R;
-import com.ruoyi.common.core.utils.JwtUtils;
-import com.ruoyi.common.core.utils.StringUtils;
-import com.ruoyi.common.security.auth.AuthUtil;
-import com.ruoyi.common.security.utils.SecurityUtils;
-import com.ruoyi.common.tokens.service.AdminTokenService;
-import com.ruoyi.system.api.model.LoginUser;
 
 /**
  * 管理员认证控制器
@@ -28,9 +21,6 @@ import com.ruoyi.system.api.model.LoginUser;
 @RestController
 @RequestMapping("admin/auth")
 public class AuthController {
-
-    @Autowired
-    private AdminTokenService tokenService;
 
     @Autowired
     private AuthService authService;
@@ -43,9 +33,9 @@ public class AuthController {
      */
     @PostMapping("/login")
     public R<?> login(@RequestBody LoginDTO loginDTO) {
-        Admin admin = authService.login(loginDTO.getUsername(), loginDTO.getPassword());
+        Map<String, Object> retMap = authService.login(loginDTO.getUsername(), loginDTO.getPassword());
 
-        return R.ok(tokenService.createToken(admin));
+        return R.ok(retMap);
     }
 
     /**
@@ -54,7 +44,7 @@ public class AuthController {
     @DeleteMapping("/logout")
     public R<?> logout(HttpServletRequest request) {
         authService.logout(request);
-        
+
         return R.ok();
     }
 
@@ -63,11 +53,10 @@ public class AuthController {
      */
     @PostMapping("/refresh")
     public R<?> refresh(HttpServletRequest request) {
-        LoginUser loginUser = tokenService.getLoginUser(request);
-        if (StringUtils.isNotNull(loginUser)) {
-            tokenService.refreshToken(loginUser);
-            return R.ok();
-        }
+        authService.refreshToken(request);
+
         return R.ok();
     }
+
+    // TODO: try-catch
 }
