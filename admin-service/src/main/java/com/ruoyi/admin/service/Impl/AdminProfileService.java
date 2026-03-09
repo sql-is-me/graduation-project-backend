@@ -1,10 +1,10 @@
-package com.ruoyi.admin.service;
+package com.ruoyi.admin.service.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.admin.dto.AdminPasswordUpdateDTO;
 import com.ruoyi.admin.dto.AdminProfileUpdateDTO;
-import com.ruoyi.admin.mapper.AdminUserMapper;
+import com.ruoyi.admin.mapper.AdminMapper;
 import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.StringUtils;
@@ -20,7 +20,7 @@ import com.ruoyi.system.api.model.LoginUser;
 public class AdminProfileService {
 
     @Autowired
-    private AdminUserMapper adminUserMapper;
+    private AdminMapper adminUserMapper;
 
     @Autowired
     private TokenService tokenService;

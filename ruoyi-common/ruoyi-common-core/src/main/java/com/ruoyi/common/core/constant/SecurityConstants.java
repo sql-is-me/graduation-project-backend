@@ -5,8 +5,7 @@ package com.ruoyi.common.core.constant;
  * 
  * @author ruoyi
  */
-public class SecurityConstants
-{
+public class SecurityConstants {
     /**
      * 用户ID字段
      */
@@ -46,4 +45,19 @@ public class SecurityConstants
      * 角色权限
      */
     public static final String ROLE_PERMISSION = "role_permission";
+
+    /**
+     * 管理员标识
+     */
+    public static final String ADMIN_KEY = "admin_key";
+
+    /**
+     * 在线管理员
+     */
+    public static final String ADMIN_ONLINE = "admin_online";
+
+    /**
+     * 管理员ID字段
+     */
+    public static final String ADMIN_ID = "admin_id";
 }

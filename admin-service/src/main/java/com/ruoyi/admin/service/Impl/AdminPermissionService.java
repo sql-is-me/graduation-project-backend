@@ -1,4 +1,4 @@
-package com.ruoyi.admin.service;
+package com.ruoyi.admin.service.Impl;
 
 import java.util.HashSet;
 import java.util.List;

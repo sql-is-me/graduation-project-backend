@@ -1,4 +1,4 @@
-package com.ruoyi.admin.service;
+package com.ruoyi.admin.service.Impl;
 
 import java.util.concurrent.TimeUnit;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,15 +22,7 @@ public class AdminPasswordService {
     @Autowired
     private AdminRecordLogService recordLogService;
 
-    /**
-     * 登录账户密码错误次数缓存键名
-     *
-     * @param username 用户名
-     * @return 缓存键key
-     */
-    private String getCacheKey(String username) {
-        return CacheConstants.PWD_ERR_CNT_KEY + username;
-    }
+    
 
     /**
      * 密码校验

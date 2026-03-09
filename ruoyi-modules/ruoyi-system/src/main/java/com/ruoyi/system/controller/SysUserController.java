@@ -303,7 +303,7 @@ public class SysUserController extends BaseController {
         userService.checkUserAllowed(user);
         userService.checkUserDataScope(user.getUserId());
         user.setUpdateBy(SecurityUtils.getUsername());
-        return toAjax(userService.updateUserStatus(user));
+        return toAjax(userService.updateAccountStatus(user));
     }
 
     /**

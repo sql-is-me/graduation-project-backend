@@ -1,4 +1,4 @@
-package com.ruoyi.admin.service;
+package com.ruoyi.admin.service.Impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.admin.mapper.AdminLogininforMapper;
 import com.ruoyi.admin.mapper.AdminOperLogMapper;
-import com.ruoyi.admin.mapper.AdminUserMapper;
+import com.ruoyi.admin.mapper.AdminMapper;
 import com.ruoyi.common.core.constant.CacheConstants;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.redis.service.RedisService;
@@ -33,7 +33,7 @@ public class AdminMonitorService {
     private AdminLogininforMapper logininforMapper;
 
     @Autowired
-    private AdminUserMapper adminUserMapper;
+    private AdminMapper adminUserMapper;
 
     /**
      * 查询在线用户列表

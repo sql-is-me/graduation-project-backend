@@ -5,12 +5,11 @@ package com.ruoyi.common.core.constant;
  * 
  * @author ruoyi
  */
-public class CacheConstants
-{
+public class CacheConstants {
     /**
-     * 缓存有效期，默认720（分钟）
+     * 缓存有效期，默认360（分钟）
      */
-    public final static long EXPIRATION = 720;
+    public final static long EXPIRATION = 360;
 
     /**
      * 缓存刷新时间，默认120（分钟）
@@ -33,6 +32,11 @@ public class CacheConstants
     public final static String LOGIN_TOKEN_KEY = "login_tokens:";
 
     /**
+     * 权限缓存前缀
+     */
+    public final static String ADMIN_TOKEN_KEY = "admin_token:";
+
+    /**
      * 验证码 redis key
      */
     public static final String CAPTCHA_CODE_KEY = "captcha_codes:";
@@ -51,9 +55,4 @@ public class CacheConstants
      * 登录账户密码错误次数 redis key
      */
     public static final String PWD_ERR_CNT_KEY = "pwd_err_cnt:";
-
-    /**
-     * 登录IP黑名单 cache key
-     */
-    public static final String SYS_LOGIN_BLACKIPLIST = SYS_CONFIG_KEY + "sys.login.blackIPList";
 }

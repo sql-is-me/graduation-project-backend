@@ -142,7 +142,7 @@ public interface ISysUserService
      * @param user 用户信息
      * @return 结果
      */
-    public int updateUserStatus(SysUser user);
+    public int updateAccountStatus(SysUser user);
 
     /**
      * 修改用户基本信息

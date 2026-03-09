@@ -8,8 +8,6 @@ import lombok.Data;
  */
 @Data
 public class AdminInviteInfo implements Serializable {
-    private static final long serialVersionUID = 1L;
-
     /** 推荐人ID */
     private Long referrerId;
 
