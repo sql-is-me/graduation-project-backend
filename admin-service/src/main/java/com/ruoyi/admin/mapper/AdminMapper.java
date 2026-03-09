@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Select;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
-import com.ruoyi.admin.entity.Admin;
+import com.ruoyi.common.entity.Admin;
 
 /**
  * 管理员用户Mapper接口

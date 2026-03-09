@@ -53,13 +53,8 @@ public class AuthController {
      */
     @DeleteMapping("/logout")
     public R<?> logout(HttpServletRequest request) {
-        String token = SecurityUtils.getToken(request);
-        if (StringUtils.isNotEmpty(token)) {
-            String username = JwtUtils.getUserName(token);
-            // 删除用户缓存记录
-            AuthUtil.logoutByToken(token);
-            adminLoginService.logout(username);
-        }
+        authService.logout(request);
+        
         return R.ok();
     }
 

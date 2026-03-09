@@ -4,7 +4,12 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ruoyi.admin.entity.Admin;
+import com.ruoyi.common.entity.Admin;
+import com.ruoyi.common.security.auth.AuthUtil;
+import com.ruoyi.common.security.utils.SecurityUtils;
+
+import jakarta.servlet.http.HttpServletRequest;
+
 import com.ruoyi.admin.mapper.AdminMapper;
 import com.ruoyi.admin.service.AuthService;
 import com.ruoyi.admin.utils.PWCheckUtils;
@@ -13,8 +18,11 @@ import com.ruoyi.common.core.constant.UserConstants;
 import com.ruoyi.common.core.enums.AccountStatus;
 import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.utils.DateUtils;
+import com.ruoyi.common.core.utils.JwtUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.ip.IpUtils;
+import com.ruoyi.common.tokens.service.AdminTokenService;;
+
 /**
  * 管理员登录与注册服务
  */
@@ -29,6 +37,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private AdminRecordLogService recordLogService;
+
+    @Autowired
+    private AdminTokenService adminTokenService;
 
     private static final String ADMIN_TYPE_STORE = "STORE";
 
@@ -88,8 +99,15 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 退出登录
      */
-    public void logout(String loginName) {
-        recordLogService.recordLogininfor(loginName, Constants.LOGOUT, "退出成功");
+    public void logout(HttpServletRequest request) {
+        String token = adminTokenService.getAOToken(request);
+        if (StringUtils.isNotEmpty(token)) {
+            String username = JwtUtils.getUserName(token);
+            // 删除用户缓存记录
+            adminTokenService.delAdminOnline(token);
+            
+            recordLogService.recordLogininfor(username, Constants.LOGOUT, "退出成功");
+        }
     }
 
     // IP黑名单校验
