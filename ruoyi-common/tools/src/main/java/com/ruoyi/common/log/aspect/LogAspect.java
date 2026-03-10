@@ -88,7 +88,7 @@ public class LogAspect {
             OperLog operLog = new OperLog();
             operLog.setStatus(BusinessStatus.SUCCESS.ordinal());
 
-            String username = SecurityContextHolder.getUserName();
+            String username = SecurityContextHolder.getUsername();
             if (StringUtils.isNotBlank(username)) {
                 operLog.setOperName(username);
             }

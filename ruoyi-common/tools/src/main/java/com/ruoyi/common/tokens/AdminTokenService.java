@@ -9,10 +9,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.ruoyi.common.Constants.JWTConstants;
 import com.ruoyi.common.Constants.TokenConstants;
+import com.ruoyi.common.JWT.JWTService;
 import com.ruoyi.common.core.constant.CacheConstants;
-import com.ruoyi.common.core.constant.SecurityConstants;
-import com.ruoyi.common.core.utils.JwtUtils;
 import com.ruoyi.common.core.utils.ServletUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.ip.IpUtils;
@@ -34,8 +34,6 @@ public class AdminTokenService {
 
     private final static long TOKEN_EXPIRE_TIME = 360;
 
-    private final static String ADMIN_TOKEN_KEY = TokenConstants.ADMIN_TOKEN_KEY;
-
     private final static Long TOKEN_REFRESH_THRESHOLD_MINUTES = CacheConstants.REFRESH_TIME * MILLIS_MINUTE;
 
     @Autowired
@@ -56,13 +54,14 @@ public class AdminTokenService {
 
         // Jwt存储信息
         Map<String, Object> claimsMap = new HashMap<String, Object>();
-        claimsMap.put(SecurityConstants.ADMIN_KEY, token);
-        claimsMap.put(SecurityConstants.ADMIN_ID, admin.getAdminId());
-        claimsMap.put(SecurityConstants.DETAILS_USERNAME, admin.getUsername());
+        claimsMap.put(JWTConstants.DETAILS_TOKEN, token);
+        claimsMap.put(JWTConstants.DETAILS_ID, admin.getAdminId());
+        claimsMap.put(JWTConstants.DETAILS_USERNAME, admin.getUsername());
+        claimsMap.put(JWTConstants.DETAILS_TYPE, "0");
 
         // 接口返回信息
         Map<String, Object> rspMap = new HashMap<String, Object>();
-        rspMap.put("access_token", JwtUtils.createToken(claimsMap));
+        rspMap.put("access_token", JWTService.createToken(claimsMap));
         rspMap.put("expires_in", TOKEN_EXPIRE_TIME);
         return rspMap;
     }
@@ -89,7 +88,7 @@ public class AdminTokenService {
         ao.setLoginTime(System.currentTimeMillis());
         ao.setExpireTime(ao.getLoginTime() + TOKEN_EXPIRE_TIME * MILLIS_MINUTE);
 
-        String aoKey = ADMIN_TOKEN_KEY + ao.getToken();
+        String aoKey = TokenConstants.TOKENS + ao.getToken();
         redisService.setCacheObject(aoKey, ao, TOKEN_EXPIRE_TIME, TimeUnit.MINUTES);
     }
 
@@ -118,12 +117,13 @@ public class AdminTokenService {
      * @return aoKey
      */
     public String getAOKey(String token) {
-        return ADMIN_TOKEN_KEY + JwtUtils.getAdminKey(token);
+        return TokenConstants.TOKENS + JWTService.getKey(JWTService.parseToken(token));
     }
 
     /**
      * 获取管理员身份信息
      *
+     * @param token JWT令牌
      * @return 用户信息
      */
     public AdminOnline getAO(String token) {

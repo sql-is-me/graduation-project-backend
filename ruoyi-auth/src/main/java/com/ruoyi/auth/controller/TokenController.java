@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.auth.form.LoginBody;
 import com.ruoyi.auth.form.RegisterBody;
 import com.ruoyi.auth.service.SysLoginService;
+import com.ruoyi.common.JWT.JWTService;
 import com.ruoyi.common.core.domain.R;
-import com.ruoyi.common.core.utils.JwtUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.security.auth.AuthUtil;
 import com.ruoyi.common.security.utils.SecurityUtils;
@@ -42,7 +42,7 @@ public class TokenController {
     public R<?> logout(HttpServletRequest request) {
         String token = SecurityUtils.getToken(request);
         if (StringUtils.isNotEmpty(token)) {
-            String username = JwtUtils.getUserName(token);
+            String username = JWTService.getUserName(token);
             // 删除用户缓存记录
             AuthUtil.logoutByToken(token);
             // 记录用户退出日志

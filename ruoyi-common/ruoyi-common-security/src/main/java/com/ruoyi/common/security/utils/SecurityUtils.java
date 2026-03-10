@@ -1,8 +1,10 @@
 package com.ruoyi.common.security.utils;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
+import com.ruoyi.common.Constants.AuthConstants;
+import com.ruoyi.common.Constants.TokenConstants;
 import com.ruoyi.common.core.constant.SecurityConstants;
-import com.ruoyi.common.core.constant.TokenConstants;
 import com.ruoyi.common.core.constant.UserConstants;
 import com.ruoyi.common.core.context.SecurityContextHolder;
 import com.ruoyi.common.core.utils.ServletUtils;
@@ -15,90 +17,60 @@ import jakarta.servlet.http.HttpServletRequest;
  * 
  * @author ruoyi
  */
-public class SecurityUtils
-{
+public class SecurityUtils {
     /**
      * 获取用户ID
      */
-    public static Long getUserId()
-    {
-        return SecurityContextHolder.getUserId();
+    public static Long getId() {
+        return SecurityContextHolder.getId();
     }
 
     /**
      * 获取用户名称
      */
-    public static String getUsername()
-    {
-        return SecurityContextHolder.getUserName();
+    public static String getUsername() {
+        return SecurityContextHolder.getUsername();
     }
 
     /**
      * 获取用户key
      */
-    public static String getUserKey()
-    {
+    public static String getUserKey() {
         return SecurityContextHolder.getUserKey();
     }
 
     /**
      * 获取登录用户信息
      */
-    public static LoginUser getLoginUser()
-    {
+    public static LoginUser getLoginUser() {
         return SecurityContextHolder.get(SecurityConstants.LOGIN_USER, LoginUser.class);
     }
 
     /**
      * 获取请求token
      */
-    public static String getToken()
-    {
+    public static String getToken() {
         return getToken(ServletUtils.getRequest());
     }
 
     /**
      * 根据request获取请求token
      */
-    public static String getToken(HttpServletRequest request)
-    {
+    public static String getToken(HttpServletRequest request) {
         // 从header获取token标识
-        String token = request.getHeader(SecurityConstants.AUTHORIZATION_HEADER);
+        String token = request.getHeader(AuthConstants.AUTHORIZATION_HEADER);
         return replaceTokenPrefix(token);
     }
 
     /**
      * 裁剪token前缀
      */
-    public static String replaceTokenPrefix(String token)
-    {
+    public static String replaceTokenPrefix(String token) {
         // 如果前端设置了令牌前缀，则裁剪掉前缀
-        if (StringUtils.isNotEmpty(token) && token.startsWith(TokenConstants.PREFIX))
-        {
+        if (StringUtils.isNotEmpty(token) && token.startsWith(TokenConstants.PREFIX)) {
             token = token.replaceFirst(TokenConstants.PREFIX, "");
         }
         return token;
-    }
-
-    /**
-     * 是否为管理员
-     * 
-     * @return 结果
-     */
-    public static boolean isAdmin()
-    {
-        return isAdmin(getUserId());
-    }
-
-    /**
-     * 是否为管理员
-     * 
-     * @param userId 用户ID
-     * @return 结果
-     */
-    public static boolean isAdmin(Long userId)
-    {
-        return UserConstants.isAdmin(userId);
     }
 
     /**
@@ -107,8 +79,7 @@ public class SecurityUtils
      * @param password 密码
      * @return 加密字符串
      */
-    public static String encryptPassword(String password)
-    {
+    public static String encryptPassword(String password) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return passwordEncoder.encode(password);
     }
@@ -116,12 +87,11 @@ public class SecurityUtils
     /**
      * 判断密码是否相同
      *
-     * @param rawPassword 真实密码
+     * @param rawPassword     真实密码
      * @param encodedPassword 加密后字符
      * @return 结果
      */
-    public static boolean matchesPassword(String rawPassword, String encodedPassword)
-    {
+    public static boolean matchesPassword(String rawPassword, String encodedPassword) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         return passwordEncoder.matches(rawPassword, encodedPassword);
     }

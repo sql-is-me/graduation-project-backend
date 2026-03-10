@@ -28,6 +28,12 @@
             <artifactId>ruoyi-api-system</artifactId>
         </dependency>
 
+        <!-- <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>tools</artifactId>
+        </dependency> -->
+
+
     </dependencies>
 
 </project>

@@ -27,7 +27,7 @@ public class MonitorServiceImpl implements MonitorService {
     public List<OnlineUserInfo> getOnlineAdmins() {
         List<OnlineUserInfo> onlineList = new ArrayList<>();
 
-        Collection<String> keys = redisService.keys(TokenConstants.ADMIN_TOKEN_KEY + "*");
+        Collection<String> keys = redisService.keys(TokenConstants.TOKENS + "*");
         for (String key : keys) {
             AdminOnline ao = redisService.getCacheObject(key);
             if (ao == null || ao.getAdminInfo() == null) {
@@ -80,7 +80,7 @@ public class MonitorServiceImpl implements MonitorService {
     }
 
     public void forceAdminLogout(String token) {
-        redisService.deleteObject(TokenConstants.ADMIN_TOKEN_KEY + token);
+        redisService.deleteObject(TokenConstants.TOKENS + token);
     }
 
     public void forceUserLogout(String token) {

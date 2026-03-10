@@ -12,16 +12,6 @@ public class SecurityConstants {
     public static final String DETAILS_USER_ID = "user_id";
 
     /**
-     * 用户名字段
-     */
-    public static final String DETAILS_USERNAME = "username";
-
-    /**
-     * 授权信息字段
-     */
-    public static final String AUTHORIZATION_HEADER = "Authorization";
-
-    /**
      * 请求来源
      */
     public static final String FROM_SOURCE = "from-source";
@@ -49,15 +39,12 @@ public class SecurityConstants {
     /**
      * 管理员标识
      */
-    public static final String ADMIN_KEY = "admin_key";
+    public static final String TOKEN_KEY = "admin_key";
 
     /**
      * 在线管理员
      */
     public static final String ADMIN_ONLINE = "admin_online";
 
-    /**
-     * 管理员ID字段
-     */
-    public static final String ADMIN_ID = "admin_id";
+ 
 }

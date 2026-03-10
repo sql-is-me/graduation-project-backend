@@ -3,7 +3,7 @@ package com.ruoyi.common.core.context;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import com.alibaba.ttl.TransmittableThreadLocal;
-import com.ruoyi.common.core.constant.SecurityConstants;
+import com.ruoyi.common.Constants.JWTConstants;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.core.utils.StringUtils;
 
@@ -44,37 +44,45 @@ public class SecurityContextHolder {
         THREAD_LOCAL.set(threadLocalMap);
     }
 
-    public static Long getUserId() {
-        return Convert.toLong(get(SecurityConstants.DETAILS_USER_ID), 0L);
+    public static Long getId() {
+        return Convert.toLong(get(JWTConstants.DETAILS_ID));
     }
 
-    public static void setUserId(String account) {
-        set(SecurityConstants.DETAILS_USER_ID, account);
+    public static void setId(String id) {
+        set(JWTConstants.DETAILS_ID, id);
     }
 
-    public static String getUserName() {
-        return get(SecurityConstants.DETAILS_USERNAME);
+    public static String getUsername() {
+        return get(JWTConstants.DETAILS_USERNAME);
     }
 
-    public static void setUserName(String username) {
-        set(SecurityConstants.DETAILS_USERNAME, username);
+    public static void setUsername(String username) {
+        set(JWTConstants.DETAILS_USERNAME, username);
     }
 
-    public static String getUserKey() {
-        return get(SecurityConstants.USER_KEY);
+    public static String getToken() {
+        return get(JWTConstants.DETAILS_TOKEN);
     }
 
-    public static void setUserKey(String userKey) {
-        set(SecurityConstants.USER_KEY, userKey);
+    public static void setToken(String token) {
+        set(JWTConstants.DETAILS_TOKEN, token);
     }
 
-    public static String getPermission() {
-        return get(SecurityConstants.ROLE_PERMISSION);
+    public static String getType() {
+        return get(JWTConstants.DETAILS_TYPE);
     }
 
-    public static void setPermission(String permissions) {
-        set(SecurityConstants.ROLE_PERMISSION, permissions);
+    public static void setType(String type) {
+        set(JWTConstants.DETAILS_TYPE, type);
     }
+
+    // public static String getPermission() {
+    // return get(SecurityConstants.ROLE_PERMISSION);
+    // }
+
+    // public static void setPermission(String permissions) {
+    // set(SecurityConstants.ROLE_PERMISSION, permissions);
+    // }
 
     public static void remove() {
         THREAD_LOCAL.remove();

@@ -85,25 +85,25 @@ public class SysUserController extends BaseController {
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysUser user) {
         List<SysUser> list = userService.selectUserList(user);
-        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
-        util.exportExcel(response, list, "用户数据");
+        // ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
+        // util.exportExcel(response, list, "用户数据");
     }
 
     @Log(title = "用户管理", businessType = BusinessType.INSERT)
     @RequiresPermissions("system:user:import")
     @PostMapping("/importData")
     public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {
-        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
-        List<SysUser> userList = util.importExcel(file.getInputStream());
+        // ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
+        // List<SysUser> userList = util.importExcel(file.getInputStream());
         String operName = SecurityUtils.getUsername();
-        String message = userService.importUser(userList, updateSupport, operName);
-        return success(message);
+        // String message = userService.importUser(userList, updateSupport, operName);
+        // return success(message);
     }
 
     @PostMapping("/importTemplate")
     public void importTemplate(HttpServletResponse response) throws IOException {
-        ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
-        util.importTemplateExcel(response, "用户数据");
+        // ExcelUtil<SysUser> util = new ExcelUtil<SysUser>(SysUser.class);
+        // util.importTemplateExcel(response, "用户数据");
     }
 
     /**

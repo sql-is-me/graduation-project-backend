@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.common.core.constant.CacheConstants;
-import com.ruoyi.common.core.utils.poi.ExcelUtil;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.core.web.page.TableDataInfo;
@@ -50,8 +49,8 @@ public class SysLoginInfoController extends BaseController {
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysLogininfor loginInfo) {
         List<SysLogininfor> list = loginInfoService.selectLogininforList(loginInfo);
-        ExcelUtil<SysLogininfor> util = new ExcelUtil<SysLogininfor>(SysLogininfor.class);
-        util.exportExcel(response, list, "登录日志");
+        // ExcelUtil<SysLogininfor> util = new ExcelUtil<SysLogininfor>(SysLogininfor.class);
+        // util.exportExcel(response, list, "登录日志");
     }
 
     @RequiresPermissions("system:loginInfo:remove")

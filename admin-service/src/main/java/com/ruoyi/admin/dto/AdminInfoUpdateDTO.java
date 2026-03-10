@@ -6,7 +6,7 @@ import lombok.Data;
  * 管理员修改个人信息请求体
  */
 @Data
-public class AdminProfileUpdateDTO {
+public class AdminInfoUpdateDTO {
     /**
      * 用户昵称
      */

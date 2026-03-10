@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
 import com.ruoyi.admin.dto.AdminPasswordUpdateDTO;
-import com.ruoyi.admin.dto.AdminProfileUpdateDTO;
-import com.ruoyi.admin.service.Impl.AdminProfileService;
+import com.ruoyi.admin.dto.AdminInfoUpdateDTO;
+import com.ruoyi.admin.service.Impl.InfoServiceImpl;
 import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.file.FileTypeUtils;
@@ -27,15 +28,17 @@ import com.ruoyi.system.api.domain.SysFile;
 import com.ruoyi.system.api.domain.SysUser;
 import com.ruoyi.system.api.model.LoginUser;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 /**
  * 管理员个人信息控制器
  */
 @RestController
-@RequestMapping("/admin/profile")
-public class AdminProfileController {
+@RequestMapping("/admin/info")
+public class InfoController {
 
     @Autowired
-    private AdminProfileService profileService;
+    private InfoServiceImpl infoService;
 
     @Autowired
     private TokenService tokenService;
@@ -46,10 +49,9 @@ public class AdminProfileController {
     /**
      * 获取管理员个人信息
      */
-    @RequiresLogin
     @GetMapping
-    public R<?> profile() {
-        SysUser user = profileService.getProfile();
+    public R<?> getInfo(HttpServletRequest request) {
+        SysUser user = infoService.getInfo(request);
         return R.ok(user);
     }
 
@@ -59,7 +61,7 @@ public class AdminProfileController {
     @RequiresLogin
     @Log(title = "管理员个人信息", businessType = BusinessType.UPDATE)
     @PutMapping
-    public R<?> updateProfile(@RequestBody AdminProfileUpdateDTO dto) {
+    public R<?> updateProfile(@RequestBody AdminInfoUpdateDTO dto) {
         profileService.updateProfile(dto);
         return R.ok("修改成功");
     }

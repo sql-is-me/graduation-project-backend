@@ -8,9 +8,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import com.ruoyi.common.JWT.JWTService;
 import com.ruoyi.common.core.constant.CacheConstants;
 import com.ruoyi.common.core.constant.SecurityConstants;
-import com.ruoyi.common.core.utils.JwtUtils;
 import com.ruoyi.common.core.utils.ServletUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.ip.IpUtils;
@@ -62,7 +63,7 @@ public class UserTokenService {
 
         // 接口返回信息
         Map<String, Object> rspMap = new HashMap<String, Object>();
-        rspMap.put("access_token", JwtUtils.createToken(claimsMap));
+        rspMap.put("access_token", JWTService.createToken(claimsMap));
         rspMap.put("expires_in", TOKEN_EXPIRE_TIME);
         return rspMap;
     }
@@ -96,7 +97,7 @@ public class UserTokenService {
         LoginUser user = null;
         try {
             if (StringUtils.isNotEmpty(token)) {
-                String userkey = JwtUtils.getUserKey(token);
+                String userkey = JWTService.getUserKey(token);
                 user = redisService.getCacheObject(getTokenKey(userkey));
                 return user;
             }
@@ -120,7 +121,7 @@ public class UserTokenService {
      */
     public void delLoginUser(String token) {
         if (StringUtils.isNotEmpty(token)) {
-            String userkey = JwtUtils.getUserKey(token);
+            String userkey = JWTService.getUserKey(token);
             redisService.deleteObject(getTokenKey(userkey));
         }
     }

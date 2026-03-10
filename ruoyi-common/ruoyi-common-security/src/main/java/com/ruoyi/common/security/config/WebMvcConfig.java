@@ -2,7 +2,8 @@ package com.ruoyi.common.security.config;
 
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import com.ruoyi.common.security.interceptor.HeaderInterceptor;
+
+import com.ruoyi.common.interceptor.HeaderInterceptor;
 
 /**
  * 拦截器配置

@@ -22,7 +22,7 @@ import com.ruoyi.common.core.domain.R;
  * 登录接口需要验证码，验证码在网关层(ValidateCodeFilter)统一校验
  */
 @RestController
-@RequestMapping("/admin")
+@RequestMapping("/admin/auth")
 public class AuthController {
     @Autowired
     private AuthService authService;

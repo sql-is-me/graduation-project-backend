@@ -9,11 +9,13 @@ import org.springframework.core.Ordered;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
-import com.ruoyi.common.core.constant.CacheConstants;
+
+import com.ruoyi.common.Constants.AuthConstants;
+import com.ruoyi.common.Constants.JWTConstants;
+import com.ruoyi.common.Constants.TokenConstants;
+import com.ruoyi.common.JWT.JWTService;
 import com.ruoyi.common.core.constant.HttpStatus;
 import com.ruoyi.common.core.constant.SecurityConstants;
-import com.ruoyi.common.core.constant.TokenConstants;
-import com.ruoyi.common.core.utils.JwtUtils;
 import com.ruoyi.common.core.utils.ServletUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.redis.service.RedisService;
@@ -43,35 +45,43 @@ public class AuthFilter implements GlobalFilter, Ordered {
         ServerHttpRequest.Builder mutate = request.mutate();
 
         String url = request.getURI().getPath();
-        // 跳过不需要验证的路径
+        // 跳过白名单上的url
         if (StringUtils.matches(url, ignoreWhite.getWhites())) {
             return chain.filter(exchange);
         }
+
         String token = getToken(request);
-        if (StringUtils.isEmpty(token)) {
+        if (StringUtils.isEmpty(token)) { // TODO:配置中心配置登录和注册白名单
             return unauthorizedResponse(exchange, "令牌不能为空");
         }
-        Claims claims = JwtUtils.parseToken(token);
+
+        Claims claims = JWTService.parseToken(token);
         if (claims == null) {
             return unauthorizedResponse(exchange, "令牌已过期或验证不正确！");
         }
-        String userkey = JwtUtils.getUserKey(claims);
-        boolean islogin = redisService.hasKey(getTokenKey(userkey));
-        if (!islogin) {
+
+        String UUIDtoken = JWTService.getKey(claims);
+        boolean isOnline = redisService.hasKey(TokenConstants.TOKENS + UUIDtoken);
+        if (!isOnline) {
             return unauthorizedResponse(exchange, "登录状态已过期");
         }
-        String userid = JwtUtils.getUserId(claims);
-        String username = JwtUtils.getUserName(claims);
-        if (StringUtils.isEmpty(userid) || StringUtils.isEmpty(username)) {
+
+        String id = JWTService.getId(claims);
+        String username = JWTService.getUsername(claims);
+        String type = JWTService.getType(claims);
+        if (StringUtils.isEmpty(id) || StringUtils.isEmpty(username) || StringUtils.isEmpty(type)) {
             return unauthorizedResponse(exchange, "令牌验证失败");
         }
 
         // 设置用户信息到请求
-        addHeader(mutate, SecurityConstants.USER_KEY, userkey);
-        addHeader(mutate, SecurityConstants.DETAILS_USER_ID, userid);
-        addHeader(mutate, SecurityConstants.DETAILS_USERNAME, username);
+        addHeader(mutate, JWTConstants.DETAILS_TOKEN, UUIDtoken);
+        addHeader(mutate, JWTConstants.DETAILS_ID, id);
+        addHeader(mutate, JWTConstants.DETAILS_USERNAME, username);
+        addHeader(mutate, JWTConstants.DETAILS_TYPE, type);
+
         // 内部请求来源参数清除
         removeHeader(mutate, SecurityConstants.FROM_SOURCE);
+
         return chain.filter(exchange.mutate().request(mutate.build()).build());
     }
 
@@ -94,17 +104,13 @@ public class AuthFilter implements GlobalFilter, Ordered {
     }
 
     /**
-     * 获取缓存key
-     */
-    private String getTokenKey(String token) {
-        return CacheConstants.LOGIN_TOKEN_KEY + token;
-    }
-
-    /**
      * 获取请求token
+     * 
+     * @param request 请求
      */
     private String getToken(ServerHttpRequest request) {
-        String token = request.getHeaders().getFirst(SecurityConstants.AUTHORIZATION_HEADER);
+        String token = request.getHeaders().getFirst(AuthConstants.AUTHORIZATION_HEADER);
+
         // 如果前端设置了令牌前缀，则裁剪掉前缀
         if (StringUtils.isNotEmpty(token) && token.startsWith(TokenConstants.PREFIX)) {
             token = token.replaceFirst(TokenConstants.PREFIX, StringUtils.EMPTY);

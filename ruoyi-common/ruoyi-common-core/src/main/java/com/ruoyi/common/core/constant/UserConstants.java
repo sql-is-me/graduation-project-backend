@@ -80,9 +80,4 @@ public class UserConstants
     public static final int PASSWORD_MIN_LENGTH = 5;
 
     public static final int PASSWORD_MAX_LENGTH = 20;
-
-    public static boolean isAdmin(Long userId)
-    {
-        return userId != null && 1L == userId;
-    }
 }

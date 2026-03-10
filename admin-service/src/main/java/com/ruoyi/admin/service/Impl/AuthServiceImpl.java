@@ -12,12 +12,12 @@ import com.ruoyi.admin.dto.AdminInviteDTO;
 import com.ruoyi.admin.dto.AdminRegisterDTO;
 import com.ruoyi.admin.mapper.AdminMapper;
 import com.ruoyi.admin.service.AuthService;
+import com.ruoyi.common.JWT.JWTService;
 import com.ruoyi.common.core.constant.Constants;
 import com.ruoyi.common.core.constant.UserConstants;
 import com.ruoyi.common.core.enums.AccountStatus;
 import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.utils.DateUtils;
-import com.ruoyi.common.core.utils.JwtUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.ip.IpUtils;
 import com.ruoyi.common.entity.Admin;
@@ -109,7 +109,7 @@ public class AuthServiceImpl implements AuthService {
     public void logout(HttpServletRequest request) {
         String token = adminTokenService.getAOToken(request);
         if (StringUtils.isNotEmpty(token)) {
-            String username = JwtUtils.getUserName(token);
+            String username = JWTService.getUsername(JWTService.parseToken(token));
             // 删除用户缓存记录
             adminTokenService.delAdminOnline(token);
 

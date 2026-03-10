@@ -3,41 +3,48 @@ package com.ruoyi.admin.service.Impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ruoyi.admin.dto.AdminPasswordUpdateDTO;
-import com.ruoyi.admin.dto.AdminProfileUpdateDTO;
+import com.ruoyi.admin.dto.AdminInfoUpdateDTO;
 import com.ruoyi.admin.mapper.AdminMapper;
 import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.StringUtils;
+import com.ruoyi.common.entity.Admin;
+import com.ruoyi.common.entity.AdminOnline;
 import com.ruoyi.common.security.utils.SecurityUtils;
+import com.ruoyi.common.tokens.AdminTokenService;
 import com.ruoyi.common.tokens.TokenService;
 import com.ruoyi.system.api.domain.SysUser;
 import com.ruoyi.system.api.model.LoginUser;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * 管理员个人信息服务
  */
 @Service
-public class AdminProfileService {
+public class InfoServiceImpl {
 
     @Autowired
-    private AdminMapper adminUserMapper;
+    private AdminMapper adminMapper;
 
     @Autowired
-    private TokenService tokenService;
+    private AdminTokenService adminTokenService;
 
     /**
      * 获取管理员个人信息
      */
-    public SysUser getProfile() {
-        String username = SecurityUtils.getUsername();
-        return adminUserMapper.selectUserByUserName(username);
+    public Admin getInfo(HttpServletRequest request) {
+        String token = SecurityUtils.getToken(request);
+        AdminOnline ao = adminTokenService.getAO(token);
+
+        return ao.getAdminInfo();
     }
 
     /**
      * 修改管理员个人信息
      */
-    public void updateProfile(AdminProfileUpdateDTO dto) {
-        LoginUser loginUser = SecurityUtils.getLoginUser();
+    public void updateInfo(AdminInfoUpdateDTO dto) {
+        AdminOnline loginUser = SecurityUtils.getLoginUser();
         SysUser currentUser = loginUser.getSysUser();
 
         currentUser.setNickName(dto.getNickName());
@@ -47,20 +54,20 @@ public class AdminProfileService {
 
         // 校验手机号唯一
         if (StringUtils.isNotEmpty(dto.getPhonenumber())) {
-            SysUser phoneUser = adminUserMapper.checkPhoneUnique(dto.getPhonenumber());
+            SysUser phoneUser = adminMapper.checkPhoneUnique(dto.getPhonenumber());
             if (phoneUser != null && !phoneUser.getUserId().equals(currentUser.getUserId())) {
                 throw new ServiceException("修改用户'" + loginUser.getUsername() + "'失败，手机号码已存在");
             }
         }
         // 校验邮箱唯一
         if (StringUtils.isNotEmpty(dto.getEmail())) {
-            SysUser emailUser = adminUserMapper.checkEmailUnique(dto.getEmail());
+            SysUser emailUser = adminMapper.checkEmailUnique(dto.getEmail());
             if (emailUser != null && !emailUser.getUserId().equals(currentUser.getUserId())) {
                 throw new ServiceException("修改用户'" + loginUser.getUsername() + "'失败，邮箱账号已存在");
             }
         }
 
-        int rows = adminUserMapper.updateUserProfile(currentUser);
+        int rows = adminMapper.updateUserProfile(currentUser);
         if (rows <= 0) {
             throw new ServiceException("修改个人信息异常，请联系管理员");
         }
@@ -89,7 +96,7 @@ public class AdminProfileService {
         }
 
         String encryptedPwd = SecurityUtils.encryptPassword(newPassword);
-        int rows = adminUserMapper.resetUserPwd(loginUser.getUserid(), encryptedPwd);
+        int rows = adminMapper.resetUserPwd(loginUser.getUserid(), encryptedPwd);
         if (rows <= 0) {
             throw new ServiceException("修改密码异常，请联系管理员");
         }
@@ -103,7 +110,7 @@ public class AdminProfileService {
      * 修改管理员头像
      */
     public void updateAvatar(Long userId, String avatarUrl) {
-        int rows = adminUserMapper.updateUserAvatar(userId, avatarUrl);
+        int rows = adminMapper.updateUserAvatar(userId, avatarUrl);
         if (rows <= 0) {
             throw new ServiceException("上传头像异常，请联系管理员");
         }
