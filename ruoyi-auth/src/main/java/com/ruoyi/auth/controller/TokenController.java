@@ -13,8 +13,8 @@ import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.utils.JwtUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.security.auth.AuthUtil;
-import com.ruoyi.common.security.service.TokenService;
 import com.ruoyi.common.security.utils.SecurityUtils;
+import com.ruoyi.common.tokens.TokenService;
 import com.ruoyi.system.api.model.LoginUser;
 
 /**

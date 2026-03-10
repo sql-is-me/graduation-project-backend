@@ -5,8 +5,9 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
 import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.log.enums.OperatorType;
+import com.ruoyi.common.enums.UserTypes;;
 
 /**
  * 自定义操作日志记录注解
@@ -31,7 +32,7 @@ public @interface Log {
     /**
      * 操作人类别
      */
-    public OperatorType operatorType() default OperatorType.MANAGER;
+    public UserTypes operatorType() default UserTypes.MANAGER;
 
     /**
      * 是否保存请求的参数

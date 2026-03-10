@@ -80,7 +80,6 @@ public class SysMenuController extends BaseController {
      * 新增菜单
      */
     @RequiresPermissions("system:menu:add")
-    @Log(title = "菜单管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysMenu menu) {
         if (!menuService.checkMenuNameUnique(menu)) {

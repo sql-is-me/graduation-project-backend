@@ -1,4 +1,4 @@
-package com.ruoyi.common.security.service;
+package com.ruoyi.common.tokens;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,8 +25,7 @@ import com.ruoyi.system.api.model.LoginUser;
  * @author ruoyi
  */
 @Component
-public class TokenService
-{
+public class UserTokenService {
     private static final Logger log = LoggerFactory.getLogger(TokenService.class);
 
     @Autowired
@@ -45,8 +44,7 @@ public class TokenService
     /**
      * 创建令牌
      */
-    public Map<String, Object> createToken(LoginUser loginUser)
-    {
+    public Map<String, Object> createToken(LoginUser loginUser) {
         String token = IdUtils.fastUUID();
         Long userId = loginUser.getSysUser().getUserId();
         String userName = loginUser.getSysUser().getUserName();
@@ -74,8 +72,7 @@ public class TokenService
      *
      * @return 用户信息
      */
-    public LoginUser getLoginUser()
-    {
+    public LoginUser getLoginUser() {
         return getLoginUser(ServletUtils.getRequest());
     }
 
@@ -84,8 +81,7 @@ public class TokenService
      *
      * @return 用户信息
      */
-    public LoginUser getLoginUser(HttpServletRequest request)
-    {
+    public LoginUser getLoginUser(HttpServletRequest request) {
         // 获取请求携带的令牌
         String token = SecurityUtils.getToken(request);
         return getLoginUser(token);
@@ -96,20 +92,15 @@ public class TokenService
      *
      * @return 用户信息
      */
-    public LoginUser getLoginUser(String token)
-    {
+    public LoginUser getLoginUser(String token) {
         LoginUser user = null;
-        try
-        {
-            if (StringUtils.isNotEmpty(token))
-            {
+        try {
+            if (StringUtils.isNotEmpty(token)) {
                 String userkey = JwtUtils.getUserKey(token);
                 user = redisService.getCacheObject(getTokenKey(userkey));
                 return user;
             }
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             log.error("获取用户信息异常'{}'", e.getMessage());
         }
         return user;
@@ -118,10 +109,8 @@ public class TokenService
     /**
      * 设置用户身份信息
      */
-    public void setLoginUser(LoginUser loginUser)
-    {
-        if (StringUtils.isNotNull(loginUser) && StringUtils.isNotEmpty(loginUser.getToken()))
-        {
+    public void setLoginUser(LoginUser loginUser) {
+        if (StringUtils.isNotNull(loginUser) && StringUtils.isNotEmpty(loginUser.getToken())) {
             refreshToken(loginUser);
         }
     }
@@ -129,10 +118,8 @@ public class TokenService
     /**
      * 删除用户缓存信息
      */
-    public void delLoginUser(String token)
-    {
-        if (StringUtils.isNotEmpty(token))
-        {
+    public void delLoginUser(String token) {
+        if (StringUtils.isNotEmpty(token)) {
             String userkey = JwtUtils.getUserKey(token);
             redisService.deleteObject(getTokenKey(userkey));
         }
@@ -143,12 +130,10 @@ public class TokenService
      *
      * @param loginUser
      */
-    public void verifyToken(LoginUser loginUser)
-    {
+    public void verifyToken(LoginUser loginUser) {
         long expireTime = loginUser.getExpireTime();
         long currentTime = System.currentTimeMillis();
-        if (expireTime - currentTime <= TOKEN_REFRESH_THRESHOLD_MINUTES)
-        {
+        if (expireTime - currentTime <= TOKEN_REFRESH_THRESHOLD_MINUTES) {
             refreshToken(loginUser);
         }
     }
@@ -158,8 +143,7 @@ public class TokenService
      *
      * @param loginUser 登录信息
      */
-    public void refreshToken(LoginUser loginUser)
-    {
+    public void refreshToken(LoginUser loginUser) {
         loginUser.setLoginTime(System.currentTimeMillis());
         loginUser.setExpireTime(loginUser.getLoginTime() + TOKEN_EXPIRE_TIME * MILLIS_MINUTE);
         // 根据uuid将loginUser缓存
@@ -167,8 +151,7 @@ public class TokenService
         redisService.setCacheObject(userKey, loginUser, TOKEN_EXPIRE_TIME, TimeUnit.MINUTES);
     }
 
-    private String getTokenKey(String token)
-    {
+    private String getTokenKey(String token) {
         return ACCESS_TOKEN + token;
     }
 }

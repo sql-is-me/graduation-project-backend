@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.ruoyi.common.Constants.TokenConstants;
 import com.ruoyi.common.core.constant.CacheConstants;
 import com.ruoyi.common.core.constant.SecurityConstants;
 import com.ruoyi.common.core.utils.JwtUtils;
@@ -33,7 +34,7 @@ public class AdminTokenService {
 
     private final static long TOKEN_EXPIRE_TIME = 360;
 
-    private final static String ADMIN_TOKEN = CacheConstants.ADMIN_TOKEN_KEY;
+    private final static String ADMIN_TOKEN_KEY = TokenConstants.ADMIN_TOKEN_KEY;
 
     private final static Long TOKEN_REFRESH_THRESHOLD_MINUTES = CacheConstants.REFRESH_TIME * MILLIS_MINUTE;
 
@@ -88,7 +89,7 @@ public class AdminTokenService {
         ao.setLoginTime(System.currentTimeMillis());
         ao.setExpireTime(ao.getLoginTime() + TOKEN_EXPIRE_TIME * MILLIS_MINUTE);
 
-        String aoKey = ADMIN_TOKEN + ao.getToken();
+        String aoKey = ADMIN_TOKEN_KEY + ao.getToken();
         redisService.setCacheObject(aoKey, ao, TOKEN_EXPIRE_TIME, TimeUnit.MINUTES);
     }
 
@@ -117,7 +118,7 @@ public class AdminTokenService {
      * @return aoKey
      */
     public String getAOKey(String token) {
-        return ADMIN_TOKEN + JwtUtils.getAdminKey(token);
+        return ADMIN_TOKEN_KEY + JwtUtils.getAdminKey(token);
     }
 
     /**

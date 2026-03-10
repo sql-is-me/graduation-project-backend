@@ -6,6 +6,7 @@ import lombok.Data;
 public class AdminOnline {
     /**
      * token
+     * 随机UUID
      */
     private String token;
 

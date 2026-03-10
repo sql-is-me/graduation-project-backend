@@ -7,7 +7,7 @@ import lombok.Data;
  */
 @Data
 public class OnlineUserInfo {
-    private String tokenId;
+    private String token;
 
     private Long userId;
 

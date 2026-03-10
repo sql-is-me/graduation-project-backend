@@ -14,8 +14,8 @@ import com.ruoyi.common.security.annotation.Logical;
 import com.ruoyi.common.security.annotation.RequiresLogin;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
 import com.ruoyi.common.security.annotation.RequiresRoles;
-import com.ruoyi.common.security.service.TokenService;
 import com.ruoyi.common.security.utils.SecurityUtils;
+import com.ruoyi.common.tokens.TokenService;
 import com.ruoyi.system.api.model.LoginUser;
 
 /**
