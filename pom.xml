@@ -162,14 +162,6 @@
                 <version>${ruoyi.version}</version>
             </dependency>
 
-            <!-- 日志记录 -->
-            <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-common-log</artifactId>
-                <version>${ruoyi.version}</version>
-            </dependency>
-
-            <!-- 缓存服务 -->
             <dependency>
                 <groupId>com.ruoyi</groupId>
                 <artifactId>tools</artifactId>

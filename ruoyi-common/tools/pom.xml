@@ -1,33 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>com.ruoyi</groupId>
         <artifactId>ruoyi-common</artifactId>
         <version>3.6.7</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    
+
     <artifactId>tools</artifactId>
-	
+
     <description>
         工具模块
     </description>
 
     <dependencies>
-		
+        <!-- RuoYi Api System -->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>ruoyi-api-system</artifactId>
+        </dependency>
+        
         <!-- SpringBoot Boot Redis -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
-        
-        <!-- RuoYi Common Core-->
+
         <dependency>
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-common-core</artifactId>
         </dependency>
-        
+
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>entities</artifactId>
+        </dependency>
+
     </dependencies>
 </project>

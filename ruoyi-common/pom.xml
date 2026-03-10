@@ -10,7 +10,6 @@
     <modelVersion>4.0.0</modelVersion>
 
     <modules>
-        <module>ruoyi-common-log</module>
         <module>ruoyi-common-core</module>
         <module>tools</module>
         <module>ruoyi-common-security</module>

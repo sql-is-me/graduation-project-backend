@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import com.ruoyi.common.core.constant.SecurityConstants;
 import com.ruoyi.common.core.constant.ServiceNameConstants;
 import com.ruoyi.common.core.domain.R;
-import com.ruoyi.system.api.domain.SysLogininfor;
-import com.ruoyi.system.api.domain.SysOperLog;
+import com.ruoyi.common.entity.LoginInfo;
+import com.ruoyi.common.entity.OperLog;
 import com.ruoyi.system.api.factory.RemoteLogFallbackFactory;
 
 /**
@@ -26,7 +26,7 @@ public interface RemoteLogService {
          * @return 结果
          */
         @PostMapping("/operlog")
-        public R<Boolean> saveLog(@RequestBody SysOperLog sysOperLog,
+        public R<Boolean> saveLog(@RequestBody OperLog operLog,
                         @RequestHeader(SecurityConstants.FROM_SOURCE) String source) throws Exception;
 
         /**
@@ -37,6 +37,6 @@ public interface RemoteLogService {
          * @return 结果
          */
         @PostMapping("/logininfor")
-        public R<Boolean> saveLogininfor(@RequestBody SysLogininfor sysLogininfor,
+        public R<Boolean> saveLogininfor(@RequestBody LoginInfo loginInfo,
                         @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
 }

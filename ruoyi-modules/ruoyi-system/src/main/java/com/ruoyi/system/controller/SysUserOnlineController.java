@@ -63,7 +63,7 @@ public class SysUserOnlineController extends BaseController {
      * 强退用户
      */
     @RequiresPermissions("monitor:online:forceLogout")
-    @Log(title = "在线用户", businessType = BusinessType.FORCE)
+    @Log(title = "在线用户", businessType = BusinessType.GRANT)
     @DeleteMapping("/{tokenId}")
     public AjaxResult forceLogout(@PathVariable String tokenId) {
         redisService.deleteObject(CacheConstants.LOGIN_TOKEN_KEY + tokenId);

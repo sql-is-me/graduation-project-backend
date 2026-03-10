@@ -45,7 +45,7 @@ public class SysPostController extends BaseController {
         return getDataTable(list);
     }
 
-    @Log(title = "岗位管理", businessType = BusinessType.EXPORT)
+    @Log(title = "岗位管理", businessType = BusinessType.GET)
     @RequiresPermissions("system:post:export")
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysPost post) {

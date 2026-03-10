@@ -53,7 +53,7 @@ public class SysRoleController extends BaseController {
         return getDataTable(list);
     }
 
-    @Log(title = "角色管理", businessType = BusinessType.EXPORT)
+    @Log(title = "角色管理", businessType = BusinessType.GET)
     @RequiresPermissions("system:role:export")
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysRole role) {

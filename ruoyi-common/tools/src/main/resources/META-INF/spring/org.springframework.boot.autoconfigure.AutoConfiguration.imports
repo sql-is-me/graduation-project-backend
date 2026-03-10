@@ -1,2 +1,4 @@
-com.ruoyi.common.tools.configure.RedisConfig
-com.ruoyi.common.tools.service.RedisService
+com.ruoyi.common.redis.configure.RedisConfig
+com.ruoyi.common.redis.service.RedisService
+com.ruoyi.common.log.service.AsyncLogService
+com.ruoyi.common.log.aspect.LogAspect

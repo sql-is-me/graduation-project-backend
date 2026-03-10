@@ -15,11 +15,6 @@ import com.ruoyi.admin.dto.AdminLoginDTO;
 import com.ruoyi.admin.dto.AdminRegisterDTO;
 import com.ruoyi.admin.service.AuthService;
 import com.ruoyi.common.core.domain.R;
-import com.ruoyi.common.log.annotation.Log;
-import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.security.annotation.Logical;
-import com.ruoyi.common.security.annotation.RequiresLogin;
-import com.ruoyi.common.security.annotation.RequiresRoles;
 
 /**
  * 管理员认证控制器
@@ -27,8 +22,8 @@ import com.ruoyi.common.security.annotation.RequiresRoles;
  * 登录接口需要验证码，验证码在网关层(ValidateCodeFilter)统一校验
  */
 @RestController
-@RequestMapping("admin")
-public class AdminAuthController {
+@RequestMapping("/admin")
+public class AuthController {
     @Autowired
     private AuthService authService;
 
@@ -66,18 +61,13 @@ public class AdminAuthController {
     }
 
     /**
-     *
      * 注册成为地区管理员需要另一位顶级管理员或地区管理员的邀请码
      * 顶级管理员无法通过注册创建，只能预置在数据库中
      */
 
     /**
      * 地区管理员注册（需邀请码）
-     *
-     * 此接口不需要登录即可访问，
-     * 但必须持有有效的邀请码
      */
-    @Log(title = "管理员注册", businessType = BusinessType.INSERT)
     @PostMapping("/register")
     public R<?> register(@RequestBody AdminRegisterDTO registerBody) {
         authService.register(registerBody);
@@ -91,9 +81,6 @@ public class AdminAuthController {
      * 顶级管理员生成时需指定storeId
      * 地区管理员生成时自动使用自身storeId
      */
-    @RequiresLogin
-    @RequiresRoles(value = { "admin" }, logical = Logical.OR)
-    @Log(title = "生成邀请码", businessType = BusinessType.OTHER)
     @PostMapping("/invite")
     public R<?> generateInviteCode(@RequestParam(required = false) Long storeId,
             HttpServletRequest request) {

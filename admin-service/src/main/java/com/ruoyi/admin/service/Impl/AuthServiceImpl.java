@@ -24,7 +24,7 @@ import com.ruoyi.common.entity.Admin;
 import com.ruoyi.common.entity.AdminOnline;
 import com.ruoyi.common.redis.service.RedisService;
 import com.ruoyi.common.security.utils.SecurityUtils;
-import com.ruoyi.common.tokens.service.AdminTokenService;
+import com.ruoyi.common.tokens.AdminTokenService;
 import com.ruoyi.common.verifier.PWCheckUtils;
 
 /**

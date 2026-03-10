@@ -1,4 +1,4 @@
-package com.ruoyi.common.tokens.service;
+package com.ruoyi.common.tokens;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,10 +16,10 @@ import com.ruoyi.common.core.utils.ServletUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.ip.IpUtils;
 import com.ruoyi.common.core.utils.uuid.IdUtils;
-import com.ruoyi.common.redis.service.RedisService;
 import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.common.entity.Admin;
 import com.ruoyi.common.entity.AdminOnline;
+import com.ruoyi.common.redis.service.RedisService;
 
 /**
  * token验证处理

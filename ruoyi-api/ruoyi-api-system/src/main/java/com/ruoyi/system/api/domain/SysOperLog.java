@@ -22,8 +22,8 @@ public class SysOperLog extends BaseEntity {
     @Excel(name = "操作模块")
     private String title;
 
-    /** 业务类型（0其它 1新增 2修改 3删除） */
-    @Excel(name = "业务类型", readConverterExp = "0=其它,1=新增,2=修改,3=删除,4=授权,5=导出,6=导入,7=强退,8=生成代码,9=清空数据")
+    /** 业务类型（0其它 1新增 2修改 3删除 4授权 5导出 6导入 7强退 8清空数据 9封禁 10解禁 11创建课程 12取消课程 13安排上课 14核销签到 15生成邀请码 16生成关系码） */
+    @Excel(name = "业务类型", readConverterExp = "0=其它,1=新增,2=修改,3=删除,4=授权,5=导出,6=导入,7=强退,8=清空数据,9=封禁用户,10=解禁用户,11=创建课程,12=取消课程,13=安排上课,14=核销签到签退,15=生成邀请码,16=生成关系码")
     private Integer businessType;
 
     /** 业务类型数组 */
@@ -37,8 +37,8 @@ public class SysOperLog extends BaseEntity {
     @Excel(name = "请求方式")
     private String requestMethod;
 
-    /** 操作类别（0其它 1后台用户 2手机端用户） */
-    @Excel(name = "操作类别", readConverterExp = "0=其它,1=后台用户,2=手机端用户")
+    /** 操作类别（0顶级管理员 1店铺管理员 2教练 3会员） */
+    @Excel(name = "操作类别", readConverterExp = "0=顶级管理员,1=店铺管理员,2=教练,3=会员")
     private Integer operatorType;
 
     /** 操作人员 */

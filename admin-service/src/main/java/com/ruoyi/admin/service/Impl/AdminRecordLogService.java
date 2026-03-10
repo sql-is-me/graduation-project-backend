@@ -6,8 +6,8 @@ import com.ruoyi.common.core.constant.Constants;
 import com.ruoyi.common.core.constant.SecurityConstants;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.ip.IpUtils;
+import com.ruoyi.common.entity.LoginInfo;
 import com.ruoyi.system.api.RemoteLogService;
-import com.ruoyi.system.api.domain.SysLogininfor;
 
 /**
  * 管理员登录日志记录服务
@@ -26,16 +26,17 @@ public class AdminRecordLogService {
      * @param message  消息内容
      */
     public void recordLogininfor(String username, String status, String message) {
-        SysLogininfor logininfor = new SysLogininfor();
-        logininfor.setUserName(username);
-        logininfor.setIpaddr(IpUtils.getIpAddr());
-        logininfor.setMsg(message);
+        LoginInfo loginInfo = new LoginInfo();
+        loginInfo.setUsername(username);
+        loginInfo.setIpaddr(IpUtils.getIpAddr());
+        loginInfo.setMsg(message);
+
         // 日志状态
         if (StringUtils.equalsAny(status, Constants.LOGIN_SUCCESS, Constants.LOGOUT, Constants.REGISTER)) {
-            logininfor.setStatus(Constants.LOGIN_SUCCESS_STATUS);
+            loginInfo.setStatus(Constants.LOGIN_SUCCESS_STATUS);
         } else if (Constants.LOGIN_FAIL.equals(status)) {
-            logininfor.setStatus(Constants.LOGIN_FAIL_STATUS);
+            loginInfo.setStatus(Constants.LOGIN_FAIL_STATUS);
         }
-        remoteLogService.saveLogininfor(logininfor, SecurityConstants.INNER);
+        remoteLogService.saveLogininfor(loginInfo, SecurityConstants.INNER);
     }
 }

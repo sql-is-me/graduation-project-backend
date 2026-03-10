@@ -2,11 +2,10 @@ package com.ruoyi.common.log.enums;
 
 /**
  * 业务操作类型
- * 
+ *
  * @author ruoyi
  */
-public enum BusinessType
-{
+public enum BusinessType {
     /**
      * 其它
      */
@@ -28,32 +27,12 @@ public enum BusinessType
     DELETE,
 
     /**
+     * 提取
+     */
+    GET,
+
+    /**
      * 授权
      */
     GRANT,
-
-    /**
-     * 导出
-     */
-    EXPORT,
-
-    /**
-     * 导入
-     */
-    IMPORT,
-
-    /**
-     * 强退
-     */
-    FORCE,
-
-    /**
-     * 生成代码
-     */
-    GENCODE,
-
-    /**
-     * 清空数据
-     */
-    CLEAN,
 }

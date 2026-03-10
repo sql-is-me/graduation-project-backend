@@ -80,7 +80,7 @@ public class SysUserController extends BaseController {
         return getDataTable(list);
     }
 
-    @Log(title = "用户管理", businessType = BusinessType.EXPORT)
+    @Log(title = "用户管理", businessType = BusinessType.GET)
     @RequiresPermissions("system:user:export")
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysUser user) {
@@ -89,7 +89,7 @@ public class SysUserController extends BaseController {
         util.exportExcel(response, list, "用户数据");
     }
 
-    @Log(title = "用户管理", businessType = BusinessType.IMPORT)
+    @Log(title = "用户管理", businessType = BusinessType.INSERT)
     @RequiresPermissions("system:user:import")
     @PostMapping("/importData")
     public AjaxResult importData(MultipartFile file, boolean updateSupport) throws Exception {

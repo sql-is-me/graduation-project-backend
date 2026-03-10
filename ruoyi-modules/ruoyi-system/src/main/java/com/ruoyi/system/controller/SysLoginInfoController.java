@@ -29,47 +29,47 @@ import com.ruoyi.system.service.ISysLogininforService;
  * @author ruoyi
  */
 @RestController
-@RequestMapping("/logininfor")
-public class SysLogininforController extends BaseController {
+@RequestMapping("/loginInfo")
+public class SysLoginInfoController extends BaseController {
     @Autowired
-    private ISysLogininforService logininforService;
+    private ISysLogininforService loginInfoService;
 
     @Autowired
     private RedisService redisService;
 
-    @RequiresPermissions("system:logininfor:list")
+    @RequiresPermissions("system:loginInfo:list")
     @GetMapping("/list")
-    public TableDataInfo list(SysLogininfor logininfor) {
+    public TableDataInfo list(SysLogininfor loginInfo) {
         startPage();
-        List<SysLogininfor> list = logininforService.selectLogininforList(logininfor);
+        List<SysLogininfor> list = loginInfoService.selectLogininforList(loginInfo);
         return getDataTable(list);
     }
 
-    @Log(title = "登录日志", businessType = BusinessType.EXPORT)
-    @RequiresPermissions("system:logininfor:export")
+    @Log(title = "登录日志", businessType = BusinessType.GET)
+    @RequiresPermissions("system:loginInfo:export")
     @PostMapping("/export")
-    public void export(HttpServletResponse response, SysLogininfor logininfor) {
-        List<SysLogininfor> list = logininforService.selectLogininforList(logininfor);
+    public void export(HttpServletResponse response, SysLogininfor loginInfo) {
+        List<SysLogininfor> list = loginInfoService.selectLogininforList(loginInfo);
         ExcelUtil<SysLogininfor> util = new ExcelUtil<SysLogininfor>(SysLogininfor.class);
         util.exportExcel(response, list, "登录日志");
     }
 
-    @RequiresPermissions("system:logininfor:remove")
+    @RequiresPermissions("system:loginInfo:remove")
     @Log(title = "登录日志", businessType = BusinessType.DELETE)
     @DeleteMapping("/{infoIds}")
     public AjaxResult remove(@PathVariable Long[] infoIds) {
-        return toAjax(logininforService.deleteLogininforByIds(infoIds));
+        return toAjax(loginInfoService.deleteLogininforByIds(infoIds));
     }
 
-    @RequiresPermissions("system:logininfor:remove")
+    @RequiresPermissions("system:loginInfo:remove")
     @Log(title = "登录日志", businessType = BusinessType.DELETE)
     @DeleteMapping("/clean")
     public AjaxResult clean() {
-        logininforService.cleanLogininfor();
+        loginInfoService.cleanLogininfor();
         return success();
     }
 
-    @RequiresPermissions("system:logininfor:unlock")
+    @RequiresPermissions("system:loginInfo:unlock")
     @Log(title = "账户解锁", businessType = BusinessType.OTHER)
     @GetMapping("/unlock/{userName}")
     public AjaxResult unlock(@PathVariable("userName") String userName) {
@@ -79,7 +79,7 @@ public class SysLogininforController extends BaseController {
 
     @InnerAuth
     @PostMapping
-    public AjaxResult add(@RequestBody SysLogininfor logininfor) {
-        return toAjax(logininforService.insertLogininfor(logininfor));
+    public AjaxResult add(@RequestBody SysLogininfor loginInfo) {
+        return toAjax(loginInfoService.insertLogininfor(loginInfo));
     }
 }

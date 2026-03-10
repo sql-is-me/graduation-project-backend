@@ -59,10 +59,9 @@
             <artifactId>ruoyi-common-datascope</artifactId>
         </dependency>
 
-        <!-- RuoYi Common Log -->
         <dependency>
             <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-common-log</artifactId>
+            <artifactId>tools</artifactId>
         </dependency>
 
         <!-- RuoYi Common Security -->

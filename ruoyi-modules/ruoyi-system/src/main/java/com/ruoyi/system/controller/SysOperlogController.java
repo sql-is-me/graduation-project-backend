@@ -40,7 +40,7 @@ public class SysOperlogController extends BaseController {
         return getDataTable(list);
     }
 
-    @Log(title = "操作日志", businessType = BusinessType.EXPORT)
+    @Log(title = "操作日志", businessType = BusinessType.GET)
     @RequiresPermissions("system:operlog:export")
     @PostMapping("/export")
     public void export(HttpServletResponse response, SysOperLog operLog) {
@@ -57,7 +57,7 @@ public class SysOperlogController extends BaseController {
     }
 
     @RequiresPermissions("system:operlog:remove")
-    @Log(title = "操作日志", businessType = BusinessType.CLEAN)
+    @Log(title = "操作日志", businessType = BusinessType.DELETE)
     @DeleteMapping("/clean")
     public AjaxResult clean() {
         operLogService.cleanOperLog();

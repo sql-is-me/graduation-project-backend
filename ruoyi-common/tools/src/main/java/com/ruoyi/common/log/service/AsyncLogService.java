@@ -4,8 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import com.ruoyi.common.core.constant.SecurityConstants;
+import com.ruoyi.common.entity.OperLog;
 import com.ruoyi.system.api.RemoteLogService;
-import com.ruoyi.system.api.domain.SysOperLog;
 
 /**
  * 异步调用日志服务
@@ -13,8 +13,7 @@ import com.ruoyi.system.api.domain.SysOperLog;
  * @author ruoyi
  */
 @Service
-public class AsyncLogService
-{
+public class AsyncLogService {
     @Autowired
     private RemoteLogService remoteLogService;
 
@@ -22,8 +21,7 @@ public class AsyncLogService
      * 保存系统日志记录
      */
     @Async
-    public void saveSysLog(SysOperLog sysOperLog) throws Exception
-    {
-        remoteLogService.saveLog(sysOperLog, SecurityConstants.INNER);
+    public void saveOperLog(OperLog operLog) throws Exception {
+        remoteLogService.saveLog(operLog, SecurityConstants.INNER);
     }
 }

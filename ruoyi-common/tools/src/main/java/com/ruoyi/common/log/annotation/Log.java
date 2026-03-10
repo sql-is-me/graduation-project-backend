@@ -14,11 +14,10 @@ import com.ruoyi.common.log.enums.OperatorType;
  * @author ruoyi
  *
  */
-@Target({ ElementType.PARAMETER, ElementType.METHOD })
-@Retention(RetentionPolicy.RUNTIME)
 @Documented
-public @interface Log
-{
+@Target(ElementType.METHOD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface Log {
     /**
      * 模块
      */
@@ -32,7 +31,7 @@ public @interface Log
     /**
      * 操作人类别
      */
-    public OperatorType operatorType() default OperatorType.MANAGE;
+    public OperatorType operatorType() default OperatorType.MANAGER;
 
     /**
      * 是否保存请求的参数

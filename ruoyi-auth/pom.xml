@@ -52,6 +52,11 @@
             <artifactId>ruoyi-common-security</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>tools</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
