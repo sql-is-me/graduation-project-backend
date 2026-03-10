@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 
-import com.ruoyi.common.Constants.JWTConstants;
+import com.ruoyi.common.Constants.ContextHolderConstants;
 import com.ruoyi.common.core.context.SecurityContextHolder;
 import com.ruoyi.common.core.utils.ServletUtils;
 import com.ruoyi.common.entity.AdminOnline;
@@ -31,11 +31,11 @@ public class HeaderInterceptor implements AsyncHandlerInterceptor {
             return true;
         }
 
-        SecurityContextHolder.setId(ServletUtils.getHeader(request, JWTConstants.DETAILS_ID));
-        SecurityContextHolder.setUsername(ServletUtils.getHeader(request, JWTConstants.DETAILS_USERNAME));
-        SecurityContextHolder.setToken(ServletUtils.getHeader(request, JWTConstants.DETAILS_TOKEN));
+        SecurityContextHolder.setId(ServletUtils.getHeader(request, ContextHolderConstants.CH_ID));
+        SecurityContextHolder.setUsername(ServletUtils.getHeader(request, ContextHolderConstants.CH_USERNAME));
+        SecurityContextHolder.setToken(ServletUtils.getHeader(request, ContextHolderConstants.CH_TOKEN));
 
-        String type = ServletUtils.getHeader(request, JWTConstants.DETAILS_TYPE);
+        String type = ServletUtils.getHeader(request, ContextHolderConstants.CH_TYPE);
         SecurityContextHolder.setType(type);
 
         // TODO:按照type分为adminOnline和userOnline
@@ -49,7 +49,11 @@ public class HeaderInterceptor implements AsyncHandlerInterceptor {
         // }
         if (Integer.valueOf(type) == 0) {
             AdminOnline ao = adminTokenService.getAO(token);
-            verifyLoginUserExpire
+            adminTokenService.verifyToken(ao);
+
+            SecurityContextHolder.set(ContextHolderConstants.CH_ADMIN_ONLINE, ao);
+        } else {
+            // TODO:用户在线信息
         }
 
         return true;

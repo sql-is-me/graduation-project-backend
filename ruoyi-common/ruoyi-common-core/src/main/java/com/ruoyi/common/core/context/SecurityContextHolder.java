@@ -3,7 +3,7 @@ package com.ruoyi.common.core.context;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import com.alibaba.ttl.TransmittableThreadLocal;
-import com.ruoyi.common.Constants.JWTConstants;
+import com.ruoyi.common.Constants.ContextHolderConstants;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.core.utils.StringUtils;
 
@@ -45,35 +45,35 @@ public class SecurityContextHolder {
     }
 
     public static Long getId() {
-        return Convert.toLong(get(JWTConstants.DETAILS_ID));
+        return Convert.toLong(get(ContextHolderConstants.CH_ID));
     }
 
     public static void setId(String id) {
-        set(JWTConstants.DETAILS_ID, id);
+        set(ContextHolderConstants.CH_ID, id);
     }
 
     public static String getUsername() {
-        return get(JWTConstants.DETAILS_USERNAME);
+        return get(ContextHolderConstants.CH_USERNAME);
     }
 
     public static void setUsername(String username) {
-        set(JWTConstants.DETAILS_USERNAME, username);
+        set(ContextHolderConstants.CH_USERNAME, username);
     }
 
     public static String getToken() {
-        return get(JWTConstants.DETAILS_TOKEN);
+        return get(ContextHolderConstants.CH_TOKEN);
     }
 
     public static void setToken(String token) {
-        set(JWTConstants.DETAILS_TOKEN, token);
+        set(ContextHolderConstants.CH_TOKEN, token);
     }
 
     public static String getType() {
-        return get(JWTConstants.DETAILS_TYPE);
+        return get(ContextHolderConstants.CH_TYPE);
     }
 
     public static void setType(String type) {
-        set(JWTConstants.DETAILS_TYPE, type);
+        set(ContextHolderConstants.CH_TYPE, type);
     }
 
     // public static String getPermission() {

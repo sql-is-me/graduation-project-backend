@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 
 import com.ruoyi.common.Constants.AuthConstants;
-import com.ruoyi.common.Constants.JWTConstants;
+import com.ruoyi.common.Constants.ContextHolderConstants;
 import com.ruoyi.common.Constants.TokenConstants;
 import com.ruoyi.common.JWT.JWTService;
 import com.ruoyi.common.core.constant.HttpStatus;
@@ -74,10 +74,10 @@ public class AuthFilter implements GlobalFilter, Ordered {
         }
 
         // 设置用户信息到请求
-        addHeader(mutate, JWTConstants.DETAILS_TOKEN, UUIDtoken);
-        addHeader(mutate, JWTConstants.DETAILS_ID, id);
-        addHeader(mutate, JWTConstants.DETAILS_USERNAME, username);
-        addHeader(mutate, JWTConstants.DETAILS_TYPE, type);
+        addHeader(mutate, ContextHolderConstants.CH_TOKEN, UUIDtoken);
+        addHeader(mutate, ContextHolderConstants.CH_ID, id);
+        addHeader(mutate, ContextHolderConstants.CH_USERNAME, username);
+        addHeader(mutate, ContextHolderConstants.CH_TYPE, type);
 
         // 内部请求来源参数清除
         removeHeader(mutate, SecurityConstants.FROM_SOURCE);
