@@ -26,6 +26,7 @@ public class LogServiceImpl implements LogService {
     /**
      * 查询操作日志列表（支持按操作人、标题、业务类型、操作状态筛选）
      */
+    @Override
     public List<OperLog> listOperLog(OperLog query) {// TODO:待审查与添加分页
         LambdaQueryWrapper<OperLog> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(StringUtils.isNotEmpty(query.getOperName()), OperLog::getOperName, query.getOperName())
@@ -38,10 +39,12 @@ public class LogServiceImpl implements LogService {
         return operLogMapper.selectList(wrapper);
     }
 
+    @Override
     public OperLog getOperLog(Long operId) {
         return operLogMapper.selectById(operId);
     }
 
+    @Override
     public int deleteOperLog(Long operId) {
         return operLogMapper.deleteById(operId);
     }
@@ -58,6 +61,7 @@ public class LogServiceImpl implements LogService {
     /**
      * 查询登录日志列表（支持按用户名、IP、状态筛选）
      */
+    @Override
     public List<LoginInfo> listLoginInfo(LoginInfo query) {// TODO:待审查与添加分页
         LambdaQueryWrapper<LoginInfo> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(StringUtils.isNotEmpty(query.getUsername()), LoginInfo::getUsername, query.getUsername())
@@ -67,10 +71,12 @@ public class LogServiceImpl implements LogService {
         return loginInfoMapper.selectList(wrapper);
     }
 
+    @Override
     public LoginInfo getLoginInfo(Long infoId) {
         return loginInfoMapper.selectById(infoId);
     }
 
+    @Override
     public int deleteLoginInfo(Long infoId) {
         return loginInfoMapper.deleteById(infoId);
     }

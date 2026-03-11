@@ -11,6 +11,7 @@ import com.ruoyi.admin.service.MonitorService;
 import com.ruoyi.common.Constants.TokenConstants;
 import com.ruoyi.common.VO.OnlineUserInfo;
 import com.ruoyi.common.entity.AdminOnline;
+import com.ruoyi.common.entity.UserOnline;
 import com.ruoyi.common.enums.UserTypes;
 import com.ruoyi.common.redis.service.RedisService;
 
@@ -24,6 +25,7 @@ public class MonitorServiceImpl implements MonitorService {
     @Autowired
     private RedisService redisService;
 
+    @Override
     public List<OnlineUserInfo> getOnlineAdmins() {
         List<OnlineUserInfo> onlineList = new ArrayList<>();
 
@@ -51,40 +53,41 @@ public class MonitorServiceImpl implements MonitorService {
         return onlineList;
     }
 
+    @Override
     public List<OnlineUserInfo> getOnlineUsers() {
         List<OnlineUserInfo> onlineList = new ArrayList<>();
 
-        // Collection<String> keys = redisService.keys(CacheConstants.ADMIN_TOKEN_KEY +
-        // "*");
-        // for (String key : keys) {
-        // AdminOnline ao = redisService.getCacheObject(key);
-        // if (ao == null || ao.getAdminInfo() == null) {
-        // continue;
-        // }
+        Collection<String> keys = redisService.keys(TokenConstants.TOKENS + "*");
+        for (String key : keys) {
+            UserOnline uo = redisService.getCacheObject(key);
+            if (uo == null || uo.getUserInfo() == null) {
+                continue;
+            }
 
-        // OnlineUserInfo online = new OnlineUserInfo();
-        // online.setTokenId(ao.getToken());
-        // online.setUserId(ao.getAdminInfo().getAdminId());
-        // online.setUserName(ao.getAdminInfo().getUsername());
-        // online.setNickName(ao.getAdminInfo().getNickName());
-        // online.setIpaddr(ao.getIpaddr());
-        // online.setLoginTime(ao.getLoginTime());
+            OnlineUserInfo online = new OnlineUserInfo();
+            online.setToken(uo.getToken());
+            online.setUserId(uo.getUserInfo().getUserId());
+            online.setUserName(uo.getUserInfo().getUsername());
+            online.setNickName(uo.getUserInfo().getNickName());
+            online.setIpaddr(uo.getIpaddr());
+            online.setLoginTime(uo.getLoginTime());
 
-        // UserTypes userType = UserTypes.fromCode(ao.getAdminInfo().getAdminType());
-        // online.setUserType(userType != null ? userType.name() : null);
+            UserTypes userType = UserTypes.fromCode(uo.getUserInfo().getUserType());
+            online.setUserType(userType != null ? userType.name() : null);
 
-        // onlineList.add(online);
-        // }
-        // onlineList.sort(Comparator.comparing(OnlineUserInfo::getLoginTime).reversed());
+            onlineList.add(online);
+        }
+        onlineList.sort(Comparator.comparing(OnlineUserInfo::getLoginTime).reversed());
         return onlineList;
     }
 
+    @Override
     public void forceAdminLogout(String token) {
         redisService.deleteObject(TokenConstants.TOKENS + token);
     }
 
+    @Override
     public void forceUserLogout(String token) {
-        // redisService.deleteObject(TokenConstants.USER_TOKEN_KEY + token);
-        // TODO: 用户强退功能后续完善
+        redisService.deleteObject(TokenConstants.TOKENS + token);
     }
 }

@@ -55,6 +55,7 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 管理员登录
      */
+    @Override
     public Map<String, Object> login(String username, String password) {
         Admin admin;
         try {
@@ -87,7 +88,7 @@ public class AuthServiceImpl implements AuthService {
         admin.setLoginIp(IpUtils.getIpAddr());
         admin.setLoginDate(DateUtils.getNowDate());
         adminMapper.updateById(admin);
-        
+
         recordLoginInfo(admin.getUsername(), Constants.LOGIN_SUCCESS, "登录成功");
 
         return adminTokenService.createToken(admin);
@@ -96,6 +97,7 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 退出登录
      */
+    @Override
     public void logout(HttpServletRequest request) {
         String token = adminTokenService.getAOToken(request);
         if (StringUtils.isNotEmpty(token)) {
@@ -110,6 +112,7 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 刷新当前管理员Token
      */
+    @Override
     public void refreshToken(HttpServletRequest request) {
         String token = adminTokenService.getAOToken(request);
         adminTokenService.refreshToken(adminTokenService.getAO(token));
@@ -118,6 +121,7 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 管理员注册（需邀请码）
      */
+    @Override
     public void register(AdminRegisterDTO registerDTO) {
         if (registerDTO == null) {
             throw new ServiceException("请求参数不能为空");
@@ -171,6 +175,7 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 生成管理员邀请码
      */
+    @Override
     public String generateInviteCode(HttpServletRequest request, Long storeId) {
 
         AdminOnline ao = adminTokenService.getAO(adminTokenService.getAOToken(request));

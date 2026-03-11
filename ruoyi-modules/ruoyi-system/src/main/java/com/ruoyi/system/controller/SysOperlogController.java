@@ -39,14 +39,6 @@ public class SysOperlogController extends BaseController {
         return getDataTable(list);
     }
 
-    @Log(title = "操作日志", businessType = BusinessType.GET)
-    @RequiresPermissions("system:operlog:export")
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, SysOperLog operLog) {
-        List<SysOperLog> list = operLogService.selectOperLogList(operLog);
-        // ExcelUtil<SysOperLog> util = new ExcelUtil<SysOperLog>(SysOperLog.class);
-        // util.exportExcel(response, list, "操作日志");
-    }
 
     @Log(title = "操作日志", businessType = BusinessType.DELETE)
     @RequiresPermissions("system:operlog:remove")

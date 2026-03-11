@@ -81,7 +81,7 @@ public class AuthServiceImpl implements AuthService {
 
         recordLoginInfo(user.getUsername(), Constants.LOGIN_SUCCESS, "登录成功");
 
-        return userTokenService.createToken(user, user.getType());
+        return userTokenService.createToken(user, user.getUserType());
     }
 
     /**
@@ -147,7 +147,7 @@ public class AuthServiceImpl implements AuthService {
         User user = new User();
         user.setUsername(username);
         user.setPassword(PWCheckUtils.encryptPassword(password));
-        user.setType(type);
+        user.setUserType(type);
         user.setCreateTime(DateUtils.getNowDate());
 
         if ("1".equals(type)) {

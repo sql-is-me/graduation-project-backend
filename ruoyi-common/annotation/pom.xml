@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>tokens</artifactId>
+    <artifactId>annotation</artifactId>
 
     <description>
         
@@ -21,11 +21,6 @@
         <dependency>
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-common-security</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>entities</artifactId>
         </dependency>
 
         <!-- lombok -->

@@ -14,8 +14,8 @@
         <module>tools</module>
         <module>ruoyi-common-security</module>
         <module>ruoyi-common-datascope</module>
-        <module>tokens</module>
-        <module>entities</module>
+        <module>annotation</module>
+        <module>infrastructures</module>
         <module>utils</module>
     </modules>
 

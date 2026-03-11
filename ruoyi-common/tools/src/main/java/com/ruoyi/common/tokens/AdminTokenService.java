@@ -13,7 +13,6 @@ import com.ruoyi.common.Constants.JWTConstants;
 import com.ruoyi.common.Constants.TokenConstants;
 import com.ruoyi.common.JWT.JWTService;
 import com.ruoyi.common.core.constant.CacheConstants;
-import com.ruoyi.common.core.utils.ServletUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.ip.IpUtils;
 import com.ruoyi.common.core.utils.uuid.IdUtils;

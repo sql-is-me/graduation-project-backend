@@ -48,7 +48,7 @@
 
         <dependency>
             <groupId>com.ruoyi</groupId>
-            <artifactId>entities</artifactId>
+            <artifactId>infrastructures</artifactId>
         </dependency>
 
         <dependency>

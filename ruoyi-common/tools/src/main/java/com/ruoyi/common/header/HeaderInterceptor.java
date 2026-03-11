@@ -10,8 +10,10 @@ import org.springframework.web.servlet.AsyncHandlerInterceptor;
 import com.ruoyi.common.Constants.ContextHolderConstants;
 import com.ruoyi.common.core.utils.ServletUtils;
 import com.ruoyi.common.entity.AdminOnline;
+import com.ruoyi.common.entity.UserOnline;
 import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.common.tokens.AdminTokenService;
+import com.ruoyi.common.tokens.UserTokenService;
 
 /**
  * 自定义请求头拦截器，将Header数据封装到线程变量中方便获取
@@ -21,6 +23,9 @@ import com.ruoyi.common.tokens.AdminTokenService;
 public class HeaderInterceptor implements AsyncHandlerInterceptor {
     @Autowired
     private AdminTokenService adminTokenService;
+
+    @Autowired
+    private UserTokenService userTokenService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -36,22 +41,17 @@ public class HeaderInterceptor implements AsyncHandlerInterceptor {
         String type = ServletUtils.getHeader(request, ContextHolderConstants.CH_TYPE);
         ContextHolder.setType(type);
 
-        // TODO:按照type分为adminOnline和userOnline
         String token = SecurityUtils.getToken();
-        // if (StringUtils.isEmpty(token)) {
-        // LoginUser loginUser = AuthUtil.getLoginUser(token);
-        // if (StringUtils.isNotNull(loginUser)) {
-        // AuthUtil.verifyLoginUserExpire(loginUser);
-        // SecurityContextHolder.set(SecurityConstants.LOGIN_USER, loginUser);
-        // }
-        // }
         if (Integer.valueOf(type) == 0) {
             AdminOnline ao = adminTokenService.getAO(token);
             adminTokenService.verifyToken(ao);
 
             ContextHolder.set(ContextHolderConstants.CH_ADMIN_ONLINE, ao);
         } else {
-            // TODO:用户在线信息
+            UserOnline uo = userTokenService.getUO(token);
+            userTokenService.verifyToken(uo);
+
+            ContextHolder.set(ContextHolderConstants.CH_USER_ONLINE, uo);
         }
 
         return true;

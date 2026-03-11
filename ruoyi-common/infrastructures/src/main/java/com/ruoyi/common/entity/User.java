@@ -3,6 +3,7 @@ package com.ruoyi.common.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 
 import lombok.Data;
 import java.util.Date;
@@ -35,12 +36,14 @@ public class User {
     /**
      * 用户昵称
      */
+    @TableField("nick_name")
     private String nickName;
 
     /**
      * 用户类型（0:会员 1:教练）
      */
-    private String type;
+    @TableField("user_type")
+    private String userType;
 
     /**
      * 用户邮箱
@@ -65,6 +68,7 @@ public class User {
     /**
      * 所属店铺ID（仅教练有此字段）
      */
+    @TableField("store_id")
     private Long storeId;
 
     /**
@@ -75,27 +79,31 @@ public class User {
     /**
      * 最后登录IP
      */
+    @TableField("login_ip")
     private String loginIp;
 
     /**
      * 最后登录时间
      */
+    @TableField("login_date")
     private Date loginDate;
 
     /**
      * 创建时间
      */
+    @TableField("create_time")
     private Date createTime;
 
     /**
      * 更新时间
      */
+    @TableField("update_time")
     private Date updateTime;
 
     /**
      * 是否是教练
      */
     public boolean isCoach() {
-        return "1".equals(type);
+        return "1".equals(userType);
     }
 }

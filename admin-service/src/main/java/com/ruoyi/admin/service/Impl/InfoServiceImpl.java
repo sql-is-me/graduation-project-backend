@@ -41,6 +41,7 @@ public class InfoServiceImpl implements InfoService {
     /**
      * 获取管理员个人信息
      */
+    @Override
     public Admin getInfo() {
         return ContextHolder.getAO().getAdminInfo();
     }
@@ -48,6 +49,7 @@ public class InfoServiceImpl implements InfoService {
     /**
      * 修改管理员个人信息
      */
+    @Override
     public void updateInfo(AdminInfoUpdateDTO dto) {
         AdminOnline ao = ContextHolder.getAO();
         Admin currentAdmin = ao.getAdminInfo();
@@ -93,6 +95,7 @@ public class InfoServiceImpl implements InfoService {
     /**
      * 修改管理员密码
      */
+    @Override
     public void updatePassword(AdminPasswordUpdateDTO dto) {
         String oldPassword = dto.getOldPassword();
         String newPassword = dto.getNewPassword();
@@ -125,6 +128,7 @@ public class InfoServiceImpl implements InfoService {
     /**
      * 修改管理员头像
      */
+    @Override
     public void updateAvatar(MultipartFile mf) {
         if (mf.isEmpty()) {
             throw new ServiceException("上传文件不能为空");

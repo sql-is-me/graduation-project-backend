@@ -36,38 +36,6 @@ public class SysLoginInfoController extends BaseController {
     @Autowired
     private RedisService redisService;
 
-    @RequiresPermissions("system:loginInfo:list")
-    @GetMapping("/list")
-    public TableDataInfo list(SysLogininfor loginInfo) {
-        startPage();
-        List<SysLogininfor> list = loginInfoService.selectLogininforList(loginInfo);
-        return getDataTable(list);
-    }
-
-    @Log(title = "登录日志", businessType = BusinessType.GET)
-    @RequiresPermissions("system:loginInfo:export")
-    @PostMapping("/export")
-    public void export(HttpServletResponse response, SysLogininfor loginInfo) {
-        List<SysLogininfor> list = loginInfoService.selectLogininforList(loginInfo);
-        // ExcelUtil<SysLogininfor> util = new ExcelUtil<SysLogininfor>(SysLogininfor.class);
-        // util.exportExcel(response, list, "登录日志");
-    }
-
-    @RequiresPermissions("system:loginInfo:remove")
-    @Log(title = "登录日志", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{infoIds}")
-    public AjaxResult remove(@PathVariable Long[] infoIds) {
-        return toAjax(loginInfoService.deleteLogininforByIds(infoIds));
-    }
-
-    @RequiresPermissions("system:loginInfo:remove")
-    @Log(title = "登录日志", businessType = BusinessType.DELETE)
-    @DeleteMapping("/clean")
-    public AjaxResult clean() {
-        loginInfoService.cleanLogininfor();
-        return success();
-    }
-
     @RequiresPermissions("system:loginInfo:unlock")
     @Log(title = "账户解锁", businessType = BusinessType.OTHER)
     @GetMapping("/unlock/{userName}")

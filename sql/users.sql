@@ -7,7 +7,7 @@ create table users (
   username          varchar(30)     not null                   comment '用户账号',
   password          varchar(100)    default ''                 comment '密码',
   nick_name         varchar(30)     not null                   comment '用户昵称',
-  type              char(1)         default '0'                comment '用户类型（0会员 1教练）',
+  user_type              char(1)         default '0'                comment '用户类型（0会员 1教练）',
   email             varchar(50)     default ''                 comment '用户邮箱',
   phone             varchar(11)     default ''                 comment '手机号码',
   sex               char(1)         default '0'                comment '用户性别（0男 1女 2未知）',
@@ -25,7 +25,7 @@ create table users (
 -- ----------------------------
 -- 初始化-用户表数据（6条会员 + 4条教练）
 -- ----------------------------
-insert into users (username, password, nick_name, type, email, phone, sex, avatar, store_id, status, login_ip, login_date, create_time, update_time) values
+insert into users (username, password, nick_name, user_type, email, phone, sex, avatar, store_id, status, login_ip, login_date, create_time, update_time) values
 ('zhangsan',  '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '张三',   '0', 'zhangsan@qq.com',    '13800000001', '0', '', null, '0', '192.168.1.1',  sysdate(), sysdate(), null),
 ('lisi',      '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '李四',   '0', 'lisi@qq.com',        '13800000002', '0', '', null, '0', '192.168.1.2',  sysdate(), sysdate(), null),
 ('wangwu',    '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '王五',   '0', 'wangwu@qq.com',      '13800000003', '1', '', null, '0', '192.168.1.3',  sysdate(), sysdate(), null),
