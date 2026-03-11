@@ -13,8 +13,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  * @author ruoyi
  */
 @Configuration
-public class ResourcesConfig implements WebMvcConfigurer
-{
+public class ResourcesConfig implements WebMvcConfigurer {
     /**
      * 上传文件存储在本地的根路径
      */
@@ -28,20 +27,19 @@ public class ResourcesConfig implements WebMvcConfigurer
     public String localFilePrefix;
 
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry)
-    {
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
         /** 本地文件上传路径 */
         registry.addResourceHandler(localFilePrefix + "/**")
                 .addResourceLocations("file:" + localFilePath + File.separator);
     }
-    
+
     /**
      * 开启跨域
      */
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         // 设置允许跨域的路由
-        registry.addMapping(localFilePrefix  + "/**")
+        registry.addMapping(localFilePrefix + "/**")
                 // 设置允许跨域请求的域名
                 .allowedOrigins("*")
                 // 设置允许的方法

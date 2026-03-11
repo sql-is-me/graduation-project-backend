@@ -14,17 +14,20 @@ import com.ruoyi.admin.mapper.AdminMapper;
 import com.ruoyi.admin.service.AuthService;
 import com.ruoyi.common.JWT.JWTService;
 import com.ruoyi.common.core.constant.Constants;
+import com.ruoyi.common.core.constant.SecurityConstants;
 import com.ruoyi.common.core.constant.UserConstants;
-import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.ip.IpUtils;
 import com.ruoyi.common.entity.Admin;
 import com.ruoyi.common.entity.AdminOnline;
+import com.ruoyi.common.entity.LoginInfo;
 import com.ruoyi.common.enums.AccountStatus;
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.redis.service.RedisService;
 import com.ruoyi.common.tokens.AdminTokenService;
 import com.ruoyi.common.verifier.PWCheckUtils;
+import com.ruoyi.system.api.RemoteLogService;
 
 /**
  * 管理员登录与注册服务
@@ -42,7 +45,7 @@ public class AuthServiceImpl implements AuthService {
     private RedisService redisService;
 
     @Autowired
-    private AdminRecordLogService recordLogService;
+    private RemoteLogService remoteLogService;
 
     /**
      * 邀请码过期时间 30min
@@ -77,7 +80,7 @@ public class AuthServiceImpl implements AuthService {
 
             validatePassword(admin, password);
         } catch (ServiceException e) {
-            recordLogService.recordLogininfor(username, Constants.LOGIN_FAIL, e.getMessage());
+            recordLoginInfo(username, Constants.LOGIN_FAIL, e.getMessage());
             throw new ServiceException(e.getMessage());
         }
 
@@ -90,7 +93,7 @@ public class AuthServiceImpl implements AuthService {
      * 更新登录信息
      */
     public Admin updateLoginInfo(Admin admin) {
-        recordLogService.recordLogininfor(admin.getUsername(), Constants.LOGIN_SUCCESS, "登录成功");
+        recordLoginInfo(admin.getUsername(), Constants.LOGIN_SUCCESS, "登录成功");
 
         admin.setLoginIp(IpUtils.getIpAddr());
         admin.setLoginDate(DateUtils.getNowDate());
@@ -109,7 +112,7 @@ public class AuthServiceImpl implements AuthService {
             // 删除用户缓存记录
             adminTokenService.delAdminOnline(token);
 
-            recordLogService.recordLogininfor(username, Constants.LOGOUT, "退出成功");
+            recordLoginInfo(username, Constants.LOGOUT, "退出成功");
         }
     }
 
@@ -171,7 +174,7 @@ public class AuthServiceImpl implements AuthService {
 
         // 注册成功后删除邀请码（一次性使用）
         redisService.deleteObject(inviteKey);
-        recordLogService.recordLogininfor(username, Constants.REGISTER, "管理员注册成功");
+        recordLoginInfo(username, Constants.REGISTER, "管理员注册成功");
     }
 
     /**
@@ -234,6 +237,28 @@ public class AuthServiceImpl implements AuthService {
                 redisService.deleteObject(PWCheckUtils.getWrongPWTimesKey(username));
             }
         }
+    }
+
+    /**
+     * 记录登录信息
+     *
+     * @param username 用户名
+     * @param status   状态
+     * @param message  消息内容
+     */
+    public void recordLoginInfo(String username, String status, String message) {
+        LoginInfo loginInfo = new LoginInfo();
+        loginInfo.setUsername(username);
+        loginInfo.setIpaddr(IpUtils.getIpAddr());
+        loginInfo.setMsg(message);
+
+        // 日志状态
+        if (StringUtils.equalsAny(status, Constants.LOGIN_SUCCESS, Constants.LOGOUT, Constants.REGISTER)) {
+            loginInfo.setStatus(Constants.LOGIN_SUCCESS_STATUS);
+        } else if (Constants.LOGIN_FAIL.equals(status)) {
+            loginInfo.setStatus(Constants.LOGIN_FAIL_STATUS);
+        }
+        remoteLogService.saveLogininfor(loginInfo, SecurityConstants.INNER);
     }
 
 }

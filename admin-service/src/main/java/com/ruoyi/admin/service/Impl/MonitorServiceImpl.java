@@ -7,9 +7,9 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ruoyi.admin.VO.OnlineUserInfo;
 import com.ruoyi.admin.service.MonitorService;
 import com.ruoyi.common.Constants.TokenConstants;
+import com.ruoyi.common.VO.OnlineUserInfo;
 import com.ruoyi.common.entity.AdminOnline;
 import com.ruoyi.common.enums.UserTypes;
 import com.ruoyi.common.redis.service.RedisService;

@@ -13,13 +13,13 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import com.ruoyi.common.core.constant.HttpStatus;
 import com.ruoyi.common.core.exception.DemoModeException;
 import com.ruoyi.common.core.exception.InnerAuthException;
-import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.exception.auth.NotPermissionException;
 import com.ruoyi.common.core.exception.auth.NotRoleException;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.html.EscapeUtil;
 import com.ruoyi.common.core.web.domain.AjaxResult;
+import com.ruoyi.common.exception.ServiceException;
 
 /**
  * 全局异常处理器

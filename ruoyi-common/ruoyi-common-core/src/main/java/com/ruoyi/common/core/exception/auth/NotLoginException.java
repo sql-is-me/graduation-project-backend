@@ -5,12 +5,10 @@ package com.ruoyi.common.core.exception.auth;
  * 
  * @author ruoyi
  */
-public class NotLoginException extends RuntimeException
-{
+public class NotLoginException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
-    public NotLoginException(String message)
-    {
+    public NotLoginException(String message) {
         super(message);
     }
 }

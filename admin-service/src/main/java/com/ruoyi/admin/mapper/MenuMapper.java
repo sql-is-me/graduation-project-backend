@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * 管理员菜单权限Mapper接口
  */
-public interface AdminMenuMapper {
+public interface MenuMapper {
 
     /**
      * 根据用户ID查询菜单权限标识

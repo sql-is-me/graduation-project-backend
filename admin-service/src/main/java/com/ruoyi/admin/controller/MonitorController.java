@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ruoyi.admin.VO.OnlineUserInfo;
 import com.ruoyi.admin.service.Impl.MonitorServiceImpl;
+import com.ruoyi.common.VO.OnlineUserInfo;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.entity.R;
 

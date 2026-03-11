@@ -1,4 +1,4 @@
-package com.ruoyi.admin.VO;
+package com.ruoyi.common.VO;
 
 import lombok.Data;
 

@@ -1,18 +1,27 @@
 package com.ruoyi.admin.service.Impl;
 
+import java.util.Arrays;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.ruoyi.admin.dto.AdminPasswordUpdateDTO;
 import com.ruoyi.admin.dto.AdminInfoUpdateDTO;
 import com.ruoyi.admin.mapper.AdminMapper;
 import com.ruoyi.admin.service.InfoService;
-import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.utils.StringUtils;
+import com.ruoyi.common.core.utils.file.FileTypeUtils;
+import com.ruoyi.common.core.utils.file.MimeTypeUtils;
 import com.ruoyi.common.entity.Admin;
 import com.ruoyi.common.entity.AdminOnline;
+import com.ruoyi.common.entity.File;
+import com.ruoyi.common.entity.R;
+import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.header.ContextHolder;
 import com.ruoyi.common.tokens.AdminTokenService;
 import com.ruoyi.common.verifier.PWCheckUtils;
+import com.ruoyi.system.api.RemoteFileService;
 
 /**
  * 管理员个人信息服务
@@ -25,6 +34,9 @@ public class InfoServiceImpl implements InfoService {
 
     @Autowired
     private AdminTokenService adminTokenService;
+
+    @Autowired
+    private RemoteFileService remoteFileService;
 
     /**
      * 获取管理员个人信息
@@ -113,15 +125,40 @@ public class InfoServiceImpl implements InfoService {
     /**
      * 修改管理员头像
      */
-    public void updateAvatar(Long adminId, String avatarUrl) {
-        AdminOnline ao = ContextHolder.getAO();
+    public void updateAvatar(MultipartFile mf) {
+        if (mf.isEmpty()) {
+            throw new ServiceException("上传文件不能为空");
+        }
 
-        int rows = adminMapper.updateAvatar(adminId, avatarUrl);
+        AdminOnline ao = ContextHolder.getAO();
+        String extension = FileTypeUtils.getExtension(mf);
+        if (!StringUtils.equalsAnyIgnoreCase(extension, MimeTypeUtils.IMAGE_EXTENSION)) {
+            throw new ServiceException("文件格式不正确，请上传" + Arrays.toString(MimeTypeUtils.IMAGE_EXTENSION) + "格式");
+        }
+
+        R<File> fileResult = remoteFileService.upload(mf);
+        if (StringUtils.isNull(fileResult) || StringUtils.isNull(fileResult.getData())) {
+            throw new ServiceException("文件服务异常，请联系管理员");
+        }
+
+        String fileUrl = fileResult.getData().getUrl();
+        // 删除旧头像
+        String oldAvatarUrl = ao.getAdminInfo().getAvatar();
+        if (StringUtils.isNotEmpty(oldAvatarUrl) && isNotDefaultAdminAvatar(oldAvatarUrl)) {
+            remoteFileService.delete(oldAvatarUrl);
+        }
+
+        int rows = adminMapper.updateAvatar(ao.getAdminInfo().getAdminId(), fileUrl);
         if (rows <= 0) {
             throw new ServiceException("上传头像异常，请联系管理员");
         }
 
-        ao.getAdminInfo().setAvatar(avatarUrl);
+        // 更新缓存
+        ao.getAdminInfo().setAvatar(fileUrl);
         adminTokenService.refreshToken(ao);
+    }
+
+    private boolean isNotDefaultAdminAvatar(String avatarUrl) {
+        return !StringUtils.equals(avatarUrl, "/default-admin-avatar.jpg");
     }
 }

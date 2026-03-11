@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 import com.ruoyi.common.core.constant.ServiceNameConstants;
 import com.ruoyi.common.entity.R;
-import com.ruoyi.system.api.domain.SysFile;
+import com.ruoyi.common.entity.File;
 import com.ruoyi.system.api.factory.RemoteFileFallbackFactory;
 
 /**
@@ -26,7 +26,7 @@ public interface RemoteFileService {
      * @return 结果
      */
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public R<SysFile> upload(@RequestPart(value = "file") MultipartFile file);
+    public R<File> upload(@RequestPart(value = "file") MultipartFile file);
 
     /**
      * 删除文件
