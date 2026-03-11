@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.admin.dto.AdminLoginDTO;
 import com.ruoyi.admin.dto.AdminRegisterDTO;
 import com.ruoyi.admin.service.AuthService;
-import com.ruoyi.common.core.domain.R;
+import com.ruoyi.common.entity.R;
 
 /**
  * 管理员认证控制器

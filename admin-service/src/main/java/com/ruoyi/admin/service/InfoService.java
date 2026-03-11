@@ -1,9 +1,15 @@
 package com.ruoyi.admin.service;
 
+import com.ruoyi.admin.dto.AdminInfoUpdateDTO;
+import com.ruoyi.admin.dto.AdminPasswordUpdateDTO;
 import com.ruoyi.common.entity.Admin;
 
-import jakarta.servlet.http.HttpServletRequest;
+public interface InfoService {
+    public Admin getInfo();
 
-public class InfoService {
-    public Admin getInfo(HttpServletRequest request);
+    public void updateInfo(AdminInfoUpdateDTO dto);
+
+    public void updatePassword(AdminPasswordUpdateDTO dto);
+
+    public void updateAvatar(Long userId, String avatarUrl);
 }

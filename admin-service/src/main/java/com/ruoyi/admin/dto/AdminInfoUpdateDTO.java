@@ -20,7 +20,7 @@ public class AdminInfoUpdateDTO {
     /**
      * 手机号码
      */
-    private String phonenumber;
+    private String phone;
 
     /**
      * 性别（0男 1女 2未知）

@@ -1,4 +1,4 @@
-package com.ruoyi.common.core.context;
+package com.ruoyi.common.header;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -6,6 +6,7 @@ import com.alibaba.ttl.TransmittableThreadLocal;
 import com.ruoyi.common.Constants.ContextHolderConstants;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.core.utils.StringUtils;
+import com.ruoyi.common.entity.AdminOnline;
 
 /**
  * 获取当前线程变量中的 用户id、用户名称、Token等信息
@@ -13,7 +14,7 @@ import com.ruoyi.common.core.utils.StringUtils;
  *
  * @author ruoyi
  */
-public class SecurityContextHolder {
+public class ContextHolder {
     private static final TransmittableThreadLocal<Map<String, Object>> THREAD_LOCAL = new TransmittableThreadLocal<>();
 
     public static void set(String key, Object value) {
@@ -76,12 +77,21 @@ public class SecurityContextHolder {
         set(ContextHolderConstants.CH_TYPE, type);
     }
 
-    // public static String getPermission() {
-    // return get(SecurityConstants.ROLE_PERMISSION);
+    public static void setAO(AdminOnline ao) {
+        set(ContextHolderConstants.CH_ADMIN_ONLINE, ao);
+    }
+
+    public static AdminOnline getAO() {
+        return get(ContextHolderConstants.CH_ADMIN_ONLINE, AdminOnline.class);
+    }
+
+    // TODO: onlineUser
+    // public static void setAO(AdminOnline ao) {
+    // set(ContextHolderConstants.CH_ADMIN_ONLINE, ao);
     // }
 
-    // public static void setPermission(String permissions) {
-    // set(SecurityConstants.ROLE_PERMISSION, permissions);
+    // public static AdminOnline getAO() {
+    // return get(ContextHolderConstants.CH_ADMIN_ONLINE, AdminOnline.class);
     // }
 
     public static void remove() {

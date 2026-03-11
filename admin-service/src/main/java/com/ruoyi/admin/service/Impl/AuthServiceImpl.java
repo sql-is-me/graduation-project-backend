@@ -15,15 +15,14 @@ import com.ruoyi.admin.service.AuthService;
 import com.ruoyi.common.JWT.JWTService;
 import com.ruoyi.common.core.constant.Constants;
 import com.ruoyi.common.core.constant.UserConstants;
-import com.ruoyi.common.core.enums.AccountStatus;
 import com.ruoyi.common.core.exception.ServiceException;
 import com.ruoyi.common.core.utils.DateUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.ip.IpUtils;
 import com.ruoyi.common.entity.Admin;
 import com.ruoyi.common.entity.AdminOnline;
+import com.ruoyi.common.enums.AccountStatus;
 import com.ruoyi.common.redis.service.RedisService;
-import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.common.tokens.AdminTokenService;
 import com.ruoyi.common.verifier.PWCheckUtils;
 
@@ -35,9 +34,6 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private AdminMapper adminMapper;
-
-    @Autowired
-    private PWCheckUtils pwCheckUtils;
 
     @Autowired
     private AdminTokenService adminTokenService;
@@ -79,7 +75,7 @@ public class AuthServiceImpl implements AuthService {
                 throw new ServiceException("账号已停用，请联系管理员");
             }
 
-            pwCheckUtils.validate(admin, password);
+            validatePassword(admin, password);
         } catch (ServiceException e) {
             recordLogService.recordLogininfor(username, Constants.LOGIN_FAIL, e.getMessage());
             throw new ServiceException(e.getMessage());
@@ -164,7 +160,7 @@ public class AuthServiceImpl implements AuthService {
         Admin admin = new Admin();
         admin.setUsername(username);
         admin.setNickName(username);
-        admin.setPassword(SecurityUtils.encryptPassword(password));
+        admin.setPassword(PWCheckUtils.encryptPassword(password));
         admin.setStoreId(inviteDTO.getStoreId());
         admin.setReferrerId(inviteDTO.getReferrerId());
 
@@ -208,6 +204,36 @@ public class AuthServiceImpl implements AuthService {
         redisService.setCacheObject(inviteCode, inviteDTO, ADMIN_INVITE_EXPIRE, TimeUnit.MINUTES);
 
         return inviteCode;
+    }
+
+    /**
+     * 密码校验
+     */
+    public void validatePassword(Admin admin, String password) {
+        String username = admin.getUsername();
+
+        Integer retryCounter = redisService.getCacheObject(PWCheckUtils.getWrongPWTimesKey(username));
+        if (retryCounter == null) {
+            retryCounter = 0;
+        }
+
+        if (retryCounter >= PWCheckUtils.PASSWORD_MAX_RETRY_COUNT) {
+            String errMsg = String.format("密码输入错误%s次，帐户锁定%s分钟", PWCheckUtils.PASSWORD_MAX_RETRY_COUNT,
+                    PWCheckUtils.PASSWORD_LOCK_TIME);
+            throw new ServiceException(errMsg);
+        }
+
+        if (!PWCheckUtils.matchesPassword(password, admin.getPassword())) {
+            retryCounter++;
+
+            redisService.setCacheObject(PWCheckUtils.getWrongPWTimesKey(username), retryCounter,
+                    PWCheckUtils.PASSWORD_LOCK_TIME, TimeUnit.MINUTES);
+            throw new ServiceException("用户不存在/密码错误");
+        } else {
+            if (redisService.hasKey(PWCheckUtils.getWrongPWTimesKey(username))) {
+                redisService.deleteObject(PWCheckUtils.getWrongPWTimesKey(username));
+            }
+        }
     }
 
 }

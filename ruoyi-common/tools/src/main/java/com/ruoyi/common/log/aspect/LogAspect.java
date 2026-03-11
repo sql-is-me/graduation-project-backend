@@ -28,8 +28,8 @@ import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessStatus;
 import com.ruoyi.common.log.filter.PropertyPreExcludeFilter;
 import com.ruoyi.common.log.service.AsyncLogService;
-import com.ruoyi.common.core.context.SecurityContextHolder;
 import com.ruoyi.common.entity.OperLog;
+import com.ruoyi.common.header.ContextHolder;
 
 /**
  * 操作日志记录处理
@@ -88,7 +88,7 @@ public class LogAspect {
             OperLog operLog = new OperLog();
             operLog.setStatus(BusinessStatus.SUCCESS.ordinal());
 
-            String username = SecurityContextHolder.getUsername();
+            String username = ContextHolder.getUsername();
             if (StringUtils.isNotBlank(username)) {
                 operLog.setOperName(username);
             }

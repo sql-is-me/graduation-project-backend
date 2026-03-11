@@ -4,9 +4,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.ruoyi.common.Constants.AuthConstants;
 import com.ruoyi.common.Constants.TokenConstants;
+import com.ruoyi.common.contextHolder.ContextHolder;
 import com.ruoyi.common.core.constant.SecurityConstants;
 import com.ruoyi.common.core.constant.UserConstants;
-import com.ruoyi.common.core.context.SecurityContextHolder;
 import com.ruoyi.common.core.utils.ServletUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.system.api.model.LoginUser;
@@ -18,33 +18,6 @@ import jakarta.servlet.http.HttpServletRequest;
  * @author ruoyi
  */
 public class SecurityUtils {
-    /**
-     * 获取用户ID
-     */
-    public static Long getId() {
-        return SecurityContextHolder.getId();
-    }
-
-    /**
-     * 获取用户名称
-     */
-    public static String getUsername() {
-        return SecurityContextHolder.getUsername();
-    }
-
-    /**
-     * 获取用户key
-     */
-    public static String getUserKey() {
-        return SecurityContextHolder.getUserKey();
-    }
-
-    /**
-     * 获取登录用户信息
-     */
-    public static LoginUser getLoginUser() {
-        return SecurityContextHolder.get(SecurityConstants.LOGIN_USER, LoginUser.class);
-    }
 
     /**
      * 获取请求token
@@ -71,28 +44,5 @@ public class SecurityUtils {
             token = token.replaceFirst(TokenConstants.PREFIX, "");
         }
         return token;
-    }
-
-    /**
-     * 生成BCryptPasswordEncoder密码
-     *
-     * @param password 密码
-     * @return 加密字符串
-     */
-    public static String encryptPassword(String password) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        return passwordEncoder.encode(password);
-    }
-
-    /**
-     * 判断密码是否相同
-     *
-     * @param rawPassword     真实密码
-     * @param encodedPassword 加密后字符
-     * @return 结果
-     */
-    public static boolean matchesPassword(String rawPassword, String encodedPassword) {
-        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        return passwordEncoder.matches(rawPassword, encodedPassword);
     }
 }

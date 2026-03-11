@@ -9,11 +9,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ruoyi.admin.service.LogService;
-import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.page.TableDataInfo;
 import com.ruoyi.common.entity.LoginInfo;
 import com.ruoyi.common.entity.OperLog;
+import com.ruoyi.common.entity.R;
 
 /**
  * 顶级管理员日志控制器（操作日志 + 登录日志）

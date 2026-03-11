@@ -1,11 +1,11 @@
-package com.ruoyi.common.security.feign;
+package com.ruoyi.common.feign;
 
 import java.util.Map;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 
 import com.ruoyi.common.Constants.AuthConstants;
-import com.ruoyi.common.core.constant.SecurityConstants;
+import com.ruoyi.common.Constants.ContextHolderConstants;
 import com.ruoyi.common.core.utils.ServletUtils;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.ip.IpUtils;
@@ -14,8 +14,6 @@ import feign.RequestTemplate;
 
 /**
  * feign 请求拦截器
- * 
- * @author ruoyi
  */
 @Component
 public class FeignRequestInterceptor implements RequestInterceptor {
@@ -24,19 +22,25 @@ public class FeignRequestInterceptor implements RequestInterceptor {
         HttpServletRequest httpServletRequest = ServletUtils.getRequest();
         if (StringUtils.isNotNull(httpServletRequest)) {
             Map<String, String> headers = ServletUtils.getHeaders(httpServletRequest);
+
             // 传递用户信息请求头，防止丢失
-            String userId = headers.get(SecurityConstants.DETAILS_USER_ID);
-            if (StringUtils.isNotEmpty(userId)) {
-                requestTemplate.header(SecurityConstants.DETAILS_USER_ID, userId);
+            String id = headers.get(ContextHolderConstants.CH_ID);
+            if (StringUtils.isNotEmpty(id)) {
+                requestTemplate.header(ContextHolderConstants.CH_ID, id);
             }
-            String userKey = headers.get(SecurityConstants.USER_KEY);
-            if (StringUtils.isNotEmpty(userKey)) {
-                requestTemplate.header(SecurityConstants.USER_KEY, userKey);
+
+            String token = headers.get(ContextHolderConstants.CH_TOKEN);
+            if (StringUtils.isNotEmpty(token)) {
+                requestTemplate.header(ContextHolderConstants.CH_TOKEN, token);
             }
-            String userName = headers.get(SecurityConstants.DETAILS_USERNAME);
-            if (StringUtils.isNotEmpty(userName)) {
-                requestTemplate.header(SecurityConstants.DETAILS_USERNAME, userName);
+
+            String username = headers.get(ContextHolderConstants.CH_USERNAME);
+            if (StringUtils.isNotEmpty(username)) {
+                requestTemplate.header(ContextHolderConstants.CH_USERNAME, username);
             }
+
+            // FIXME:是否要传递在线管理员与用户对象？
+            // FIXME：authentication并未发现有地方set过
             String authentication = headers.get(AuthConstants.AUTHORIZATION_HEADER);
             if (StringUtils.isNotEmpty(authentication)) {
                 requestTemplate.header(AuthConstants.AUTHORIZATION_HEADER, authentication);

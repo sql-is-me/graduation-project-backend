@@ -1,8 +1,7 @@
-package com.ruoyi.common.core.enums;
+package com.ruoyi.common.enums;
 
 /**
  * 用户状态
- * 
  */
 public enum AccountStatus {
     OK("0"), DISABLE("1");

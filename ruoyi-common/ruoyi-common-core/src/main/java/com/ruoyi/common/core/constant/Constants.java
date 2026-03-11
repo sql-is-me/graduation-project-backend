@@ -5,8 +5,7 @@ package com.ruoyi.common.core.constant;
  * 
  * @author ruoyi
  */
-public class Constants
-{
+public class Constants {
     /**
      * UTF-8 字符集
      */
@@ -46,17 +45,7 @@ public class Constants
      * https请求
      */
     public static final String HTTPS = "https://";
-
-    /**
-     * 成功标记
-     */
-    public static final Integer SUCCESS = 200;
-
-    /**
-     * 失败标记
-     */
-    public static final Integer FAIL = 500;
-
+    
     /**
      * 登录成功状态
      */

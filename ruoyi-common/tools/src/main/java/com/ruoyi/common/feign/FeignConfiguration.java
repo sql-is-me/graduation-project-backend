@@ -1,7 +1,8 @@
-package com.ruoyi.common.security.feign;
+package com.ruoyi.common.feign;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
 import feign.RequestInterceptor;
 
 /**
@@ -10,11 +11,9 @@ import feign.RequestInterceptor;
  * @author ruoyi
  **/
 @Configuration
-public class FeignAutoConfiguration
-{
+public class FeignConfiguration {
     @Bean
-    public RequestInterceptor requestInterceptor()
-    {
+    public RequestInterceptor requestInterceptor() {
         return new FeignRequestInterceptor();
     }
 }

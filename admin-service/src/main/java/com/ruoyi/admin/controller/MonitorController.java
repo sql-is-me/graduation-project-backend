@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ruoyi.admin.VO.OnlineUserInfo;
 import com.ruoyi.admin.service.Impl.MonitorServiceImpl;
-import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.web.controller.BaseController;
+import com.ruoyi.common.entity.R;
 
 /**
  * 管理员用户监控控制器（在线用户监控 + 管理员用户管理）

@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.ruoyi.common.core.exception.ServiceException;
-import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.html.EscapeUtil;
+import com.ruoyi.common.entity.R;
 
 /**
  * 管理员服务全局异常处理器（返回统一 R 结构）

@@ -14,15 +14,16 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ruoyi.admin.dto.AdminPasswordUpdateDTO;
 import com.ruoyi.admin.dto.AdminInfoUpdateDTO;
 import com.ruoyi.admin.service.Impl.InfoServiceImpl;
-import com.ruoyi.common.core.domain.R;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.core.utils.file.FileTypeUtils;
 import com.ruoyi.common.core.utils.file.MimeTypeUtils;
+import com.ruoyi.common.entity.Admin;
+import com.ruoyi.common.entity.R;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresLogin;
 import com.ruoyi.common.security.utils.SecurityUtils;
-import com.ruoyi.common.tokens.TokenService;
+import com.ruoyi.common.tokens.AdminTokenService;
 import com.ruoyi.system.api.RemoteFileService;
 import com.ruoyi.system.api.domain.SysFile;
 import com.ruoyi.system.api.domain.SysUser;
@@ -41,49 +42,40 @@ public class InfoController {
     private InfoServiceImpl infoService;
 
     @Autowired
-    private TokenService tokenService;
-
-    @Autowired
     private RemoteFileService remoteFileService;
 
     /**
      * 获取管理员个人信息
      */
     @GetMapping
-    public R<?> getInfo(HttpServletRequest request) {
-        SysUser user = infoService.getInfo(request);
-        return R.ok(user);
+    public R<?> getInfo() {
+        Admin admin = infoService.getInfo();
+        return R.ok(admin);
     }
 
     /**
      * 修改管理员个人信息
      */
-    @RequiresLogin
-    @Log(title = "管理员个人信息", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public R<?> updateProfile(@RequestBody AdminInfoUpdateDTO dto) {
-        profileService.updateProfile(dto);
-        return R.ok("修改成功");
+    @PutMapping("/updateInfo")
+    public R<?> updateInfo(@RequestBody AdminInfoUpdateDTO dto) {
+        infoService.updateInfo(dto);
+        return R.ok("个人信息修改成功");
     }
 
     /**
      * 修改管理员密码
      */
-    @RequiresLogin
-    @Log(title = "管理员修改密码", businessType = BusinessType.UPDATE)
-    @PutMapping("/password")
+    @PutMapping("/updatePassword")
     public R<?> updatePassword(@RequestBody AdminPasswordUpdateDTO dto) {
-        profileService.updatePassword(dto);
+        infoService.updatePassword(dto);
         return R.ok("密码修改成功");
     }
 
     /**
      * 管理员头像上传
      */
-    @RequiresLogin
-    @Log(title = "管理员头像", businessType = BusinessType.UPDATE)
-    @PostMapping("/avatar")
-    public R<?> avatar(@RequestParam("avatarfile") MultipartFile file) {
+    @PutMapping("/updateAvatar")
+    public R<?> updateAvatar(@RequestParam("avatarfile") MultipartFile file) { // TODO:完成文件传输
         if (file.isEmpty()) {
             return R.fail("上传文件不能为空");
         }
