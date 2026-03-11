@@ -1,7 +1,6 @@
 package com.ruoyi.system.controller;
 
 import java.util.List;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +37,6 @@ public class SysOperlogController extends BaseController {
         List<SysOperLog> list = operLogService.selectOperLogList(operLog);
         return getDataTable(list);
     }
-
 
     @Log(title = "操作日志", businessType = BusinessType.DELETE)
     @RequiresPermissions("system:operlog:remove")

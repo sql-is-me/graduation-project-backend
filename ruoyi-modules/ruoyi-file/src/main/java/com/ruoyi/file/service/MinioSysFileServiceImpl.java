@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import com.alibaba.nacos.common.utils.IoUtils;
-import com.ruoyi.common.core.utils.StringUtils;
+import com.ruoyi.common.StringUtils;
 import com.ruoyi.file.config.MinioConfig;
 import com.ruoyi.file.utils.FileUploadUtils;
 import io.minio.MinioClient;

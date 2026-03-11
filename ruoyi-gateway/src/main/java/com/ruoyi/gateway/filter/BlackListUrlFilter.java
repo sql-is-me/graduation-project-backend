@@ -6,7 +6,8 @@ import java.util.regex.Pattern;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.stereotype.Component;
-import com.ruoyi.common.core.utils.ServletUtils;
+
+import com.ruoyi.common.ServletUtils;
 
 /**
  * 黑名单过滤器

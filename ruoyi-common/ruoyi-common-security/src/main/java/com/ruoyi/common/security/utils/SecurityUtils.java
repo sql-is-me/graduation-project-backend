@@ -2,13 +2,13 @@ package com.ruoyi.common.security.utils;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import com.ruoyi.common.ServletUtils;
+import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.Constants.AuthConstants;
 import com.ruoyi.common.Constants.TokenConstants;
 import com.ruoyi.common.contextHolder.ContextHolder;
 import com.ruoyi.common.core.constant.SecurityConstants;
 import com.ruoyi.common.core.constant.UserConstants;
-import com.ruoyi.common.core.utils.ServletUtils;
-import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.system.api.model.LoginUser;
 import jakarta.servlet.http.HttpServletRequest;
 

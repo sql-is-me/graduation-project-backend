@@ -10,7 +10,7 @@ import com.ruoyi.admin.dto.AdminPasswordUpdateDTO;
 import com.ruoyi.admin.dto.AdminInfoUpdateDTO;
 import com.ruoyi.admin.mapper.AdminMapper;
 import com.ruoyi.admin.service.InfoService;
-import com.ruoyi.common.core.utils.StringUtils;
+import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.core.utils.file.FileTypeUtils;
 import com.ruoyi.common.core.utils.file.MimeTypeUtils;
 import com.ruoyi.common.entity.Admin;

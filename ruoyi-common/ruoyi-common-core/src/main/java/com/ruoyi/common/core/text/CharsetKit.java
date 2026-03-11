@@ -2,7 +2,8 @@ package com.ruoyi.common.core.text;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import com.ruoyi.common.core.utils.StringUtils;
+
+import com.ruoyi.common.StringUtils;
 
 /**
  * 字符集工具类

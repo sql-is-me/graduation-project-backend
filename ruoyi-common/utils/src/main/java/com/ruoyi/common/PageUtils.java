@@ -1,7 +1,6 @@
-package com.ruoyi.common.core.utils;
+package com.ruoyi.common;
 
 import com.github.pagehelper.PageHelper;
-import com.ruoyi.common.core.utils.sql.SqlUtil;
 import com.ruoyi.common.core.web.page.PageDomain;
 import com.ruoyi.common.core.web.page.TableSupport;
 

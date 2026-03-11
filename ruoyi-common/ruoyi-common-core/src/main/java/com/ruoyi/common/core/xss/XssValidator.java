@@ -2,9 +2,11 @@ package com.ruoyi.common.core.xss;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.ruoyi.common.StringUtils;
+
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import com.ruoyi.common.core.utils.StringUtils;
 
 /**
  * 自定义xss校验注解实现

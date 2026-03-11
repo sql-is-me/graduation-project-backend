@@ -12,8 +12,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD, ElementType.TYPE })
-public @interface RequiresRoles
-{
+public @interface RequiresRoles {
     /**
      * 需要校验的角色标识
      */

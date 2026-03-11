@@ -4,11 +4,12 @@ import java.util.Map;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 
+import com.ruoyi.common.IpUtils;
+import com.ruoyi.common.ServletUtils;
+import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.Constants.AuthConstants;
 import com.ruoyi.common.Constants.ContextHolderConstants;
-import com.ruoyi.common.core.utils.ServletUtils;
-import com.ruoyi.common.core.utils.StringUtils;
-import com.ruoyi.common.core.utils.ip.IpUtils;
+
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 

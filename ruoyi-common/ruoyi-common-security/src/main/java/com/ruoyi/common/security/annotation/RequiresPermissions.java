@@ -13,8 +13,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD, ElementType.TYPE })
-public @interface RequiresPermissions
-{
+public @interface RequiresPermissions {
     /**
      * 需要校验的权限码
      */

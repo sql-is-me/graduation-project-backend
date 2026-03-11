@@ -7,7 +7,8 @@ import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.text.NumberFormat;
 import java.util.Set;
-import com.ruoyi.common.core.utils.StringUtils;
+
+import com.ruoyi.common.StringUtils;
 
 /**
  * 类型转换器

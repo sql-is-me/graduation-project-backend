@@ -45,7 +45,7 @@ public class Constants {
      * https请求
      */
     public static final String HTTPS = "https://";
-    
+
     /**
      * 登录成功状态
      */

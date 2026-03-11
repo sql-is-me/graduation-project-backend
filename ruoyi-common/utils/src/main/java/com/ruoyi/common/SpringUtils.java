@@ -1,4 +1,4 @@
-package com.ruoyi.common.core.utils;
+package com.ruoyi.common;
 
 import org.springframework.aop.framework.AopContext;
 import org.springframework.beans.BeansException;
@@ -13,14 +13,12 @@ import org.springframework.stereotype.Component;
  * @author ruoyi
  */
 @Component
-public final class SpringUtils implements BeanFactoryPostProcessor
-{
+public final class SpringUtils implements BeanFactoryPostProcessor {
     /** Spring应用上下文环境 */
     private static ConfigurableListableBeanFactory beanFactory;
 
     @Override
-    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException
-    {
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         SpringUtils.beanFactory = beanFactory;
     }
 
@@ -33,8 +31,7 @@ public final class SpringUtils implements BeanFactoryPostProcessor
      *
      */
     @SuppressWarnings("unchecked")
-    public static <T> T getBean(String name) throws BeansException
-    {
+    public static <T> T getBean(String name) throws BeansException {
         return (T) beanFactory.getBean(name);
     }
 
@@ -46,8 +43,7 @@ public final class SpringUtils implements BeanFactoryPostProcessor
      * @throws org.springframework.beans.BeansException
      *
      */
-    public static <T> T getBean(Class<T> clz) throws BeansException
-    {
+    public static <T> T getBean(Class<T> clz) throws BeansException {
         T result = (T) beanFactory.getBean(clz);
         return result;
     }
@@ -58,21 +54,20 @@ public final class SpringUtils implements BeanFactoryPostProcessor
      * @param name
      * @return boolean
      */
-    public static boolean containsBean(String name)
-    {
+    public static boolean containsBean(String name) {
         return beanFactory.containsBean(name);
     }
 
     /**
-     * 判断以给定名字注册的bean定义是一个singleton还是一个prototype。 如果与给定名字相应的bean定义没有被找到，将会抛出一个异常（NoSuchBeanDefinitionException）
+     * 判断以给定名字注册的bean定义是一个singleton还是一个prototype。
+     * 如果与给定名字相应的bean定义没有被找到，将会抛出一个异常（NoSuchBeanDefinitionException）
      *
      * @param name
      * @return boolean
      * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException
      *
      */
-    public static boolean isSingleton(String name) throws NoSuchBeanDefinitionException
-    {
+    public static boolean isSingleton(String name) throws NoSuchBeanDefinitionException {
         return beanFactory.isSingleton(name);
     }
 
@@ -82,8 +77,7 @@ public final class SpringUtils implements BeanFactoryPostProcessor
      * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException
      *
      */
-    public static Class<?> getType(String name) throws NoSuchBeanDefinitionException
-    {
+    public static Class<?> getType(String name) throws NoSuchBeanDefinitionException {
         return beanFactory.getType(name);
     }
 
@@ -95,8 +89,7 @@ public final class SpringUtils implements BeanFactoryPostProcessor
      * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException
      *
      */
-    public static String[] getAliases(String name) throws NoSuchBeanDefinitionException
-    {
+    public static String[] getAliases(String name) throws NoSuchBeanDefinitionException {
         return beanFactory.getAliases(name);
     }
 
@@ -107,8 +100,7 @@ public final class SpringUtils implements BeanFactoryPostProcessor
      * @return
      */
     @SuppressWarnings("unchecked")
-    public static <T> T getAopProxy(T invoker)
-    {
+    public static <T> T getAopProxy(T invoker) {
         return (T) AopContext.currentProxy();
     }
 }

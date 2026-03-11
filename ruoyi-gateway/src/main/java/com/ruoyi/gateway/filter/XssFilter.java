@@ -18,7 +18,8 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
-import com.ruoyi.common.core.utils.StringUtils;
+
+import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.core.utils.html.EscapeUtil;
 import com.ruoyi.gateway.config.properties.XssProperties;
 import io.netty.buffer.ByteBufAllocator;

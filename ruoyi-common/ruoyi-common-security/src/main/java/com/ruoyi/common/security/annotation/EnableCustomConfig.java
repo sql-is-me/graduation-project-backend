@@ -26,7 +26,6 @@ import com.ruoyi.common.security.config.ApplicationConfig;
 @EnableAsync
 // 自动加载类
 @Import({ ApplicationConfig.class, FeignConfiguration.class })
-public @interface EnableCustomConfig
-{
+public @interface EnableCustomConfig {
 
 }

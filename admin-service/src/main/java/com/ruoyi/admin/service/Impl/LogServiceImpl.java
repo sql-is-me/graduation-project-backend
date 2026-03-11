@@ -9,9 +9,9 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.admin.mapper.LoginInfoMapper;
 import com.ruoyi.admin.mapper.OperLogMapper;
 import com.ruoyi.admin.service.LogService;
+import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.entity.LoginInfo;
 import com.ruoyi.common.entity.OperLog;
-import com.ruoyi.common.core.utils.StringUtils;
 
 public class LogServiceImpl implements LogService {
 

@@ -9,11 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.ruoyi.common.IpUtils;
+import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.Constants.JWTConstants;
 import com.ruoyi.common.JWT.JWTService;
 import com.ruoyi.common.core.constant.CacheConstants;
-import com.ruoyi.common.core.utils.StringUtils;
-import com.ruoyi.common.core.utils.ip.IpUtils;
 import com.ruoyi.common.core.utils.uuid.IdUtils;
 import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.common.entity.User;

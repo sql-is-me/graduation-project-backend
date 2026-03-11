@@ -7,18 +7,17 @@ public class AuthConstants {
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
     /**
-     * 用户标识
+     * 用户名长度限制
      */
-    public static final String USER_KEY = "user_key";
+    public static final int USERNAME_MIN_LENGTH = 2;
+
+    public static final int USERNAME_MAX_LENGTH = 20;
 
     /**
-     * JWT的claim中用于存放token(UUID)的key
+     * 密码长度限制
      */
-    public static final String TOKEN_KEY = "token_key";
+    public static final int PASSWORD_MIN_LENGTH = 5;
 
-    /**
-     * 用户ID字段
-     */
-    public static final String DETAILS_USER_ID = "user_id";
+    public static final int PASSWORD_MAX_LENGTH = 20;
 
 }

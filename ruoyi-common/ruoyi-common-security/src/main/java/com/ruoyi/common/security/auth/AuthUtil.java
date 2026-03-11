@@ -9,8 +9,7 @@ import com.ruoyi.system.api.model.LoginUser;
  * 
  * @author ruoyi
  */
-public class AuthUtil
-{
+public class AuthUtil {
     /**
      * 底层的 AuthLogic 对象
      */
@@ -19,8 +18,7 @@ public class AuthUtil
     /**
      * 会话注销
      */
-    public static void logout()
-    {
+    public static void logout() {
         authLogic.logout();
     }
 
@@ -29,16 +27,14 @@ public class AuthUtil
      * 
      * @param token 指定token
      */
-    public static void logoutByToken(String token)
-    {
+    public static void logoutByToken(String token) {
         authLogic.logoutByToken(token);
     }
 
     /**
      * 检验当前会话是否已经登录，如未登录，则抛出异常
      */
-    public static void checkLogin()
-    {
+    public static void checkLogin() {
         authLogic.checkLogin();
     }
 
@@ -48,8 +44,7 @@ public class AuthUtil
      * @param token 指定token
      * @return 用户信息
      */
-    public static LoginUser getLoginUser(String token)
-    {
+    public static LoginUser getLoginUser(String token) {
         return authLogic.getLoginUser(token);
     }
 
@@ -58,8 +53,7 @@ public class AuthUtil
      * 
      * @param loginUser 用户信息
      */
-    public static void verifyLoginUserExpire(LoginUser loginUser)
-    {
+    public static void verifyLoginUserExpire(LoginUser loginUser) {
         authLogic.verifyLoginUserExpire(loginUser);
     }
 
@@ -69,8 +63,7 @@ public class AuthUtil
      * @param role 角色标识
      * @return 是否含有指定角色标识
      */
-    public static boolean hasRole(String role)
-    {
+    public static boolean hasRole(String role) {
         return authLogic.hasRole(role);
     }
 
@@ -79,8 +72,7 @@ public class AuthUtil
      * 
      * @param role 角色标识
      */
-    public static void checkRole(String role)
-    {
+    public static void checkRole(String role) {
         authLogic.checkRole(role);
     }
 
@@ -89,8 +81,7 @@ public class AuthUtil
      * 
      * @param requiresRoles 角色权限注解
      */
-    public static void checkRole(RequiresRoles requiresRoles)
-    {
+    public static void checkRole(RequiresRoles requiresRoles) {
         authLogic.checkRole(requiresRoles);
     }
 
@@ -99,8 +90,7 @@ public class AuthUtil
      * 
      * @param roles 角色标识数组
      */
-    public static void checkRoleAnd(String... roles)
-    {
+    public static void checkRoleAnd(String... roles) {
         authLogic.checkRoleAnd(roles);
     }
 
@@ -109,8 +99,7 @@ public class AuthUtil
      * 
      * @param roles 角色标识数组
      */
-    public static void checkRoleOr(String... roles)
-    {
+    public static void checkRoleOr(String... roles) {
         authLogic.checkRoleOr(roles);
     }
 
@@ -120,8 +109,7 @@ public class AuthUtil
      * @param permission 权限码
      * @return 是否含有指定权限
      */
-    public static boolean hasPermi(String permission)
-    {
+    public static boolean hasPermi(String permission) {
         return authLogic.hasPermi(permission);
     }
 
@@ -130,8 +118,7 @@ public class AuthUtil
      * 
      * @param permission 权限码
      */
-    public static void checkPermi(String permission)
-    {
+    public static void checkPermi(String permission) {
         authLogic.checkPermi(permission);
     }
 
@@ -140,8 +127,7 @@ public class AuthUtil
      * 
      * @param requiresPermissions 权限注解
      */
-    public static void checkPermi(RequiresPermissions requiresPermissions)
-    {
+    public static void checkPermi(RequiresPermissions requiresPermissions) {
         authLogic.checkPermi(requiresPermissions);
     }
 
@@ -150,8 +136,7 @@ public class AuthUtil
      * 
      * @param permissions 权限码数组
      */
-    public static void checkPermiAnd(String... permissions)
-    {
+    public static void checkPermiAnd(String... permissions) {
         authLogic.checkPermiAnd(permissions);
     }
 
@@ -160,8 +145,7 @@ public class AuthUtil
      * 
      * @param permissions 权限码数组
      */
-    public static void checkPermiOr(String... permissions)
-    {
+    public static void checkPermiOr(String... permissions) {
         authLogic.checkPermiOr(permissions);
     }
 }

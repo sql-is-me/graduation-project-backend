@@ -6,13 +6,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ruoyi.common.DateUtils;
+import com.ruoyi.common.IpUtils;
+import com.ruoyi.common.StringUtils;
+import com.ruoyi.common.Constants.AuthConstants;
 import com.ruoyi.common.JWT.JWTService;
 import com.ruoyi.common.core.constant.Constants;
 import com.ruoyi.common.core.constant.SecurityConstants;
-import com.ruoyi.common.core.constant.UserConstants;
-import com.ruoyi.common.core.utils.DateUtils;
-import com.ruoyi.common.core.utils.StringUtils;
-import com.ruoyi.common.core.utils.ip.IpUtils;
 import com.ruoyi.common.entity.LoginInfo;
 import com.ruoyi.common.entity.User;
 import com.ruoyi.common.enums.AccountStatus;
@@ -50,12 +50,12 @@ public class AuthServiceImpl implements AuthService {
     public Map<String, Object> login(String username, String password) {
         User user;
         try {
-            if (password.length() < UserConstants.PASSWORD_MIN_LENGTH
-                    || password.length() > UserConstants.PASSWORD_MAX_LENGTH) {
+            if (password.length() < AuthConstants.PASSWORD_MIN_LENGTH
+                    || password.length() > AuthConstants.PASSWORD_MAX_LENGTH) {
                 throw new ServiceException("密码长度不符合要求");
             }
-            if (username.length() < UserConstants.USERNAME_MIN_LENGTH
-                    || username.length() > UserConstants.USERNAME_MAX_LENGTH) {
+            if (username.length() < AuthConstants.USERNAME_MIN_LENGTH
+                    || username.length() > AuthConstants.USERNAME_MAX_LENGTH) {
                 throw new ServiceException("用户名长度不符合要求");
             }
 
@@ -123,12 +123,12 @@ public class AuthServiceImpl implements AuthService {
         if (StringUtils.isAnyBlank(username, password, type)) {
             throw new ServiceException("用户名/密码/类型必须填写");
         }
-        if (username.length() < UserConstants.USERNAME_MIN_LENGTH
-                || username.length() > UserConstants.USERNAME_MAX_LENGTH) {
+        if (username.length() < AuthConstants.USERNAME_MIN_LENGTH
+                || username.length() > AuthConstants.USERNAME_MAX_LENGTH) {
             throw new ServiceException("账户长度必须在2到20个字符之间");
         }
-        if (password.length() < UserConstants.PASSWORD_MIN_LENGTH
-                || password.length() > UserConstants.PASSWORD_MAX_LENGTH) {
+        if (password.length() < AuthConstants.PASSWORD_MIN_LENGTH
+                || password.length() > AuthConstants.PASSWORD_MAX_LENGTH) {
             throw new ServiceException("密码长度必须在5到20个字符之间");
         }
 

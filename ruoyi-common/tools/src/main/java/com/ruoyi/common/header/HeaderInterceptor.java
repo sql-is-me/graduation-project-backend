@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 
+import com.ruoyi.common.ServletUtils;
 import com.ruoyi.common.Constants.ContextHolderConstants;
-import com.ruoyi.common.core.utils.ServletUtils;
 import com.ruoyi.common.entity.AdminOnline;
 import com.ruoyi.common.entity.UserOnline;
 import com.ruoyi.common.security.utils.SecurityUtils;
