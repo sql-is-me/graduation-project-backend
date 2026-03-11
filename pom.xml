@@ -219,6 +219,7 @@
 
     <modules>
         <module>admin-service</module>
+        <module>user-service</module>
         <module>ruoyi-auth</module>
         <module>ruoyi-gateway</module>
         <module>ruoyi-modules</module>

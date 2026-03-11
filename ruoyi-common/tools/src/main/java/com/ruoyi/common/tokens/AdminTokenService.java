@@ -68,8 +68,6 @@ public class AdminTokenService {
 
     /**
      * 验证令牌有效期，相差不足120分钟，自动刷新缓存
-     *
-     * @param loginUser
      */
     public void verifyToken(AdminOnline ao) {
         long expireTime = ao.getExpireTime();
@@ -90,16 +88,6 @@ public class AdminTokenService {
 
         String aoKey = TokenConstants.TOKENS + ao.getToken();
         redisService.setCacheObject(aoKey, ao, TOKEN_EXPIRE_TIME, TimeUnit.MINUTES);
-    }
-
-    /**
-     * 获取当前登录管理员的token
-     *
-     * @return token
-     */
-    public String getAOToken() {
-        HttpServletRequest request = ServletUtils.getRequest();
-        return SecurityUtils.getToken(request);
     }
 
     /**

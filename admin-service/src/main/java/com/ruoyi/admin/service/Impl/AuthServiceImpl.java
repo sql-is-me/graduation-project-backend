@@ -58,18 +58,18 @@ public class AuthServiceImpl implements AuthService {
     public Map<String, Object> login(String username, String password) {
         Admin admin;
         try {
-            // 密码如果不在指定范围内 错误
+            // 密码长度校验
             if (password.length() < UserConstants.PASSWORD_MIN_LENGTH
                     || password.length() > UserConstants.PASSWORD_MAX_LENGTH) {
                 throw new ServiceException("密码长度不符合要求");
             }
-            // 用户名不在指定范围内 错误
+            // 用户名长度校验
             if (username.length() < UserConstants.USERNAME_MIN_LENGTH
                     || username.length() > UserConstants.USERNAME_MAX_LENGTH) {
                 throw new ServiceException("用户名长度不符合要求");
             }
 
-            // 查询用户信息（直连数据库）
+            // 查询用户信息
             admin = adminMapper.selectByUsername(username);
             if (admin == null) {
                 throw new ServiceException("用户名或密码错误");
@@ -84,22 +84,13 @@ public class AuthServiceImpl implements AuthService {
             throw new ServiceException(e.getMessage());
         }
 
-        admin = updateLoginInfo(admin);
-
-        return adminTokenService.createToken(admin);
-    }
-
-    /**
-     * 更新登录信息
-     */
-    public Admin updateLoginInfo(Admin admin) {
-        recordLoginInfo(admin.getUsername(), Constants.LOGIN_SUCCESS, "登录成功");
-
         admin.setLoginIp(IpUtils.getIpAddr());
         admin.setLoginDate(DateUtils.getNowDate());
-
         adminMapper.updateById(admin);
-        return admin;
+        
+        recordLoginInfo(admin.getUsername(), Constants.LOGIN_SUCCESS, "登录成功");
+
+        return adminTokenService.createToken(admin);
     }
 
     /**

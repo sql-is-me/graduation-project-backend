@@ -23,9 +23,9 @@ public interface AdminMapper extends BaseMapper<Admin> {
     @Select("SELECT * FROM admins WHERE email = #{email}")
     Admin checkEmailUnique(@Param("email") String email);
 
-    @Update("UPDATE admins SET password = #{password} WHERE admin_id = #{adminId}")
+    @Update("UPDATE admins SET password = #{password}, update_time = now() WHERE admin_id = #{adminId}")
     int updatePassword(@Param("adminId") Long adminId, @Param("password") String password);
 
-    @Update("UPDATE admins SET avatar = #{avatar} WHERE admin_id = #{adminId}")
+    @Update("UPDATE admins SET avatar = #{avatar}, update_time = now() WHERE admin_id = #{adminId}")
     int updateAvatar(@Param("adminId") Long adminId, @Param("avatar") String avatar);
 }

@@ -7,6 +7,7 @@ import com.ruoyi.common.Constants.ContextHolderConstants;
 import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.core.utils.StringUtils;
 import com.ruoyi.common.entity.AdminOnline;
+import com.ruoyi.common.entity.UserOnline;
 
 /**
  * 获取当前线程变量中的 用户id、用户名称、Token等信息
@@ -85,14 +86,14 @@ public class ContextHolder {
         return get(ContextHolderConstants.CH_ADMIN_ONLINE, AdminOnline.class);
     }
 
-    // TODO: onlineUser
-    // public static void setAO(AdminOnline ao) {
-    // set(ContextHolderConstants.CH_ADMIN_ONLINE, ao);
-    // }
+    // UserOnline
+    public static void setUO(UserOnline uo) {
+        set(ContextHolderConstants.CH_USER_ONLINE, uo);
+    }
 
-    // public static AdminOnline getAO() {
-    // return get(ContextHolderConstants.CH_ADMIN_ONLINE, AdminOnline.class);
-    // }
+    public static UserOnline getUO() {
+        return get(ContextHolderConstants.CH_USER_ONLINE, UserOnline.class);
+    }
 
     public static void remove() {
         THREAD_LOCAL.remove();
