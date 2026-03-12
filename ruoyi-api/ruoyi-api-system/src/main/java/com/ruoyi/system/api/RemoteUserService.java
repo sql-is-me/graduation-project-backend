@@ -7,8 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+
+import com.ruoyi.common.Constants.ServiceNameConstants;
 import com.ruoyi.common.core.constant.SecurityConstants;
-import com.ruoyi.common.core.constant.ServiceNameConstants;
 import com.ruoyi.common.entity.R;
 import com.ruoyi.system.api.domain.SysUser;
 import com.ruoyi.system.api.factory.RemoteUserFallbackFactory;

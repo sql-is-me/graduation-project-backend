@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import com.ruoyi.common.Convert;
 import com.ruoyi.common.StringUtils;
-import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.core.utils.html.EscapeUtil;
 import com.ruoyi.common.entity.R;
 import com.ruoyi.common.exception.ServiceException;

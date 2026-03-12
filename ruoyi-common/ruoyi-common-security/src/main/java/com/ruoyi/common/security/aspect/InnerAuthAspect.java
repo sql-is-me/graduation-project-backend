@@ -8,8 +8,9 @@ import org.springframework.stereotype.Component;
 
 import com.ruoyi.common.ServletUtils;
 import com.ruoyi.common.StringUtils;
+import com.ruoyi.common.Constants.AuthConstants;
 import com.ruoyi.common.core.constant.SecurityConstants;
-import com.ruoyi.common.core.exception.InnerAuthException;
+import com.ruoyi.common.exception.InnerAuthException;
 import com.ruoyi.common.security.annotation.InnerAuth;
 
 /**
@@ -24,7 +25,7 @@ public class InnerAuthAspect implements Ordered {
     public Object innerAround(ProceedingJoinPoint point, InnerAuth innerAuth) throws Throwable {
         String source = ServletUtils.getRequest().getHeader(SecurityConstants.FROM_SOURCE);
         // 内部请求验证
-        if (!StringUtils.equals(SecurityConstants.INNER, source)) {
+        if (!StringUtils.equals(AuthConstants.INNER, source)) {
             throw new InnerAuthException("没有内部访问权限，不允许访问");
         }
 

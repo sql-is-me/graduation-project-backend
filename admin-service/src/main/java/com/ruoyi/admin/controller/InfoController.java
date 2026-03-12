@@ -56,7 +56,7 @@ public class InfoController {
      * 管理员头像上传
      */
     @PutMapping("/updateAvatar")
-    public R<?> updateAvatar(@RequestParam("avatarFile") MultipartFile mf) { // TODO:完成文件传输
+    public R<?> updateAvatar(@RequestParam("avatarFile") MultipartFile mf) {
         infoService.updateAvatar(mf);
 
         return R.ok("头像更新成功");

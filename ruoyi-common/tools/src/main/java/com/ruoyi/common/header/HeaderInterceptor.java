@@ -8,10 +8,10 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 
 import com.ruoyi.common.ServletUtils;
+import com.ruoyi.common.TokenUtils;
 import com.ruoyi.common.Constants.ContextHolderConstants;
 import com.ruoyi.common.entity.AdminOnline;
 import com.ruoyi.common.entity.UserOnline;
-import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.common.tokens.AdminTokenService;
 import com.ruoyi.common.tokens.UserTokenService;
 
@@ -41,7 +41,7 @@ public class HeaderInterceptor implements AsyncHandlerInterceptor {
         String type = ServletUtils.getHeader(request, ContextHolderConstants.CH_TYPE);
         ContextHolder.setType(type);
 
-        String token = SecurityUtils.getToken();
+        String token = TokenUtils.getToken();
         if (Integer.valueOf(type) == 0) {
             AdminOnline ao = adminTokenService.getAO(token);
             adminTokenService.verifyToken(ao);

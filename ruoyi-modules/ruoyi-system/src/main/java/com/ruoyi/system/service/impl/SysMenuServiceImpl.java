@@ -14,9 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ruoyi.common.StringUtils;
+import com.ruoyi.common.TokenUtils;
+import com.ruoyi.common.Constants.MenuConstants;
+import com.ruoyi.common.Constants.WebConstants;
 import com.ruoyi.common.core.constant.Constants;
-import com.ruoyi.common.core.constant.UserConstants;
-import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.domain.SysRole;
 import com.ruoyi.system.domain.SysMenu;
 import com.ruoyi.system.domain.vo.MetaVo;
@@ -73,7 +74,7 @@ public class SysMenuServiceImpl implements ISysMenuService
     {
         List<SysMenu> menuList = null;
         // 管理员显示所有菜单信息
-        if (SecurityUtils.isAdmin(userId))
+        if (TokenUtils.isAdmin(userId))
         {
             menuList = menuMapper.selectMenuList(menu);
         }
@@ -137,7 +138,7 @@ public class SysMenuServiceImpl implements ISysMenuService
     public List<SysMenu> selectMenuTreeByUserId(Long userId)
     {
         List<SysMenu> menus = null;
-        if (SecurityUtils.isAdmin(userId))
+        if (TokenUtils.isAdmin(userId))
         {
             menus = menuMapper.selectMenuTreeAll();
         }
@@ -181,7 +182,7 @@ public class SysMenuServiceImpl implements ISysMenuService
             router.setQuery(menu.getQuery());
             router.setMeta(new MetaVo(menu.getMenuName(), menu.getIcon(), StringUtils.equals("1", menu.getIsCache()), menu.getPath()));
             List<SysMenu> cMenus = menu.getChildren();
-            if (StringUtils.isNotEmpty(cMenus) && UserConstants.TYPE_DIR.equals(menu.getMenuType()))
+            if (StringUtils.isNotEmpty(cMenus) && MenuConstants.TYPE_DIR.equals(menu.getMenuType()))
             {
                 router.setAlwaysShow(true);
                 router.setRedirect("noRedirect");
@@ -208,7 +209,7 @@ public class SysMenuServiceImpl implements ISysMenuService
                 RouterVo children = new RouterVo();
                 String routerPath = innerLinkReplaceEach(menu.getPath());
                 children.setPath(routerPath);
-                children.setComponent(UserConstants.INNER_LINK);
+                children.setComponent(MenuConstants.INNER_LINK);
                 children.setName(getRouteName(menu.getRouteName(), routerPath));
                 children.setMeta(new MetaVo(menu.getMenuName(), menu.getIcon(), menu.getPath()));
                 childrenList.add(children);
@@ -347,9 +348,9 @@ public class SysMenuServiceImpl implements ISysMenuService
         SysMenu info = menuMapper.checkMenuNameUnique(menu.getMenuName(), menu.getParentId());
         if (StringUtils.isNotNull(info) && info.getMenuId().longValue() != menuId.longValue())
         {
-            return UserConstants.NOT_UNIQUE;
+            return MenuConstants.NOT_UNIQUE;
         }
-        return UserConstants.UNIQUE;
+        return MenuConstants.UNIQUE;
     }
 
     /**
@@ -376,21 +377,21 @@ public class SysMenuServiceImpl implements ISysMenuService
                 if (StringUtils.equalsAnyIgnoreCase(path, dbPath) && parentId.longValue() == dbParentId.longValue())
                 {
                     log.warn("[同级路由冲突] 同级下已存在相同路由路径 '{}'，冲突菜单：{}", dbPath, sysMenu.getMenuName());
-                    return UserConstants.NOT_UNIQUE;
+                    return MenuConstants.NOT_UNIQUE;
                 }
                 else if (StringUtils.equalsAnyIgnoreCase(path, dbPath) && parentId.longValue() == MENU_ROOT_ID)
                 {
                     log.warn("[根目录路由冲突] 根目录下路由 '{}' 必须唯一，已被菜单 '{}' 占用", path, sysMenu.getMenuName());
-                    return UserConstants.NOT_UNIQUE;
+                    return MenuConstants.NOT_UNIQUE;
                 }
                 else if (StringUtils.equalsAnyIgnoreCase(routeName, dbRouteName))
                 {
                     log.warn("[路由名称冲突] 路由名称 '{}' 需全局唯一，已被菜单 '{}' 使用", routeName, sysMenu.getMenuName());
-                    return UserConstants.NOT_UNIQUE;
+                    return MenuConstants.NOT_UNIQUE;
                 }
             }
         }
-        return UserConstants.UNIQUE;
+        return MenuConstants.UNIQUE;
     }
 
     /**
@@ -437,8 +438,8 @@ public class SysMenuServiceImpl implements ISysMenuService
             routerPath = innerLinkReplaceEach(routerPath);
         }
         // 非外链并且是一级目录（类型为目录）
-        if (MENU_ROOT_ID == menu.getParentId().intValue() && UserConstants.TYPE_DIR.equals(menu.getMenuType())
-                && UserConstants.NO_FRAME.equals(menu.getIsFrame()))
+        if (MENU_ROOT_ID == menu.getParentId().intValue() && MenuConstants.TYPE_DIR.equals(menu.getMenuType())
+                && MenuConstants.NO_FRAME.equals(menu.getIsFrame()))
         {
             routerPath = "/" + menu.getPath();
         }
@@ -458,18 +459,18 @@ public class SysMenuServiceImpl implements ISysMenuService
      */
     public String getComponent(SysMenu menu)
     {
-        String component = UserConstants.LAYOUT;
+        String component = MenuConstants.LAYOUT;
         if (StringUtils.isNotEmpty(menu.getComponent()) && !isMenuFrame(menu))
         {
             component = menu.getComponent();
         }
         else if (StringUtils.isEmpty(menu.getComponent()) && menu.getParentId().intValue() != MENU_ROOT_ID && isInnerLink(menu))
         {
-            component = UserConstants.INNER_LINK;
+            component = MenuConstants.INNER_LINK;
         }
         else if (StringUtils.isEmpty(menu.getComponent()) && isParentView(menu))
         {
-            component = UserConstants.PARENT_VIEW;
+            component = MenuConstants.PARENT_VIEW;
         }
         return component;
     }
@@ -482,8 +483,8 @@ public class SysMenuServiceImpl implements ISysMenuService
      */
     public boolean isMenuFrame(SysMenu menu)
     {
-        return menu.getParentId().intValue() == MENU_ROOT_ID && UserConstants.TYPE_MENU.equals(menu.getMenuType())
-                && menu.getIsFrame().equals(UserConstants.NO_FRAME);
+        return menu.getParentId().intValue() == MENU_ROOT_ID && MenuConstants.TYPE_MENU.equals(menu.getMenuType())
+                && menu.getIsFrame().equals(MenuConstants.NO_FRAME);
     }
 
     /**
@@ -494,7 +495,7 @@ public class SysMenuServiceImpl implements ISysMenuService
      */
     public boolean isParentView(SysMenu menu)
     {
-        return menu.getParentId().intValue() != MENU_ROOT_ID && UserConstants.TYPE_DIR.equals(menu.getMenuType());
+        return menu.getParentId().intValue() != MENU_ROOT_ID && MenuConstants.TYPE_DIR.equals(menu.getMenuType());
     }
 
     /**
@@ -505,7 +506,7 @@ public class SysMenuServiceImpl implements ISysMenuService
      */
     public boolean isInnerLink(SysMenu menu)
     {
-        return menu.getIsFrame().equals(UserConstants.NO_FRAME) && StringUtils.ishttp(menu.getPath());
+        return menu.getIsFrame().equals(MenuConstants.NO_FRAME) && StringUtils.ishttp(menu.getPath());
     }
 
     /**
@@ -584,7 +585,7 @@ public class SysMenuServiceImpl implements ISysMenuService
      */
     public String innerLinkReplaceEach(String path)
     {
-        return StringUtils.replaceEach(path, new String[] { Constants.HTTP, Constants.HTTPS, Constants.WWW, ".", ":" },
+        return StringUtils.replaceEach(path, new String[] { WebConstants.HTTP, WebConstants.HTTPS, WebConstants.WWW, ".", ":" },
                 new String[] { "", "", "", "/", "/" });
     }
 }

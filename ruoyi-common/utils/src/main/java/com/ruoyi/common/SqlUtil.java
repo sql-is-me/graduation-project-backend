@@ -1,6 +1,6 @@
 package com.ruoyi.common;
 
-import com.ruoyi.common.core.exception.UtilException;
+import com.ruoyi.common.exception.UtilException;
 
 /**
  * sql操作工具类

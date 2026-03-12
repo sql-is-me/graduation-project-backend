@@ -11,12 +11,12 @@ import org.springframework.stereotype.Component;
 
 import com.ruoyi.common.IpUtils;
 import com.ruoyi.common.StringUtils;
+import com.ruoyi.common.TokenUtils;
+import com.ruoyi.common.Constants.CacheConstants;
 import com.ruoyi.common.Constants.JWTConstants;
 import com.ruoyi.common.Constants.TokenConstants;
 import com.ruoyi.common.JWT.JWTService;
-import com.ruoyi.common.core.constant.CacheConstants;
 import com.ruoyi.common.core.utils.uuid.IdUtils;
-import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.common.entity.Admin;
 import com.ruoyi.common.entity.AdminOnline;
 import com.ruoyi.common.redis.service.RedisService;
@@ -29,11 +29,9 @@ import com.ruoyi.common.redis.service.RedisService;
 @Slf4j
 @Component
 public class AdminTokenService {
-    protected static final long MILLIS_MINUTE = 60000;
 
-    private final static long TOKEN_EXPIRE_TIME = 360;
-
-    private final static Long TOKEN_REFRESH_THRESHOLD_MINUTES = CacheConstants.REFRESH_TIME * MILLIS_MINUTE;
+    private final static Long TOKEN_REFRESH_THRESHOLD_MINUTES = CacheConstants.REFRESH_TIME
+            * CacheConstants.MILLIS_MINUTE;
 
     @Autowired
     private RedisService redisService;
@@ -61,7 +59,7 @@ public class AdminTokenService {
         // 接口返回信息
         Map<String, Object> rspMap = new HashMap<String, Object>();
         rspMap.put("access_token", JWTService.createToken(claimsMap));
-        rspMap.put("expires_in", TOKEN_EXPIRE_TIME);
+        rspMap.put("expires_in", CacheConstants.TOKEN_EXPIRE_TIME);
         return rspMap;
     }
 
@@ -83,10 +81,10 @@ public class AdminTokenService {
      */
     public void refreshToken(AdminOnline ao) {
         ao.setLoginTime(System.currentTimeMillis());
-        ao.setExpireTime(ao.getLoginTime() + TOKEN_EXPIRE_TIME * MILLIS_MINUTE);
+        ao.setExpireTime(ao.getLoginTime() + CacheConstants.TOKEN_EXPIRE_TIME * CacheConstants.MILLIS_MINUTE);
 
-        String aoKey = TokenConstants.TOKENS + ao.getToken();
-        redisService.setCacheObject(aoKey, ao, TOKEN_EXPIRE_TIME, TimeUnit.MINUTES);
+        String aoKey = TokenConstants.ADMIN_TOKENS + ao.getToken();
+        redisService.setCacheObject(aoKey, ao, CacheConstants.TOKEN_EXPIRE_TIME, TimeUnit.MINUTES);
     }
 
     /**
@@ -95,7 +93,7 @@ public class AdminTokenService {
      * @return token
      */
     public String getAOToken(HttpServletRequest request) {
-        return SecurityUtils.getToken(request);
+        return TokenUtils.getToken(request);
     }
 
     /**
@@ -104,7 +102,7 @@ public class AdminTokenService {
      * @return aoKey
      */
     public String getAOKey(String token) {
-        return TokenConstants.TOKENS + JWTService.getKey(JWTService.parseToken(token));
+        return TokenConstants.ADMIN_TOKENS + JWTService.getKey(JWTService.parseToken(token));
     }
 
     /**

@@ -7,6 +7,41 @@ public class AuthConstants {
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
     /**
+     * 内部请求
+     */
+    public static final String INNER = "inner";
+
+    /**
+     * 登录成功状态
+     */
+    public static final String LOGIN_SUCCESS_STATUS = "0";
+
+    /**
+     * 登录失败状态
+     */
+    public static final String LOGIN_FAIL_STATUS = "1";
+
+    /**
+     * 登录成功
+     */
+    public static final String LOGIN_SUCCESS = "Success";
+
+    /**
+     * 登录失败
+     */
+    public static final String LOGIN_FAIL = "Error";
+
+    /**
+     * 注销
+     */
+    public static final String LOGOUT = "Logout";
+
+    /**
+     * 注册
+     */
+    public static final String REGISTER = "Register";
+
+    /**
      * 用户名长度限制
      */
     public static final int USERNAME_MIN_LENGTH = 2;
@@ -19,5 +54,10 @@ public class AuthConstants {
     public static final int PASSWORD_MIN_LENGTH = 5;
 
     public static final int PASSWORD_MAX_LENGTH = 20;
+
+    /**
+     * 验证码有效期（分钟）
+     */
+    public static final long CAPTCHA_EXPIRATION = 2;
 
 }

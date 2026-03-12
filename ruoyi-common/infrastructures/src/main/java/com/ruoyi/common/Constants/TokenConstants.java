@@ -15,8 +15,13 @@ public class TokenConstants {
     public final static String SECRET = "abcdefghijklmnopqrstuvwxyz";
 
     /**
-     * token缓存的前缀
+     * 管理员token缓存的前缀
      */
-    public final static String TOKENS = "tokens:";
+    public final static String ADMIN_TOKENS = "admin_tokens:";
+
+    /**
+     * 用户token缓存前缀
+     */
+    public final static String USER_TOKENS = "user_tokens:";
 
 }

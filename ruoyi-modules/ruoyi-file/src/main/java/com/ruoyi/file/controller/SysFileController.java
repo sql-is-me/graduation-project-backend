@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ruoyi.common.StringUtils;
-import com.ruoyi.common.core.utils.file.FileUtils;
 import com.ruoyi.common.entity.R;
+import com.ruoyi.common.file.FileUtils;
 import com.ruoyi.common.entity.File;
 import com.ruoyi.file.service.ISysFileService;
 

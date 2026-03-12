@@ -14,7 +14,7 @@ import com.ruoyi.common.ServletUtils;
 import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.Constants.AuthConstants;
 import com.ruoyi.common.Constants.ContextHolderConstants;
-import com.ruoyi.common.Constants.HttpStatus;
+import com.ruoyi.common.Constants.HttpStatusConstants;
 import com.ruoyi.common.Constants.TokenConstants;
 import com.ruoyi.common.JWT.JWTService;
 import com.ruoyi.common.core.constant.SecurityConstants;
@@ -60,17 +60,25 @@ public class AuthFilter implements GlobalFilter, Ordered {
             return unauthorizedResponse(exchange, "令牌已过期或验证不正确！");
         }
 
-        String UUIDtoken = JWTService.getKey(claims);
-        boolean isOnline = redisService.hasKey(TokenConstants.TOKENS + UUIDtoken);
-        if (!isOnline) {
-            return unauthorizedResponse(exchange, "登录状态已过期");
-        }
-
         String id = JWTService.getId(claims);
         String username = JWTService.getUsername(claims);
         String type = JWTService.getType(claims);
         if (StringUtils.isEmpty(id) || StringUtils.isEmpty(username) || StringUtils.isEmpty(type)) {
             return unauthorizedResponse(exchange, "令牌验证失败");
+        }
+
+        String UUIDtoken = JWTService.getKey(claims);
+        String UUIDKey;
+        if (type.equals("0")) {
+            UUIDKey = TokenConstants.ADMIN_TOKENS + UUIDtoken;
+        } else if (type.equals("1")) {
+            UUIDKey = TokenConstants.USER_TOKENS + UUIDtoken;
+        } else {
+            return unauthorizedResponse(exchange, "令牌用户类型异常");
+        }
+        boolean isOnline = redisService.hasKey(UUIDKey);
+        if (!isOnline) {
+            return unauthorizedResponse(exchange, "登录状态已过期");
         }
 
         // 设置用户信息到请求
@@ -100,7 +108,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
 
     private Mono<Void> unauthorizedResponse(ServerWebExchange exchange, String msg) {
         log.error("[鉴权异常处理]请求路径:{},错误信息:{}", exchange.getRequest().getPath(), msg);
-        return ServletUtils.webFluxResponseWriter(exchange.getResponse(), msg, HttpStatus.UNAUTHORIZED);
+        return ServletUtils.webFluxResponseWriter(exchange.getResponse(), msg, HttpStatusConstants.UNAUTHORIZED);
     }
 
     /**

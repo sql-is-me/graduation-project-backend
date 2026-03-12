@@ -17,8 +17,6 @@ import com.ruoyi.common.IpUtils;
 import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.Constants.AuthConstants;
 import com.ruoyi.common.JWT.JWTService;
-import com.ruoyi.common.core.constant.Constants;
-import com.ruoyi.common.core.constant.SecurityConstants;
 import com.ruoyi.common.entity.Admin;
 import com.ruoyi.common.entity.AdminOnline;
 import com.ruoyi.common.entity.LoginInfo;
@@ -81,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
 
             validatePassword(admin, password);
         } catch (ServiceException e) {
-            recordLoginInfo(username, Constants.LOGIN_FAIL, e.getMessage());
+            recordLoginInfo(username, AuthConstants.LOGIN_FAIL, e.getMessage());
             throw new ServiceException(e.getMessage());
         }
 
@@ -89,7 +87,7 @@ public class AuthServiceImpl implements AuthService {
         admin.setLoginDate(DateUtils.getNowDate());
         adminMapper.updateById(admin);
 
-        recordLoginInfo(admin.getUsername(), Constants.LOGIN_SUCCESS, "登录成功");
+        recordLoginInfo(admin.getUsername(), AuthConstants.LOGIN_SUCCESS, "登录成功");
 
         return adminTokenService.createToken(admin);
     }
@@ -105,7 +103,7 @@ public class AuthServiceImpl implements AuthService {
             // 删除用户缓存记录
             adminTokenService.delAdminOnline(token);
 
-            recordLoginInfo(username, Constants.LOGOUT, "退出成功");
+            recordLoginInfo(username, AuthConstants.LOGOUT, "退出成功");
         }
     }
 
@@ -169,7 +167,7 @@ public class AuthServiceImpl implements AuthService {
 
         // 注册成功后删除邀请码（一次性使用）
         redisService.deleteObject(inviteKey);
-        recordLoginInfo(username, Constants.REGISTER, "管理员注册成功");
+        recordLoginInfo(username, AuthConstants.REGISTER, "管理员注册成功");
     }
 
     /**
@@ -249,12 +247,12 @@ public class AuthServiceImpl implements AuthService {
         loginInfo.setMsg(message);
 
         // 日志状态
-        if (StringUtils.equalsAny(status, Constants.LOGIN_SUCCESS, Constants.LOGOUT, Constants.REGISTER)) {
-            loginInfo.setStatus(Constants.LOGIN_SUCCESS_STATUS);
-        } else if (Constants.LOGIN_FAIL.equals(status)) {
-            loginInfo.setStatus(Constants.LOGIN_FAIL_STATUS);
+        if (StringUtils.equalsAny(status, AuthConstants.LOGIN_SUCCESS, AuthConstants.LOGOUT, AuthConstants.REGISTER)) {
+            loginInfo.setStatus(AuthConstants.LOGIN_SUCCESS_STATUS);
+        } else if (AuthConstants.LOGIN_FAIL.equals(status)) {
+            loginInfo.setStatus(AuthConstants.LOGIN_FAIL_STATUS);
         }
-        remoteLogService.saveLogininfor(loginInfo, SecurityConstants.INNER);
+        remoteLogService.saveLogininfor(loginInfo, AuthConstants.INNER);
     }
 
 }

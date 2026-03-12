@@ -3,9 +3,9 @@ package com.ruoyi.common.header;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import com.alibaba.ttl.TransmittableThreadLocal;
+import com.ruoyi.common.Convert;
 import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.Constants.ContextHolderConstants;
-import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.entity.AdminOnline;
 import com.ruoyi.common.entity.UserOnline;
 

@@ -7,8 +7,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
-import com.ruoyi.common.core.constant.ServiceNameConstants;
+
 import com.ruoyi.common.entity.R;
+import com.ruoyi.common.Constants.ServiceNameConstants;
 import com.ruoyi.common.entity.File;
 import com.ruoyi.system.api.factory.RemoteFileFallbackFactory;
 

@@ -11,15 +11,15 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import com.ruoyi.common.Convert;
 import com.ruoyi.common.StringUtils;
-import com.ruoyi.common.Constants.HttpStatus;
-import com.ruoyi.common.core.exception.DemoModeException;
-import com.ruoyi.common.core.exception.InnerAuthException;
+import com.ruoyi.common.Constants.HttpStatusConstants;
 import com.ruoyi.common.core.exception.auth.NotPermissionException;
 import com.ruoyi.common.core.exception.auth.NotRoleException;
-import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.core.utils.html.EscapeUtil;
 import com.ruoyi.common.core.web.domain.AjaxResult;
+import com.ruoyi.common.exception.DemoModeException;
+import com.ruoyi.common.exception.InnerAuthException;
 import com.ruoyi.common.exception.ServiceException;
 
 /**
@@ -38,7 +38,7 @@ public class GlobalExceptionHandler {
     public AjaxResult handleNotPermissionException(NotPermissionException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         log.error("请求地址'{}',权限码校验失败'{}'", requestURI, e.getMessage());
-        return AjaxResult.error(HttpStatus.FORBIDDEN, "没有访问权限，请联系管理员授权");
+        return AjaxResult.error(HttpStatusConstants.FORBIDDEN, "没有访问权限，请联系管理员授权");
     }
 
     /**
@@ -48,7 +48,7 @@ public class GlobalExceptionHandler {
     public AjaxResult handleNotRoleException(NotRoleException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
         log.error("请求地址'{}',角色权限校验失败'{}'", requestURI, e.getMessage());
-        return AjaxResult.error(HttpStatus.FORBIDDEN, "没有访问权限，请联系管理员授权");
+        return AjaxResult.error(HttpStatusConstants.FORBIDDEN, "没有访问权限，请联系管理员授权");
     }
 
     /**

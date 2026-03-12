@@ -5,7 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class PWCheckUtils {
     public final static String PWD_ERR_CNT_KEY = "pwd_err_ctr:";
 
-    public final static Integer PASSWORD_MAX_RETRY_COUNT = 3;
+    public final static Integer PASSWORD_MAX_RETRY_COUNT = 5;
 
     public final static Long PASSWORD_LOCK_TIME = 5L;
 

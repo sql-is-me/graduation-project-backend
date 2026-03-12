@@ -1,7 +1,6 @@
 package com.ruoyi.user.service.impl;
 
 import java.util.Map;
-
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,8 +10,6 @@ import com.ruoyi.common.IpUtils;
 import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.Constants.AuthConstants;
 import com.ruoyi.common.JWT.JWTService;
-import com.ruoyi.common.core.constant.Constants;
-import com.ruoyi.common.core.constant.SecurityConstants;
 import com.ruoyi.common.entity.LoginInfo;
 import com.ruoyi.common.entity.User;
 import com.ruoyi.common.enums.AccountStatus;
@@ -44,7 +41,7 @@ public class AuthServiceImpl implements AuthService {
     private RemoteLogService remoteLogService;
 
     /**
-     * 用户/教练登录（不需要选择类型，后端按 username 查表自动识别 type）
+     * 用户/教练登录
      */
     @Override
     public Map<String, Object> login(String username, String password) {
@@ -70,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
 
             validatePassword(user, password);
         } catch (ServiceException e) {
-            recordLoginInfo(username, Constants.LOGIN_FAIL, e.getMessage());
+            recordLoginInfo(username, AuthConstants.LOGIN_FAIL, e.getMessage());
             throw new ServiceException(e.getMessage());
         }
 
@@ -79,7 +76,7 @@ public class AuthServiceImpl implements AuthService {
         user.setLoginDate(DateUtils.getNowDate());
         userMapper.updateById(user);
 
-        recordLoginInfo(user.getUsername(), Constants.LOGIN_SUCCESS, "登录成功");
+        recordLoginInfo(user.getUsername(), AuthConstants.LOGIN_SUCCESS, "登录成功");
 
         return userTokenService.createToken(user, user.getUserType());
     }
@@ -94,7 +91,7 @@ public class AuthServiceImpl implements AuthService {
             String username = JWTService.getUsername(JWTService.parseToken(token));
             userTokenService.delUserOnline(token);
 
-            recordLoginInfo(username, Constants.LOGOUT, "退出成功");
+            recordLoginInfo(username, AuthConstants.LOGOUT, "退出成功");
         }
     }
 
@@ -159,7 +156,7 @@ public class AuthServiceImpl implements AuthService {
             throw new ServiceException("注册失败，请联系管理员");
         }
 
-        recordLoginInfo(username, Constants.REGISTER, ("1".equals(type) ? "教练" : "会员") + "注册成功");
+        recordLoginInfo(username, AuthConstants.REGISTER, ("1".equals(type) ? "教练" : "会员") + "注册成功");
     }
 
     /**
@@ -200,11 +197,11 @@ public class AuthServiceImpl implements AuthService {
         loginInfo.setIpaddr(IpUtils.getIpAddr());
         loginInfo.setMsg(message);
 
-        if (StringUtils.equalsAny(status, Constants.LOGIN_SUCCESS, Constants.LOGOUT, Constants.REGISTER)) {
-            loginInfo.setStatus(Constants.LOGIN_SUCCESS_STATUS);
-        } else if (Constants.LOGIN_FAIL.equals(status)) {
-            loginInfo.setStatus(Constants.LOGIN_FAIL_STATUS);
+        if (StringUtils.equalsAny(status, AuthConstants.LOGIN_SUCCESS, AuthConstants.LOGOUT, AuthConstants.REGISTER)) {
+            loginInfo.setStatus(AuthConstants.LOGIN_SUCCESS_STATUS);
+        } else if (AuthConstants.LOGIN_FAIL.equals(status)) {
+            loginInfo.setStatus(AuthConstants.LOGIN_FAIL_STATUS);
         }
-        remoteLogService.saveLogininfor(loginInfo, SecurityConstants.INNER);
+        remoteLogService.saveLogininfor(loginInfo, AuthConstants.INNER);
     }
 }

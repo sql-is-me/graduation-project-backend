@@ -2,9 +2,10 @@ package com.ruoyi.common.JWT;
 
 import java.util.Map;
 
+import com.ruoyi.common.Convert;
 import com.ruoyi.common.Constants.JWTConstants;
 import com.ruoyi.common.Constants.TokenConstants;
-import com.ruoyi.common.core.text.Convert;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.InitBinder;
 import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.DateUtils;
 import com.ruoyi.common.PageUtils;
-import com.ruoyi.common.Constants.HttpStatus;
+import com.ruoyi.common.Constants.HttpStatusConstants;
 import com.ruoyi.common.core.web.domain.AjaxResult;
-import com.ruoyi.common.core.web.page.TableDataInfo;
+import com.ruoyi.common.entity.TableDataInfo;
 
 /**
  * web层通用数据处理
@@ -56,7 +56,7 @@ public class BaseController {
     @SuppressWarnings({ "rawtypes", "unchecked" })
     protected TableDataInfo getDataTable(List<?> list) {
         TableDataInfo rspData = new TableDataInfo();
-        rspData.setCode(HttpStatus.SUCCESS);
+        rspData.setCode(HttpStatusConstants.SUCCESS);
         rspData.setRows(list);
         rspData.setMsg("查询成功");
         rspData.setTotal(new PageInfo(list).getTotal());

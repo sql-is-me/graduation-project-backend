@@ -9,13 +9,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.ruoyi.common.DateUtils;
 import com.ruoyi.common.StringUtils;
-import com.ruoyi.common.core.exception.file.FileException;
-import com.ruoyi.common.core.exception.file.FileNameLengthLimitExceededException;
-import com.ruoyi.common.core.exception.file.FileSizeLimitExceededException;
-import com.ruoyi.common.core.exception.file.InvalidExtensionException;
-import com.ruoyi.common.core.utils.file.FileTypeUtils;
-import com.ruoyi.common.core.utils.file.MimeTypeUtils;
 import com.ruoyi.common.core.utils.uuid.Seq;
+import com.ruoyi.common.exception.file.FileException;
+import com.ruoyi.common.exception.file.FileNameLengthLimitExceededException;
+import com.ruoyi.common.exception.file.FileSizeLimitExceededException;
+import com.ruoyi.common.exception.file.InvalidExtensionException;
+import com.ruoyi.common.file.FileTypeUtils;
+import com.ruoyi.common.file.MimeTypeUtils;
 
 /**
  * 文件上传工具类

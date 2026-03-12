@@ -29,7 +29,7 @@ public class MonitorServiceImpl implements MonitorService {
     public List<OnlineUserInfo> getOnlineAdmins() {
         List<OnlineUserInfo> onlineList = new ArrayList<>();
 
-        Collection<String> keys = redisService.keys(TokenConstants.TOKENS + "*");
+        Collection<String> keys = redisService.keys(TokenConstants.ADMIN_TOKENS + "*");
         for (String key : keys) {
             AdminOnline ao = redisService.getCacheObject(key);
             if (ao == null || ao.getAdminInfo() == null) {
@@ -57,7 +57,7 @@ public class MonitorServiceImpl implements MonitorService {
     public List<OnlineUserInfo> getOnlineUsers() {
         List<OnlineUserInfo> onlineList = new ArrayList<>();
 
-        Collection<String> keys = redisService.keys(TokenConstants.TOKENS + "*");
+        Collection<String> keys = redisService.keys(TokenConstants.USER_TOKENS + "*");
         for (String key : keys) {
             UserOnline uo = redisService.getCacheObject(key);
             if (uo == null || uo.getUserInfo() == null) {
@@ -83,11 +83,11 @@ public class MonitorServiceImpl implements MonitorService {
 
     @Override
     public void forceAdminLogout(String token) {
-        redisService.deleteObject(TokenConstants.TOKENS + token);
+        redisService.deleteObject(TokenConstants.ADMIN_TOKENS + token);
     }
 
     @Override
     public void forceUserLogout(String token) {
-        redisService.deleteObject(TokenConstants.TOKENS + token);
+        redisService.deleteObject(TokenConstants.USER_TOKENS + token);
     }
 }

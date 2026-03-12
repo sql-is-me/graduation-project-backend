@@ -4,7 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
-import com.ruoyi.common.core.constant.UserConstants;
+
+import com.ruoyi.common.Constants.MenuConstants;
 import com.ruoyi.common.core.web.domain.BaseEntity;
 
 /**
@@ -106,7 +107,7 @@ public class SysDictData extends BaseEntity {
     }
 
     public boolean getDefault() {
-        return UserConstants.YES.equals(this.isDefault);
+        return MenuConstants.YES.equals(this.isDefault);
     }
 
     public String getIsDefault() {

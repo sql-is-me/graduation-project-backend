@@ -11,13 +11,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.ruoyi.common.TokenUtils;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
-import com.ruoyi.common.core.web.page.TableDataInfo;
+import com.ruoyi.common.entity.TableDataInfo;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
-import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.domain.SysNotice;
 import com.ruoyi.system.service.ISysNoticeService;
 
@@ -59,7 +60,7 @@ public class SysNoticeController extends BaseController {
     @Log(title = "通知公告", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysNotice notice) {
-        notice.setCreateBy(SecurityUtils.getUsername());
+        notice.setCreateBy(TokenUtils.getUsername());
         return toAjax(noticeService.insertNotice(notice));
     }
 
@@ -70,7 +71,7 @@ public class SysNoticeController extends BaseController {
     @Log(title = "通知公告", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysNotice notice) {
-        notice.setUpdateBy(SecurityUtils.getUsername());
+        notice.setUpdateBy(TokenUtils.getUsername());
         return toAjax(noticeService.updateNotice(notice));
     }
 

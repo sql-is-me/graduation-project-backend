@@ -9,13 +9,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FastByteArrayOutputStream;
 import com.google.code.kaptcha.Producer;
+
 import com.ruoyi.common.StringUtils;
-import com.ruoyi.common.core.constant.CacheConstants;
-import com.ruoyi.common.core.constant.Constants;
-import com.ruoyi.common.core.exception.CaptchaException;
+import com.ruoyi.common.Constants.AuthConstants;
 import com.ruoyi.common.core.utils.sign.Base64;
 import com.ruoyi.common.core.utils.uuid.IdUtils;
 import com.ruoyi.common.core.web.domain.AjaxResult;
+import com.ruoyi.common.exception.CaptchaException;
 import com.ruoyi.common.redis.service.RedisService;
 import com.ruoyi.gateway.config.properties.CaptchaProperties;
 import com.ruoyi.gateway.service.ValidateCodeService;
@@ -27,6 +27,11 @@ import com.ruoyi.gateway.service.ValidateCodeService;
  */
 @Service
 public class ValidateCodeServiceImpl implements ValidateCodeService {
+    /**
+     * 验证码 redis key
+     */
+    public static final String CAPTCHA_CODE_KEY = "captcha_codes:";
+
     @Resource(name = "captchaProducer")
     private Producer captchaProducer;
 
@@ -53,7 +58,7 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
 
         // 保存验证码信息
         String uuid = IdUtils.simpleUUID();
-        String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + uuid;
+        String verifyKey = CAPTCHA_CODE_KEY + uuid;
 
         String capStr = null, code = null;
         BufferedImage image = null;
@@ -70,7 +75,7 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
             image = captchaProducer.createImage(capStr);
         }
 
-        redisService.setCacheObject(verifyKey, code, Constants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
+        redisService.setCacheObject(verifyKey, code, AuthConstants.CAPTCHA_EXPIRATION, TimeUnit.MINUTES);
         // 转换流信息写出
         FastByteArrayOutputStream os = new FastByteArrayOutputStream();
         try {
@@ -92,7 +97,7 @@ public class ValidateCodeServiceImpl implements ValidateCodeService {
         if (StringUtils.isEmpty(code)) {
             throw new CaptchaException("验证码不能为空");
         }
-        String verifyKey = CacheConstants.CAPTCHA_CODE_KEY + StringUtils.nvl(uuid, "");
+        String verifyKey = CAPTCHA_CODE_KEY + StringUtils.nvl(uuid, "");
         String captcha = redisService.getCacheObject(verifyKey);
         if (captcha == null) {
             throw new CaptchaException("验证码已失效");

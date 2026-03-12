@@ -13,13 +13,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ruoyi.common.StringUtils;
-import com.ruoyi.common.core.constant.UserConstants;
+import com.ruoyi.common.TokenUtils;
+import com.ruoyi.common.Constants.MenuConstants;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
-import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.domain.SysMenu;
 import com.ruoyi.system.service.ISysMenuService;
 
@@ -40,7 +40,7 @@ public class SysMenuController extends BaseController {
     @RequiresPermissions("system:menu:list")
     @GetMapping("/list")
     public AjaxResult list(SysMenu menu) {
-        Long userId = SecurityUtils.getUserId();
+        Long userId = TokenUtils.getUserId();
         List<SysMenu> menus = menuService.selectMenuList(menu, userId);
         return success(menus);
     }
@@ -59,7 +59,7 @@ public class SysMenuController extends BaseController {
      */
     @GetMapping("/treeselect")
     public AjaxResult treeselect(SysMenu menu) {
-        Long userId = SecurityUtils.getUserId();
+        Long userId = TokenUtils.getUserId();
         List<SysMenu> menus = menuService.selectMenuList(menu, userId);
         return success(menuService.buildMenuTreeSelect(menus));
     }
@@ -69,7 +69,7 @@ public class SysMenuController extends BaseController {
      */
     @GetMapping(value = "/roleMenuTreeselect/{roleId}")
     public AjaxResult roleMenuTreeselect(@PathVariable("roleId") Long roleId) {
-        Long userId = SecurityUtils.getUserId();
+        Long userId = TokenUtils.getUserId();
         List<SysMenu> menus = menuService.selectMenuList(userId);
         AjaxResult ajax = AjaxResult.success();
         ajax.put("checkedKeys", menuService.selectMenuListByRoleId(roleId));
@@ -85,12 +85,12 @@ public class SysMenuController extends BaseController {
     public AjaxResult add(@Validated @RequestBody SysMenu menu) {
         if (!menuService.checkMenuNameUnique(menu)) {
             return error("新增菜单'" + menu.getMenuName() + "'失败，菜单名称已存在");
-        } else if (UserConstants.YES_FRAME.equals(menu.getIsFrame()) && !StringUtils.ishttp(menu.getPath())) {
+        } else if (MenuConstants.YES_FRAME.equals(menu.getIsFrame()) && !StringUtils.ishttp(menu.getPath())) {
             return error("新增菜单'" + menu.getMenuName() + "'失败，地址必须以http(s)://开头");
         } else if (!menuService.checkRouteConfigUnique(menu)) {
             return error("新增菜单'" + menu.getMenuName() + "'失败，路由名称或地址已存在");
         }
-        menu.setCreateBy(SecurityUtils.getUsername());
+        menu.setCreateBy(TokenUtils.getUsername());
         return toAjax(menuService.insertMenu(menu));
     }
 
@@ -103,14 +103,14 @@ public class SysMenuController extends BaseController {
     public AjaxResult edit(@Validated @RequestBody SysMenu menu) {
         if (!menuService.checkMenuNameUnique(menu)) {
             return error("修改菜单'" + menu.getMenuName() + "'失败，菜单名称已存在");
-        } else if (UserConstants.YES_FRAME.equals(menu.getIsFrame()) && !StringUtils.ishttp(menu.getPath())) {
+        } else if (MenuConstants.YES_FRAME.equals(menu.getIsFrame()) && !StringUtils.ishttp(menu.getPath())) {
             return error("修改菜单'" + menu.getMenuName() + "'失败，地址必须以http(s)://开头");
         } else if (menu.getMenuId().equals(menu.getParentId())) {
             return error("修改菜单'" + menu.getMenuName() + "'失败，上级菜单不能选择自己");
         } else if (!menuService.checkRouteConfigUnique(menu)) {
             return error("修改菜单'" + menu.getMenuName() + "'失败，路由名称或地址已存在");
         }
-        menu.setUpdateBy(SecurityUtils.getUsername());
+        menu.setUpdateBy(TokenUtils.getUsername());
         return toAjax(menuService.updateMenu(menu));
     }
 
@@ -137,7 +137,7 @@ public class SysMenuController extends BaseController {
      */
     @GetMapping("getRouters")
     public AjaxResult getRouters() {
-        Long userId = SecurityUtils.getUserId();
+        Long userId = TokenUtils.getUserId();
         List<SysMenu> menus = menuService.selectMenuTreeByUserId(userId);
         return success(menuService.buildMenus(menus));
     }

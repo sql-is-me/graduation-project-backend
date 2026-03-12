@@ -24,8 +24,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import com.alibaba.fastjson2.JSON;
 import reactor.core.publisher.Mono;
 
-import com.ruoyi.common.core.constant.Constants;
-import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.entity.R;
 
 /**
@@ -34,6 +32,11 @@ import com.ruoyi.common.entity.R;
  * @author ruoyi
  */
 public class ServletUtils {
+    /**
+     * UTF-8 字符集
+     */
+    public static final String UTF8 = "UTF-8";
+
     /**
      * 获取String参数
      */
@@ -210,7 +213,7 @@ public class ServletUtils {
      */
     public static String urlEncode(String str) {
         try {
-            return URLEncoder.encode(str, Constants.UTF8);
+            return URLEncoder.encode(str, UTF8);
         } catch (UnsupportedEncodingException e) {
             return StringUtils.EMPTY;
         }
@@ -224,7 +227,7 @@ public class ServletUtils {
      */
     public static String urlDecode(String str) {
         try {
-            return URLDecoder.decode(str, Constants.UTF8);
+            return URLDecoder.decode(str, UTF8);
         } catch (UnsupportedEncodingException e) {
             return StringUtils.EMPTY;
         }

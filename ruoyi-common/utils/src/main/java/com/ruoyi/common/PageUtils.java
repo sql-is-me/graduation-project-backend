@@ -1,8 +1,8 @@
 package com.ruoyi.common;
 
 import com.github.pagehelper.PageHelper;
-import com.ruoyi.common.core.web.page.PageDomain;
-import com.ruoyi.common.core.web.page.TableSupport;
+import com.ruoyi.common.Constants.PageConstants;
+import com.ruoyi.common.entity.Page;
 
 /**
  * 分页工具类
@@ -14,11 +14,11 @@ public class PageUtils extends PageHelper {
      * 设置请求分页数据
      */
     public static void startPage() {
-        PageDomain pageDomain = TableSupport.buildPageRequest();
-        Integer pageNum = pageDomain.getPageNum();
-        Integer pageSize = pageDomain.getPageSize();
-        String orderBy = SqlUtil.escapeOrderBySql(pageDomain.getOrderBy());
-        Boolean reasonable = pageDomain.getReasonable();
+        Page page = getPage();
+        Integer pageNum = page.getPageNum();
+        Integer pageSize = page.getPageSize();
+        String orderBy = SqlUtil.escapeOrderBySql(getOrderBy(page));
+        Boolean reasonable = page.getReasonable();
         PageHelper.startPage(pageNum, pageSize, orderBy).setReasonable(reasonable);
     }
 
@@ -27,5 +27,25 @@ public class PageUtils extends PageHelper {
      */
     public static void clearPage() {
         PageHelper.clearPage();
+    }
+
+    /**
+     * 封装分页对象
+     */
+    public static Page getPage() {
+        Page page = new Page();
+        page.setPageNum(Convert.toInt(ServletUtils.getParameter(PageConstants.PAGE_NUM), 1));
+        page.setPageSize(Convert.toInt(ServletUtils.getParameter(PageConstants.PAGE_SIZE), 10));
+        page.setOrderByColumn(ServletUtils.getParameter(PageConstants.ORDER_BY_COLUMN));
+        page.setIsAsc(ServletUtils.getParameter(PageConstants.IS_ASC));
+        page.setReasonable(ServletUtils.getParameterToBool(PageConstants.REASONABLE));
+        return page;
+    }
+
+    public static String getOrderBy(Page page) {
+        if (StringUtils.isEmpty(page.getOrderByColumn())) {
+            return "";
+        }
+        return StringUtils.toUnderScoreCase(page.getOrderByColumn()) + " " + page.getIsAsc();
     }
 }

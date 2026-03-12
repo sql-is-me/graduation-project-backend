@@ -7,13 +7,13 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
 
+import com.ruoyi.common.Convert;
 import com.ruoyi.common.StringUtils;
+import com.ruoyi.common.TokenUtils;
+import com.ruoyi.common.Constants.MenuConstants;
 import com.ruoyi.common.contextHolder.ContextHolder;
-import com.ruoyi.common.core.constant.UserConstants;
-import com.ruoyi.common.core.text.Convert;
 import com.ruoyi.common.core.web.domain.BaseEntity;
 import com.ruoyi.common.datascope.annotation.DataScope;
-import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.system.api.domain.SysRole;
 import com.ruoyi.system.api.domain.SysUser;
 import com.ruoyi.system.api.model.LoginUser;
@@ -64,7 +64,7 @@ public class DataScopeAspect {
 
     protected void handleDataScope(final JoinPoint joinPoint, DataScope controllerDataScope) {
         // 获取当前的用户
-        LoginUser loginUser = SecurityUtils.getLoginUser();
+        LoginUser loginUser = TokenUtils.getLoginUser();
         if (StringUtils.isNotNull(loginUser)) {
             SysUser currentUser = loginUser.getSysUser();
             // 如果是超级管理员，则不过滤数据
@@ -93,7 +93,7 @@ public class DataScopeAspect {
         List<String> scopeCustomIds = new ArrayList<String>();
         user.getRoles().forEach(role -> {
             if (DATA_SCOPE_CUSTOM.equals(role.getDataScope())
-                    && StringUtils.equals(role.getStatus(), UserConstants.ROLE_NORMAL)
+                    && StringUtils.equals(role.getStatus(), MenuConstants.ROLE_NORMAL)
                     && (StringUtils.isEmpty(permission)
                             || StringUtils.containsAny(role.getPermissions(), Convert.toStrArray(permission)))) {
                 scopeCustomIds.add(Convert.toStr(role.getRoleId()));
@@ -102,7 +102,7 @@ public class DataScopeAspect {
 
         for (SysRole role : user.getRoles()) {
             String dataScope = role.getDataScope();
-            if (conditions.contains(dataScope) || StringUtils.equals(role.getStatus(), UserConstants.ROLE_DISABLE)) {
+            if (conditions.contains(dataScope) || StringUtils.equals(role.getStatus(), MenuConstants.ROLE_DISABLE)) {
                 continue;
             }
             if (StringUtils.isNotEmpty(permission)

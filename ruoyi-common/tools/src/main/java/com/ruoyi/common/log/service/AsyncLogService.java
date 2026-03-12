@@ -3,7 +3,8 @@ package com.ruoyi.common.log.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import com.ruoyi.common.core.constant.SecurityConstants;
+
+import com.ruoyi.common.Constants.AuthConstants;
 import com.ruoyi.common.entity.OperLog;
 import com.ruoyi.system.api.RemoteLogService;
 
@@ -22,6 +23,6 @@ public class AsyncLogService {
      */
     @Async
     public void saveOperLog(OperLog operLog) throws Exception {
-        remoteLogService.saveLog(operLog, SecurityConstants.INNER);
+        remoteLogService.saveLog(operLog, AuthConstants.INNER);
     }
 }

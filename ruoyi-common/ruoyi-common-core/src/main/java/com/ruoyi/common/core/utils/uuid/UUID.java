@@ -5,7 +5,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-import com.ruoyi.common.core.exception.UtilException;
+
+import com.ruoyi.common.exception.UtilException;
 
 /**
  * 提供通用唯一识别码（universally unique identifier）（UUID）实现

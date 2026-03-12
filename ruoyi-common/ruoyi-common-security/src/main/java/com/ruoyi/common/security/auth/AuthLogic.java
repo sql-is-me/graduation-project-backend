@@ -7,6 +7,7 @@ import org.springframework.util.PatternMatchUtils;
 
 import com.ruoyi.common.SpringUtils;
 import com.ruoyi.common.StringUtils;
+import com.ruoyi.common.TokenUtils;
 import com.ruoyi.common.contextHolder.ContextHolder;
 import com.ruoyi.common.core.exception.auth.NotLoginException;
 import com.ruoyi.common.core.exception.auth.NotPermissionException;
@@ -15,7 +16,6 @@ import com.ruoyi.common.security.annotation.Logical;
 import com.ruoyi.common.security.annotation.RequiresLogin;
 import com.ruoyi.common.security.annotation.RequiresPermissions;
 import com.ruoyi.common.security.annotation.RequiresRoles;
-import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.common.tokens.TokenService;
 import com.ruoyi.system.api.model.LoginUser;
 
@@ -37,7 +37,7 @@ public class AuthLogic {
      * 会话注销
      */
     public void logout() {
-        String token = SecurityUtils.getToken();
+        String token = TokenUtils.getToken();
         if (token == null) {
             return;
         }
@@ -64,11 +64,11 @@ public class AuthLogic {
      * @return 用户缓存信息
      */
     public LoginUser getLoginUser() {
-        String token = SecurityUtils.getToken();
+        String token = TokenUtils.getToken();
         if (token == null) {
             throw new NotLoginException("未提供token");
         }
-        LoginUser loginUser = SecurityUtils.getLoginUser();
+        LoginUser loginUser = TokenUtils.getLoginUser();
         if (loginUser == null) {
             throw new NotLoginException("无效的token");
         }

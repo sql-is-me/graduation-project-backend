@@ -1,20 +1,14 @@
 package com.ruoyi.system.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.ruoyi.common.core.constant.CacheConstants;
+
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
-import com.ruoyi.common.log.annotation.Log;
-import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.redis.service.RedisService;
 import com.ruoyi.common.security.annotation.InnerAuth;
-import com.ruoyi.common.security.annotation.RequiresPermissions;
 import com.ruoyi.system.api.domain.SysLogininfor;
 import com.ruoyi.system.service.ISysLogininforService;
 
@@ -28,17 +22,6 @@ import com.ruoyi.system.service.ISysLogininforService;
 public class SysLoginInfoController extends BaseController {
     @Autowired
     private ISysLogininforService loginInfoService;
-
-    @Autowired
-    private RedisService redisService;
-
-    @RequiresPermissions("system:loginInfo:unlock")
-    @Log(title = "账户解锁", businessType = BusinessType.OTHER)
-    @GetMapping("/unlock/{userName}")
-    public AjaxResult unlock(@PathVariable("userName") String userName) {
-        redisService.deleteObject(CacheConstants.PWD_ERR_CNT_KEY + userName);
-        return success();
-    }
 
     @InnerAuth
     @PostMapping

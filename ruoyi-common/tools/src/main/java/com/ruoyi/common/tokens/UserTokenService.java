@@ -11,11 +11,12 @@ import org.springframework.stereotype.Component;
 
 import com.ruoyi.common.IpUtils;
 import com.ruoyi.common.StringUtils;
+import com.ruoyi.common.TokenUtils;
+import com.ruoyi.common.Constants.CacheConstants;
 import com.ruoyi.common.Constants.JWTConstants;
+import com.ruoyi.common.Constants.TokenConstants;
 import com.ruoyi.common.JWT.JWTService;
-import com.ruoyi.common.core.constant.CacheConstants;
 import com.ruoyi.common.core.utils.uuid.IdUtils;
-import com.ruoyi.common.security.utils.SecurityUtils;
 import com.ruoyi.common.entity.User;
 import com.ruoyi.common.entity.UserOnline;
 import com.ruoyi.common.redis.service.RedisService;
@@ -26,16 +27,8 @@ import com.ruoyi.common.redis.service.RedisService;
 @Slf4j
 @Component
 public class UserTokenService {
-    protected static final long MILLIS_MINUTE = 60000;
-
-    private final static long TOKEN_EXPIRE_TIME = 360;
-
-    private final static Long TOKEN_REFRESH_THRESHOLD_MINUTES = CacheConstants.REFRESH_TIME * MILLIS_MINUTE;
-
-    /**
-     * 用户token缓存前缀
-     */
-    private final static String USER_TOKENS = "user_tokens:";
+    private final static Long TOKEN_REFRESH_THRESHOLD_MINUTES = CacheConstants.REFRESH_TIME
+            * CacheConstants.MILLIS_MINUTE;
 
     @Autowired
     private RedisService redisService;
@@ -66,7 +59,7 @@ public class UserTokenService {
         // 接口返回信息
         Map<String, Object> rspMap = new HashMap<String, Object>();
         rspMap.put("access_token", JWTService.createToken(claimsMap));
-        rspMap.put("expires_in", TOKEN_EXPIRE_TIME);
+        rspMap.put("expires_in", CacheConstants.TOKEN_EXPIRE_TIME);
         return rspMap;
     }
 
@@ -86,24 +79,24 @@ public class UserTokenService {
      */
     public void refreshToken(UserOnline uo) {
         uo.setLoginTime(System.currentTimeMillis());
-        uo.setExpireTime(uo.getLoginTime() + TOKEN_EXPIRE_TIME * MILLIS_MINUTE);
+        uo.setExpireTime(uo.getLoginTime() + CacheConstants.TOKEN_EXPIRE_TIME * CacheConstants.MILLIS_MINUTE);
 
-        String uoKey = USER_TOKENS + uo.getToken();
-        redisService.setCacheObject(uoKey, uo, TOKEN_EXPIRE_TIME, TimeUnit.MINUTES);
+        String uoKey = TokenConstants.USER_TOKENS + uo.getToken();
+        redisService.setCacheObject(uoKey, uo, CacheConstants.TOKEN_EXPIRE_TIME, TimeUnit.MINUTES);
     }
 
     /**
      * 获取当前登录用户的token
      */
     public String getUOToken(HttpServletRequest request) {
-        return SecurityUtils.getToken(request);
+        return TokenUtils.getToken(request);
     }
 
     /**
      * 获取当前登录用户存储在redis中的key
      */
     public String getUOKey(String token) {
-        return USER_TOKENS + JWTService.getKey(JWTService.parseToken(token));
+        return TokenConstants.USER_TOKENS + JWTService.getKey(JWTService.parseToken(token));
     }
 
     /**

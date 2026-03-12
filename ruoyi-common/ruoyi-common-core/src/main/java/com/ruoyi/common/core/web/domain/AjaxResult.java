@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 import com.ruoyi.common.StringUtils;
-import com.ruoyi.common.Constants.HttpStatus;
+import com.ruoyi.common.Constants.HttpStatusConstants;
 
 /**
  * 操作消息提醒
@@ -91,7 +91,7 @@ public class AjaxResult extends HashMap<String, Object> {
      * @return 成功消息
      */
     public static AjaxResult success(String msg, Object data) {
-        return new AjaxResult(HttpStatus.SUCCESS, msg, data);
+        return new AjaxResult(HttpStatusConstants.SUCCESS, msg, data);
     }
 
     /**
@@ -112,7 +112,7 @@ public class AjaxResult extends HashMap<String, Object> {
      * @return 警告消息
      */
     public static AjaxResult warn(String msg, Object data) {
-        return new AjaxResult(HttpStatus.WARN, msg, data);
+        return new AjaxResult(HttpStatusConstants.WARN, msg, data);
     }
 
     /**
@@ -142,7 +142,7 @@ public class AjaxResult extends HashMap<String, Object> {
      * @return 错误消息
      */
     public static AjaxResult error(String msg, Object data) {
-        return new AjaxResult(HttpStatus.ERROR, msg, data);
+        return new AjaxResult(HttpStatusConstants.ERROR, msg, data);
     }
 
     /**
@@ -162,7 +162,7 @@ public class AjaxResult extends HashMap<String, Object> {
      * @return 结果
      */
     public boolean isSuccess() {
-        return Objects.equals(HttpStatus.SUCCESS, this.get(CODE_TAG));
+        return Objects.equals(HttpStatusConstants.SUCCESS, this.get(CODE_TAG));
     }
 
     /**
@@ -171,7 +171,7 @@ public class AjaxResult extends HashMap<String, Object> {
      * @return 结果
      */
     public boolean isWarn() {
-        return Objects.equals(HttpStatus.WARN, this.get(CODE_TAG));
+        return Objects.equals(HttpStatusConstants.WARN, this.get(CODE_TAG));
     }
 
     /**
@@ -180,7 +180,7 @@ public class AjaxResult extends HashMap<String, Object> {
      * @return 结果
      */
     public boolean isError() {
-        return Objects.equals(HttpStatus.ERROR, this.get(CODE_TAG));
+        return Objects.equals(HttpStatusConstants.ERROR, this.get(CODE_TAG));
     }
 
     /**
