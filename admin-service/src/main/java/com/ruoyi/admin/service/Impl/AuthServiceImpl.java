@@ -252,7 +252,7 @@ public class AuthServiceImpl implements AuthService {
         } else if (AuthConstants.LOGIN_FAIL.equals(status)) {
             loginInfo.setStatus(AuthConstants.LOGIN_FAIL_STATUS);
         }
-        remoteLogService.saveLogininfor(loginInfo, AuthConstants.INNER);
+        remoteLogService.saveLoginInfo(loginInfo, AuthConstants.INNER);
     }
 
 }

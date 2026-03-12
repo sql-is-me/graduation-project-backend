@@ -1,4 +1,4 @@
-package com.ruoyi.common.security.config;
+package com.ruoyi.common.config;
 
 import java.util.TimeZone;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;

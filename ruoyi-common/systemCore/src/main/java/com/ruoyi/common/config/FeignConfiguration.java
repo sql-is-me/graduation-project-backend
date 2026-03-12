@@ -1,14 +1,13 @@
-package com.ruoyi.common.feign;
+package com.ruoyi.common.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import feign.RequestInterceptor;
+
+import com.ruoyi.common.Interceptor.FeignRequestInterceptor;
 
 /**
  * Feign 配置注册
- *
- * @author ruoyi
  **/
 @Configuration
 public class FeignConfiguration {

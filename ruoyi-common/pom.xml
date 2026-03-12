@@ -12,7 +12,7 @@
     <modules>
         <module>system</module>
         <module>tools</module>
-        <module>ruoyi-common-security</module>
+        <module>systemCore</module>
         <module>annotation</module>
         <module>infrastructures</module>
         <module>utils</module>

@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.Constants.MenuConstants;
-import com.ruoyi.system.api.domain.SysDept;
 import com.ruoyi.system.domain.SysMenu;
 
 /**

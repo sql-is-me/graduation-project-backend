@@ -22,6 +22,11 @@ public interface LogService {
     int deleteOperLog(Long operId);
 
     /**
+     * 新增操作日志（仅内部调用）
+     */
+    int insertOperLog(OperLog operLog);
+
+    /**
      * 查询操作日志列表
      */
     List<LoginInfo> listLoginInfo(LoginInfo loginInfo);
@@ -35,4 +40,9 @@ public interface LogService {
      * 删除登录日志
      */
     int deleteLoginInfo(Long infoId);
+
+    /**
+     * 新增登录日志（仅内部调用）
+     */
+    int insertLoginInfo(LoginInfo loginInfo);
 }

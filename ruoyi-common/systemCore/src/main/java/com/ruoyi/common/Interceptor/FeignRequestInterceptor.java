@@ -1,4 +1,4 @@
-package com.ruoyi.common.feign;
+package com.ruoyi.common.Interceptor;
 
 import java.util.Map;
 import jakarta.servlet.http.HttpServletRequest;
@@ -49,9 +49,9 @@ public class FeignRequestInterceptor implements RequestInterceptor {
 
             // 配置客户端IP
             requestTemplate.header("X-Forwarded-For", IpUtils.getIpAddr());
-        }
 
-        // 标记为内部请求，配合 @InnerAuth 注解使用
-        requestTemplate.header(SecurityConstants.FROM_SOURCE, AuthConstants.INNER);
+            // 标记为内部请求，配合 @InnerAuth 注解使用
+            requestTemplate.header(SecurityConstants.FROM_SOURCE, AuthConstants.INNER);
+        }
     }
 }

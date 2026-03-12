@@ -1,6 +1,5 @@
-package com.ruoyi.common.security.annotation;
+package com.ruoyi.common.annotation;
 
-import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;

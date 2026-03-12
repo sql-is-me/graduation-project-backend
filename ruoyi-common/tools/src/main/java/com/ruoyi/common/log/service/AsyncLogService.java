@@ -23,6 +23,6 @@ public class AsyncLogService {
      */
     @Async
     public void saveOperLog(OperLog operLog) throws Exception {
-        remoteLogService.saveLog(operLog, AuthConstants.INNER);
+        remoteLogService.saveOperLog(operLog, AuthConstants.INNER);
     }
 }

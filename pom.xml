@@ -154,7 +154,7 @@
                 <artifactId>ruoyi-common-sensitive</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
-            
+
             <dependency>
                 <groupId>com.ruoyi</groupId>
                 <artifactId>tools</artifactId>
@@ -183,6 +183,12 @@
             <dependency>
                 <groupId>com.ruoyi</groupId>
                 <artifactId>utils</artifactId>
+                <version>${ruoyi.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.ruoyi</groupId>
+                <artifactId>systemCore</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
 

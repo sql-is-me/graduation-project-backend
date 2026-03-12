@@ -49,6 +49,11 @@ public class LogServiceImpl implements LogService {
         return operLogMapper.deleteById(operId);
     }
 
+    @Override
+    public int insertOperLog(OperLog operLog) {
+        return operLogMapper.insert(operLog);
+    }
+
     /**
      * 清空操作日志
      */
@@ -81,6 +86,10 @@ public class LogServiceImpl implements LogService {
         return loginInfoMapper.deleteById(infoId);
     }
 
+    public int insertLoginInfo(LoginInfo loginInfo) {
+        return loginInfoMapper.insert(loginInfo);
+    }
+
     /**
      * 批量删除登录日志
      */
@@ -96,5 +105,4 @@ public class LogServiceImpl implements LogService {
         wrapper.gt(LoginInfo::getInfoId, 0);
         loginInfoMapper.delete(wrapper);
     }
-
 }

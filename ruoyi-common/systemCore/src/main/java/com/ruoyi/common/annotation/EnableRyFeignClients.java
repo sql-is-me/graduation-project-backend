@@ -1,4 +1,4 @@
-package com.ruoyi.common.security.annotation;
+package com.ruoyi.common.annotation;
 
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import java.lang.annotation.*;

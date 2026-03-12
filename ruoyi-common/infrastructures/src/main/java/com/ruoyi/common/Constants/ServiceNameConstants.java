@@ -2,19 +2,18 @@ package com.ruoyi.common.Constants;
 
 /**
  * 服务名称
- * 
- * @author ruoyi
  */
 public class ServiceNameConstants {
-    /**
-     * 认证服务的serviceid
-     */
-    public static final String AUTH_SERVICE = "ruoyi-auth";
 
     /**
-     * 系统模块的serviceid
+     * TODO:临时过度用
      */
-    public static final String SYSTEM_SERVICE = "ruoyi-system";
+    public static final String SYSTEM_SERVICE = "system-service";
+
+    /**
+     * 管理员微服务
+     */
+    public static final String ADMIN_SERVICE = "admin-service";
 
     /**
      * 文件服务的serviceid

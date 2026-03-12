@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://maven.apache.org/POM/4.0.0"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>com.ruoyi</groupId>
         <artifactId>ruoyi-common</artifactId>
         <version>3.6.7</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    
-    <artifactId>ruoyi-common-security</artifactId>
+
+    <artifactId>systemCore</artifactId>
 
     <description>
-        ruoyi-common-security安全模块
+        系统配置模块
     </description>
 
     <dependencies>
-
         <!-- Spring Web -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -28,10 +28,10 @@
             <artifactId>ruoyi-api-system</artifactId>
         </dependency>
 
-        <!-- <dependency>
+        <dependency>
             <groupId>com.ruoyi</groupId>
             <artifactId>tools</artifactId>
-        </dependency> -->
+        </dependency>
 
 
     </dependencies>

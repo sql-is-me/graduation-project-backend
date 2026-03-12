@@ -13,12 +13,12 @@ import com.ruoyi.common.header.ContextHolder;
  * 从当前线程上下文中获取登录用户信息，判断用户类型
  *
  * 类型映射关系:
- *   ContextHolder.type = "0" → 管理员端
- *     AdminOnline.adminInfo.adminType = "0" → ADMIN（顶级管理员）
- *     AdminOnline.adminInfo.adminType = "1" → MANAGER（地区管理员）
- *   ContextHolder.type = "1" → 用户端
- *     UserOnline.userInfo.userType = "0" → VIP（普通会员）
- *     UserOnline.userInfo.userType = "1" → COACH（教练）
+ * ContextHolder.type = "0" → 管理员端
+ * AdminOnline.adminInfo.adminType = "0" → ADMIN（顶级管理员）
+ * AdminOnline.adminInfo.adminType = "1" → MANAGER（地区管理员）
+ * ContextHolder.type = "1" → 用户端
+ * UserOnline.userInfo.userType = "0" → VIP（普通会员）
+ * UserOnline.userInfo.userType = "1" → COACH（教练）
  */
 public class AuthUtil {
 
