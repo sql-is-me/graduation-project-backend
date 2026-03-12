@@ -154,14 +154,7 @@
                 <artifactId>ruoyi-common-sensitive</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
-
-            <!-- 权限范围 -->
-            <dependency>
-                <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-common-datascope</artifactId>
-                <version>${ruoyi.version}</version>
-            </dependency>
-
+            
             <dependency>
                 <groupId>com.ruoyi</groupId>
                 <artifactId>tools</artifactId>

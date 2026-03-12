@@ -19,7 +19,8 @@ import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.security.annotation.RequiresPermissions;
+import com.ruoyi.common.auth.annotation.RequiresType;
+import com.ruoyi.common.enums.UserTypes;
 import com.ruoyi.system.domain.SysMenu;
 import com.ruoyi.system.service.ISysMenuService;
 
@@ -37,7 +38,7 @@ public class SysMenuController extends BaseController {
     /**
      * 获取菜单列表
      */
-    @RequiresPermissions("system:menu:list")
+    @RequiresType(UserTypes.ADMIN)
     @GetMapping("/list")
     public AjaxResult list(SysMenu menu) {
         Long userId = TokenUtils.getUserId();
@@ -48,7 +49,7 @@ public class SysMenuController extends BaseController {
     /**
      * 根据菜单编号获取详细信息
      */
-    @RequiresPermissions("system:menu:query")
+    @RequiresType(UserTypes.ADMIN)
     @GetMapping(value = "/{menuId}")
     public AjaxResult getInfo(@PathVariable Long menuId) {
         return success(menuService.selectMenuById(menuId));
@@ -80,7 +81,7 @@ public class SysMenuController extends BaseController {
     /**
      * 新增菜单
      */
-    @RequiresPermissions("system:menu:add")
+    @RequiresType(UserTypes.ADMIN)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysMenu menu) {
         if (!menuService.checkMenuNameUnique(menu)) {
@@ -97,7 +98,7 @@ public class SysMenuController extends BaseController {
     /**
      * 修改菜单
      */
-    @RequiresPermissions("system:menu:edit")
+    @RequiresType(UserTypes.ADMIN)
     @Log(title = "菜单管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysMenu menu) {
@@ -117,7 +118,7 @@ public class SysMenuController extends BaseController {
     /**
      * 删除菜单
      */
-    @RequiresPermissions("system:menu:remove")
+    @RequiresType(UserTypes.ADMIN)
     @Log(title = "菜单管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{menuId}")
     public AjaxResult remove(@PathVariable("menuId") Long menuId) {

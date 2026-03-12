@@ -9,12 +9,14 @@ import com.ruoyi.common.ServletUtils;
 import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.Constants.AuthConstants;
 import com.ruoyi.common.Constants.ContextHolderConstants;
+import com.ruoyi.common.core.constant.SecurityConstants;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 
 /**
  * feign 请求拦截器
+ * 在内部服务间调用时自动传递用户信息和内部标识
  */
 @Component
 public class FeignRequestInterceptor implements RequestInterceptor {
@@ -40,8 +42,6 @@ public class FeignRequestInterceptor implements RequestInterceptor {
                 requestTemplate.header(ContextHolderConstants.CH_USERNAME, username);
             }
 
-            // FIXME:是否要传递在线管理员与用户对象？
-            // FIXME：authentication并未发现有地方set过
             String authentication = headers.get(AuthConstants.AUTHORIZATION_HEADER);
             if (StringUtils.isNotEmpty(authentication)) {
                 requestTemplate.header(AuthConstants.AUTHORIZATION_HEADER, authentication);
@@ -50,5 +50,8 @@ public class FeignRequestInterceptor implements RequestInterceptor {
             // 配置客户端IP
             requestTemplate.header("X-Forwarded-For", IpUtils.getIpAddr());
         }
+
+        // 标记为内部请求，配合 @InnerAuth 注解使用
+        requestTemplate.header(SecurityConstants.FROM_SOURCE, AuthConstants.INNER);
     }
 }

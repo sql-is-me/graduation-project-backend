@@ -13,7 +13,6 @@
         <module>system</module>
         <module>tools</module>
         <module>ruoyi-common-security</module>
-        <module>ruoyi-common-datascope</module>
         <module>annotation</module>
         <module>infrastructures</module>
         <module>utils</module>

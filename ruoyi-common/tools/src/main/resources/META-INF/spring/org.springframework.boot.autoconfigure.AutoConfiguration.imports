@@ -3,3 +3,5 @@ com.ruoyi.common.redis.service.RedisService
 com.ruoyi.common.log.service.AsyncLogService
 com.ruoyi.common.log.aspect.LogAspect
 com.ruoyi.common.tokens.TokenService
+com.ruoyi.common.auth.aspect.InnerAuthAspect
+com.ruoyi.common.auth.aspect.PermissionAspect

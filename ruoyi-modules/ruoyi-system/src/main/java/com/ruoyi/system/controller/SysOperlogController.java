@@ -14,14 +14,16 @@ import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.entity.TableDataInfo;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.security.annotation.InnerAuth;
-import com.ruoyi.common.security.annotation.RequiresPermissions;
+import com.ruoyi.common.auth.annotation.InnerAuth;
+import com.ruoyi.common.auth.annotation.RequiresType;
+import com.ruoyi.common.enums.UserTypes;
 import com.ruoyi.system.api.domain.SysOperLog;
 import com.ruoyi.system.service.ISysOperLogService;
 
 /**
  * 操作日志记录
- * 
+ * 查询/删除操作仅顶级管理员可用，新增操作仅内部调用
+ *
  * @author ruoyi
  */
 @RestController
@@ -30,7 +32,7 @@ public class SysOperlogController extends BaseController {
     @Autowired
     private ISysOperLogService operLogService;
 
-    @RequiresPermissions("system:operlog:list")
+    @RequiresType(UserTypes.ADMIN)
     @GetMapping("/list")
     public TableDataInfo list(SysOperLog operLog) {
         startPage();
@@ -39,13 +41,13 @@ public class SysOperlogController extends BaseController {
     }
 
     @Log(title = "操作日志", businessType = BusinessType.DELETE)
-    @RequiresPermissions("system:operlog:remove")
+    @RequiresType(UserTypes.ADMIN)
     @DeleteMapping("/{operIds}")
     public AjaxResult remove(@PathVariable Long[] operIds) {
         return toAjax(operLogService.deleteOperLogByIds(operIds));
     }
 
-    @RequiresPermissions("system:operlog:remove")
+    @RequiresType(UserTypes.ADMIN)
     @Log(title = "操作日志", businessType = BusinessType.DELETE)
     @DeleteMapping("/clean")
     public AjaxResult clean() {

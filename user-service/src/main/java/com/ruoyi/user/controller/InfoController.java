@@ -9,17 +9,21 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ruoyi.common.auth.annotation.RequiresType;
 import com.ruoyi.common.entity.R;
 import com.ruoyi.common.entity.User;
+import com.ruoyi.common.enums.UserTypes;
 import com.ruoyi.user.dto.UserInfoUpdateDTO;
 import com.ruoyi.user.dto.UserPasswordUpdateDTO;
 import com.ruoyi.user.service.InfoService;
 
 /**
  * 用户/教练个人信息控制器
+ * 教练和会员均可访问
  */
 @RestController
 @RequestMapping("/user/info")
+@RequiresType({UserTypes.COACH, UserTypes.VIP})
 public class InfoController {
 
     @Autowired

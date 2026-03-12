@@ -12,14 +12,18 @@ import org.springframework.web.multipart.MultipartFile;
 import com.ruoyi.admin.dto.AdminPasswordUpdateDTO;
 import com.ruoyi.admin.dto.AdminInfoUpdateDTO;
 import com.ruoyi.admin.service.Impl.InfoServiceImpl;
+import com.ruoyi.common.auth.annotation.RequiresType;
 import com.ruoyi.common.entity.Admin;
 import com.ruoyi.common.entity.R;
+import com.ruoyi.common.enums.UserTypes;
 
 /**
  * 管理员个人信息控制器
+ * 顶级管理员和地区管理员均可访问
  */
 @RestController
 @RequestMapping("/admin/info")
+@RequiresType({UserTypes.ADMIN, UserTypes.MANAGER})
 public class InfoController {
 
     @Autowired

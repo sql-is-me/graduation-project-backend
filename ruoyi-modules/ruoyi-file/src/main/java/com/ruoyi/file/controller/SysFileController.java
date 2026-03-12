@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.ruoyi.common.StringUtils;
+import com.ruoyi.common.auth.annotation.InnerAuth;
 import com.ruoyi.common.entity.R;
 import com.ruoyi.common.file.FileUtils;
 import com.ruoyi.common.entity.File;
@@ -16,7 +17,8 @@ import com.ruoyi.file.service.ISysFileService;
 
 /**
  * 文件请求处理
- * 
+ * 仅允许内部服务调用（通过Feign）
+ *
  * @author ruoyi
  */
 @RestController
@@ -27,8 +29,9 @@ public class SysFileController {
     private ISysFileService sysFileService;
 
     /**
-     * 文件上传请求
+     * 文件上传请求（仅内部调用）
      */
+    @InnerAuth
     @PostMapping("upload")
     public R<File> upload(MultipartFile mf) {
         try {
@@ -45,8 +48,9 @@ public class SysFileController {
     }
 
     /**
-     * 文件删除请求
+     * 文件删除请求（仅内部调用）
      */
+    @InnerAuth
     @DeleteMapping("delete")
     public R<Boolean> delete(String fileUrl) {
         try {

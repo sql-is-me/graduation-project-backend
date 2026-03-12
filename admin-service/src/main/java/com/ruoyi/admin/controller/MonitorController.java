@@ -10,14 +10,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ruoyi.admin.service.Impl.MonitorServiceImpl;
 import com.ruoyi.common.VO.OnlineUserInfo;
+import com.ruoyi.common.auth.annotation.RequiresType;
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.entity.R;
+import com.ruoyi.common.enums.UserTypes;
 
 /**
  * 管理员用户监控控制器（在线用户监控 + 管理员用户管理）
+ * 仅顶级管理员可访问（查看在线用户、强退用户）
  */
 @RestController
 @RequestMapping("/admin/monitor")
+@RequiresType(UserTypes.ADMIN)
 public class MonitorController extends BaseController {
 
     @Autowired

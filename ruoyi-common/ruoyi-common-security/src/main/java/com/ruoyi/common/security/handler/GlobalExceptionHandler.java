@@ -14,12 +14,11 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import com.ruoyi.common.Convert;
 import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.Constants.HttpStatusConstants;
-import com.ruoyi.common.core.exception.auth.NotPermissionException;
-import com.ruoyi.common.core.exception.auth.NotRoleException;
 import com.ruoyi.common.core.utils.html.EscapeUtil;
 import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.exception.DemoModeException;
 import com.ruoyi.common.exception.InnerAuthException;
+import com.ruoyi.common.exception.PreAuthorizeException;
 import com.ruoyi.common.exception.ServiceException;
 
 /**
@@ -32,22 +31,22 @@ public class GlobalExceptionHandler {
     private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     /**
-     * 权限码异常
+     * 内部认证异常
      */
-    @ExceptionHandler(NotPermissionException.class)
-    public AjaxResult handleNotPermissionException(NotPermissionException e, HttpServletRequest request) {
+    @ExceptionHandler(InnerAuthException.class)
+    public AjaxResult handleInnerAuthException(InnerAuthException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
-        log.error("请求地址'{}',权限码校验失败'{}'", requestURI, e.getMessage());
-        return AjaxResult.error(HttpStatusConstants.FORBIDDEN, "没有访问权限，请联系管理员授权");
+        log.error("请求地址'{}',内部认证失败'{}'", requestURI, e.getMessage());
+        return AjaxResult.error(HttpStatusConstants.FORBIDDEN, e.getMessage());
     }
 
     /**
-     * 角色权限异常
+     * 权限校验异常（未登录）
      */
-    @ExceptionHandler(NotRoleException.class)
-    public AjaxResult handleNotRoleException(NotRoleException e, HttpServletRequest request) {
+    @ExceptionHandler(PreAuthorizeException.class)
+    public AjaxResult handlePreAuthorizeException(PreAuthorizeException e, HttpServletRequest request) {
         String requestURI = request.getRequestURI();
-        log.error("请求地址'{}',角色权限校验失败'{}'", requestURI, e.getMessage());
+        log.error("请求地址'{}',权限校验失败", requestURI);
         return AjaxResult.error(HttpStatusConstants.FORBIDDEN, "没有访问权限，请联系管理员授权");
     }
 
@@ -136,14 +135,6 @@ public class GlobalExceptionHandler {
         log.error(e.getMessage(), e);
         String message = e.getBindingResult().getFieldError().getDefaultMessage();
         return AjaxResult.error(message);
-    }
-
-    /**
-     * 内部认证异常
-     */
-    @ExceptionHandler(InnerAuthException.class)
-    public AjaxResult handleInnerAuthException(InnerAuthException e) {
-        return AjaxResult.error(e.getMessage());
     }
 
     /**

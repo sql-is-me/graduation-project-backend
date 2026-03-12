@@ -18,7 +18,8 @@ import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.entity.TableDataInfo;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
-import com.ruoyi.common.security.annotation.RequiresPermissions;
+import com.ruoyi.common.auth.annotation.RequiresType;
+import com.ruoyi.common.enums.UserTypes;
 import com.ruoyi.system.domain.SysNotice;
 import com.ruoyi.system.service.ISysNoticeService;
 
@@ -36,7 +37,7 @@ public class SysNoticeController extends BaseController {
     /**
      * 获取通知公告列表
      */
-    @RequiresPermissions("system:notice:list")
+    @RequiresType(UserTypes.ADMIN)
     @GetMapping("/list")
     public TableDataInfo list(SysNotice notice) {
         startPage();
@@ -47,7 +48,7 @@ public class SysNoticeController extends BaseController {
     /**
      * 根据通知公告编号获取详细信息
      */
-    @RequiresPermissions("system:notice:query")
+    @RequiresType(UserTypes.ADMIN)
     @GetMapping(value = "/{noticeId}")
     public AjaxResult getInfo(@PathVariable Long noticeId) {
         return success(noticeService.selectNoticeById(noticeId));
@@ -56,7 +57,7 @@ public class SysNoticeController extends BaseController {
     /**
      * 新增通知公告
      */
-    @RequiresPermissions("system:notice:add")
+    @RequiresType(UserTypes.ADMIN)
     @Log(title = "通知公告", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody SysNotice notice) {
@@ -67,7 +68,7 @@ public class SysNoticeController extends BaseController {
     /**
      * 修改通知公告
      */
-    @RequiresPermissions("system:notice:edit")
+    @RequiresType(UserTypes.ADMIN)
     @Log(title = "通知公告", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody SysNotice notice) {
@@ -78,7 +79,7 @@ public class SysNoticeController extends BaseController {
     /**
      * 删除通知公告
      */
-    @RequiresPermissions("system:notice:remove")
+    @RequiresType(UserTypes.ADMIN)
     @Log(title = "通知公告", businessType = BusinessType.DELETE)
     @DeleteMapping("/{noticeIds}")
     public AjaxResult remove(@PathVariable Long[] noticeIds) {

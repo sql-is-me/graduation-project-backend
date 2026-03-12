@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.core.web.domain.AjaxResult;
-import com.ruoyi.common.security.annotation.InnerAuth;
+import com.ruoyi.common.auth.annotation.InnerAuth;
 import com.ruoyi.system.api.domain.SysLogininfor;
 import com.ruoyi.system.service.ISysLogininforService;
 

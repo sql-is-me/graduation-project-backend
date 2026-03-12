@@ -12,8 +12,11 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 
 import com.ruoyi.common.Convert;
 import com.ruoyi.common.StringUtils;
+import com.ruoyi.common.Constants.HttpStatusConstants;
+import com.ruoyi.common.auth.aspect.PermissionAspect.PermissionDeniedException;
 import com.ruoyi.common.core.utils.html.EscapeUtil;
 import com.ruoyi.common.entity.R;
+import com.ruoyi.common.exception.InnerAuthException;
 import com.ruoyi.common.exception.ServiceException;
 
 /**
@@ -22,6 +25,26 @@ import com.ruoyi.common.exception.ServiceException;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+    /**
+     * 内部认证异常
+     */
+    @ExceptionHandler(InnerAuthException.class)
+    public R<?> handleInnerAuthException(InnerAuthException e, HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        log.error("请求地址'{}',内部认证失败'{}'", requestURI, e.getMessage());
+        return R.fail(HttpStatusConstants.FORBIDDEN, e.getMessage());
+    }
+
+    /**
+     * 权限不足异常
+     */
+    @ExceptionHandler(PermissionDeniedException.class)
+    public R<?> handlePermissionDeniedException(PermissionDeniedException e, HttpServletRequest request) {
+        String requestURI = request.getRequestURI();
+        log.error("请求地址'{}',权限校验失败'{}'", requestURI, e.getMessage());
+        return R.fail(HttpStatusConstants.FORBIDDEN, e.getMessage());
+    }
+
     /**
      * 请求方式不支持
      */

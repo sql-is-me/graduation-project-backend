@@ -59,6 +59,12 @@
             <groupId>com.ruoyi</groupId>
             <artifactId>ruoyi-api-system</artifactId>
         </dependency>
+
+        <!-- Tools (权限注解支持) -->
+        <dependency>
+            <groupId>com.ruoyi</groupId>
+            <artifactId>tools</artifactId>
+        </dependency>
         
     </dependencies>
 

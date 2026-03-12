@@ -53,12 +53,6 @@
             <artifactId>mysql-connector-j</artifactId>
         </dependency>
 
-        <!-- RuoYi Common DataScope -->
-        <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-common-datascope</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>com.ruoyi</groupId>
             <artifactId>tools</artifactId>

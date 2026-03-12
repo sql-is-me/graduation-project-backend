@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.admin.dto.AdminLoginDTO;
 import com.ruoyi.admin.dto.AdminRegisterDTO;
 import com.ruoyi.admin.service.AuthService;
+import com.ruoyi.common.auth.annotation.RequiresType;
 import com.ruoyi.common.entity.R;
+import com.ruoyi.common.enums.UserTypes;
 
 /**
  * 管理员认证控制器
@@ -82,12 +84,11 @@ public class AuthController {
      * 地区管理员生成时自动使用自身storeId
      */
     @PostMapping("/invite")
+    @RequiresType({UserTypes.ADMIN, UserTypes.MANAGER})
     public R<?> generateInviteCode(@RequestParam(required = false) Long storeId,
             HttpServletRequest request) {
         String code = authService.generateInviteCode(request, storeId);
 
         return R.ok(code, "邀请码生成成功");
     }
-
-    // TODO: 访问权限管理
 }

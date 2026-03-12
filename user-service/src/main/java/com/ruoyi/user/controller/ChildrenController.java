@@ -12,16 +12,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ruoyi.common.auth.annotation.RequiresType;
 import com.ruoyi.common.entity.Children;
 import com.ruoyi.common.entity.R;
+import com.ruoyi.common.enums.UserTypes;
 import com.ruoyi.user.dto.ChildrenDTO;
 import com.ruoyi.user.service.ChildrenService;
 
 /**
  * 孩子信息管理控制器
+ * 仅普通会员（VIP）可访问，教练无权操作
  */
 @RestController
 @RequestMapping("/user/children")
+@RequiresType(UserTypes.VIP)
 public class ChildrenController {
 
     @Autowired

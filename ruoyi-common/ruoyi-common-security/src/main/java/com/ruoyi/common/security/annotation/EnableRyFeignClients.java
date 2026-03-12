@@ -11,7 +11,6 @@ import java.lang.annotation.*;
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-@Documented
 @EnableFeignClients
 public @interface EnableRyFeignClients {
     String[] value() default {};
