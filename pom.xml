@@ -137,7 +137,7 @@
             <!-- 核心模块 -->
             <dependency>
                 <groupId>com.ruoyi</groupId>
-                <artifactId>ruoyi-common-core</artifactId>
+                <artifactId>system</artifactId>
                 <version>${ruoyi.version}</version>
             </dependency>
 
