@@ -15,7 +15,7 @@ import com.ruoyi.common.Convert;
 import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.Constants.HttpStatusConstants;
 import com.ruoyi.common.core.utils.html.EscapeUtil;
-import com.ruoyi.common.core.web.domain.AjaxResult;
+import com.ruoyi.common.entity.result.AjaxResult;
 import com.ruoyi.common.exception.DemoModeException;
 import com.ruoyi.common.exception.InnerAuthException;
 import com.ruoyi.common.exception.PreAuthorizeException;

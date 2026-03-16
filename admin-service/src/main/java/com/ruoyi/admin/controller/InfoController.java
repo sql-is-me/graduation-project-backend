@@ -14,7 +14,7 @@ import com.ruoyi.admin.dto.AdminInfoUpdateDTO;
 import com.ruoyi.admin.service.Impl.InfoServiceImpl;
 import com.ruoyi.common.auth.annotation.RequiresType;
 import com.ruoyi.common.entity.Admin;
-import com.ruoyi.common.entity.R;
+import com.ruoyi.common.entity.result.R;
 import com.ruoyi.common.enums.UserTypes;
 
 /**

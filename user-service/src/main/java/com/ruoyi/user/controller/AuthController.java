@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ruoyi.common.entity.R;
+import com.ruoyi.common.entity.result.R;
 import com.ruoyi.user.dto.UserLoginDTO;
 import com.ruoyi.user.dto.UserRegisterDTO;
 import com.ruoyi.user.service.AuthService;

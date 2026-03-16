@@ -2,7 +2,7 @@ package com.ruoyi.gateway.service;
 
 import java.io.IOException;
 
-import com.ruoyi.common.core.web.domain.AjaxResult;
+import com.ruoyi.common.entity.result.AjaxResult;
 import com.ruoyi.common.exception.CaptchaException;
 
 /**

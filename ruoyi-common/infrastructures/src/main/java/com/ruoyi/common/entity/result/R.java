@@ -1,4 +1,4 @@
-package com.ruoyi.common.entity;
+package com.ruoyi.common.entity.result;
 
 import java.io.Serializable;
 

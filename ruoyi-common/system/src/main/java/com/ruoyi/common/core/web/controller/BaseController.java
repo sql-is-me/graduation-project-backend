@@ -11,8 +11,8 @@ import com.github.pagehelper.PageInfo;
 import com.ruoyi.common.DateUtils;
 import com.ruoyi.common.PageUtils;
 import com.ruoyi.common.Constants.HttpStatusConstants;
-import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.entity.TableDataInfo;
+import com.ruoyi.common.entity.result.AjaxResult;
 
 /**
  * web层通用数据处理

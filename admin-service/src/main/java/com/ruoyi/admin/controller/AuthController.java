@@ -15,7 +15,7 @@ import com.ruoyi.admin.dto.AdminLoginDTO;
 import com.ruoyi.admin.dto.AdminRegisterDTO;
 import com.ruoyi.admin.service.AuthService;
 import com.ruoyi.common.auth.annotation.RequiresType;
-import com.ruoyi.common.entity.R;
+import com.ruoyi.common.entity.result.R;
 import com.ruoyi.common.enums.UserTypes;
 
 /**

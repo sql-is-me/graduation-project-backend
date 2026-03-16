@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.admin.service.LogService;
 import com.ruoyi.common.auth.annotation.InnerAuth;
 import com.ruoyi.common.core.web.controller.BaseController;
-import com.ruoyi.common.core.web.domain.AjaxResult;
 import com.ruoyi.common.entity.LoginInfo;
 import com.ruoyi.common.entity.OperLog;
+import com.ruoyi.common.entity.result.R;
 
 /**
  * 日志内部接口
@@ -26,13 +26,23 @@ public class InnerLogController extends BaseController {
 
     @InnerAuth
     @PostMapping("/operLog")
-    public AjaxResult addOperLog(@RequestBody OperLog operLog) {
-        return toAjax(logService.insertOperLog(operLog));
+    public R<Boolean> addOperLog(@RequestBody OperLog operLog) {
+        int rows = logService.insertOperLog(operLog);
+        if (rows > 0) {
+            return R.ok(true);
+        } else {
+            return R.fail("插入操作日志失败");
+        }
     }
 
     @InnerAuth
     @PostMapping("/loginInfo")
-    public AjaxResult addLoginInfo(@RequestBody LoginInfo loginInfo) {
-        return toAjax(logService.insertLoginInfo(loginInfo));
+    public R<Boolean> addLoginInfo(@RequestBody LoginInfo loginInfo) {
+        int rows = logService.insertLoginInfo(loginInfo);
+        if (rows > 0) {
+            return R.ok(true);
+        } else {
+            return R.fail("插入登录日志失败");
+        }
     }
 }

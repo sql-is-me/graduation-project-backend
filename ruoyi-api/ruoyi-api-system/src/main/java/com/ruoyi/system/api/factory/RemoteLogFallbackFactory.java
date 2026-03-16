@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.ruoyi.common.entity.LoginInfo;
 import com.ruoyi.common.entity.OperLog;
-import com.ruoyi.common.entity.R;
+import com.ruoyi.common.entity.result.R;
 import com.ruoyi.system.api.RemoteLogService;
 
 /**

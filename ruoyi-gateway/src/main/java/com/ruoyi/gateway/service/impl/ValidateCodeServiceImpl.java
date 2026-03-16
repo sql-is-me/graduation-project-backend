@@ -14,7 +14,7 @@ import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.Constants.AuthConstants;
 import com.ruoyi.common.core.utils.sign.Base64;
 import com.ruoyi.common.core.utils.uuid.IdUtils;
-import com.ruoyi.common.core.web.domain.AjaxResult;
+import com.ruoyi.common.entity.result.AjaxResult;
 import com.ruoyi.common.exception.CaptchaException;
 import com.ruoyi.common.redis.service.RedisService;
 import com.ruoyi.gateway.config.properties.CaptchaProperties;

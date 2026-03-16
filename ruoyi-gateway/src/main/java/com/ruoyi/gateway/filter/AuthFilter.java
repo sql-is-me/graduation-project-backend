@@ -17,7 +17,6 @@ import com.ruoyi.common.Constants.ContextHolderConstants;
 import com.ruoyi.common.Constants.HttpStatusConstants;
 import com.ruoyi.common.Constants.TokenConstants;
 import com.ruoyi.common.JWT.JWTService;
-import com.ruoyi.common.core.constant.SecurityConstants;
 import com.ruoyi.common.redis.service.RedisService;
 import com.ruoyi.gateway.config.properties.IgnoreWhiteProperties;
 import io.jsonwebtoken.Claims;
@@ -88,7 +87,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
         addHeader(mutate, ContextHolderConstants.CH_TYPE, type);
 
         // 内部请求来源参数清除
-        removeHeader(mutate, SecurityConstants.FROM_SOURCE);
+        removeHeader(mutate, AuthConstants.FROM_SOURCE);
 
         return chain.filter(exchange.mutate().request(mutate.build()).build());
     }

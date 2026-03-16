@@ -7,6 +7,11 @@ public class AuthConstants {
     public static final String AUTHORIZATION_HEADER = "Authorization";
 
     /**
+     * 请求来源字段
+     */
+    public static final String FROM_SOURCE = "from-source";
+
+    /**
      * 内部请求
      */
     public static final String INNER = "inner";

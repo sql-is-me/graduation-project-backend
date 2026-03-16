@@ -6,10 +6,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.ruoyi.common.Constants.ServiceNameConstants;
-import com.ruoyi.common.core.constant.SecurityConstants;
+import com.ruoyi.common.Constants.AuthConstants;
 import com.ruoyi.common.entity.LoginInfo;
 import com.ruoyi.common.entity.OperLog;
-import com.ruoyi.common.entity.R;
+import com.ruoyi.common.entity.result.R;
 import com.ruoyi.system.api.factory.RemoteLogFallbackFactory;
 
 /**
@@ -26,7 +26,7 @@ public interface RemoteLogService {
          */
         @PostMapping("/operLog")
         public R<Boolean> saveOperLog(@RequestBody OperLog operLog,
-                        @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
+                        @RequestHeader(AuthConstants.FROM_SOURCE) String source);
 
         /**
          * 保存登录记录
@@ -37,5 +37,5 @@ public interface RemoteLogService {
          */
         @PostMapping("/loginInfo")
         public R<Boolean> saveLoginInfo(@RequestBody LoginInfo loginInfo,
-                        @RequestHeader(SecurityConstants.FROM_SOURCE) String source);
+                        @RequestHeader(AuthConstants.FROM_SOURCE) String source);
 }

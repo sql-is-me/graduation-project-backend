@@ -15,7 +15,7 @@ import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.Constants.HttpStatusConstants;
 import com.ruoyi.common.auth.aspect.PermissionAspect.PermissionDeniedException;
 import com.ruoyi.common.core.utils.html.EscapeUtil;
-import com.ruoyi.common.entity.R;
+import com.ruoyi.common.entity.result.R;
 import com.ruoyi.common.exception.InnerAuthException;
 import com.ruoyi.common.exception.ServiceException;
 

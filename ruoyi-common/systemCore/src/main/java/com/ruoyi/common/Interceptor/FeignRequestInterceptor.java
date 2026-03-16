@@ -9,7 +9,6 @@ import com.ruoyi.common.ServletUtils;
 import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.Constants.AuthConstants;
 import com.ruoyi.common.Constants.ContextHolderConstants;
-import com.ruoyi.common.core.constant.SecurityConstants;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
@@ -51,7 +50,7 @@ public class FeignRequestInterceptor implements RequestInterceptor {
             requestTemplate.header("X-Forwarded-For", IpUtils.getIpAddr());
 
             // 标记为内部请求，配合 @InnerAuth 注解使用
-            requestTemplate.header(SecurityConstants.FROM_SOURCE, AuthConstants.INNER);
+            requestTemplate.header(AuthConstants.FROM_SOURCE, AuthConstants.INNER);
         }
     }
 }

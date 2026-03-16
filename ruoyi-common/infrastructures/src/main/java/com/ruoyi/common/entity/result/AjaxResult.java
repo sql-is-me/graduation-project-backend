@@ -1,9 +1,8 @@
-package com.ruoyi.common.core.web.domain;
+package com.ruoyi.common.entity.result;
 
 import java.util.HashMap;
 import java.util.Objects;
 
-import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.Constants.HttpStatusConstants;
 
 /**
@@ -50,7 +49,7 @@ public class AjaxResult extends HashMap<String, Object> {
     public AjaxResult(int code, String msg, Object data) {
         super.put(CODE_TAG, code);
         super.put(MSG_TAG, msg);
-        if (StringUtils.isNotNull(data)) {
+        if (data != null) {
             super.put(DATA_TAG, data);
         }
     }
