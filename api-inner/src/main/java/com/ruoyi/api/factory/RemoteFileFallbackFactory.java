@@ -1,4 +1,4 @@
-package com.ruoyi.system.api.factory;
+package com.ruoyi.api.factory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -6,9 +6,9 @@ import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ruoyi.api.RemoteFileService;
 import com.ruoyi.common.entity.File;
 import com.ruoyi.common.entity.result.R;
-import com.ruoyi.system.api.RemoteFileService;
 
 /**
  * 文件服务降级处理

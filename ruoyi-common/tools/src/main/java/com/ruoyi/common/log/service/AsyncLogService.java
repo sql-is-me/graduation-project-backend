@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import com.ruoyi.api.RemoteOperLogService;
 import com.ruoyi.common.Constants.AuthConstants;
 import com.ruoyi.common.entity.OperLog;
-import com.ruoyi.system.api.RemoteLogService;
 
 /**
  * 异步调用日志服务
@@ -16,7 +16,7 @@ import com.ruoyi.system.api.RemoteLogService;
 @Service
 public class AsyncLogService {
     @Autowired
-    private RemoteLogService remoteLogService;
+    private RemoteOperLogService remoteLogService;
 
     /**
      * 保存系统日志记录

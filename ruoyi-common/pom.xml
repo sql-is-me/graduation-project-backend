@@ -12,7 +12,6 @@
     <modules>
         <module>tools</module>
         <module>systemCore</module>
-        <module>annotation</module>
         <module>infrastructures</module>
     </modules>
 

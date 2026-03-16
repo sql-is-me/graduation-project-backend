@@ -12,6 +12,7 @@ import com.ruoyi.admin.dto.AdminInviteDTO;
 import com.ruoyi.admin.dto.AdminRegisterDTO;
 import com.ruoyi.admin.mapper.AdminMapper;
 import com.ruoyi.admin.service.AuthService;
+import com.ruoyi.api.RemoteLoginLogService;
 import com.ruoyi.common.Constants.AuthConstants;
 import com.ruoyi.common.JWT.service.JWTService;
 import com.ruoyi.common.entity.Admin;
@@ -21,7 +22,6 @@ import com.ruoyi.common.enums.AccountStatus;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.redis.service.RedisService;
 import com.ruoyi.common.tokens.AdminTokenService;
-import com.ruoyi.system.api.RemoteLogService;
 import com.ruoyi.utils.DateUtils;
 import com.ruoyi.utils.IpUtils;
 import com.ruoyi.utils.PWCheckUtils;
@@ -43,7 +43,7 @@ public class AuthServiceImpl implements AuthService {
     private RedisService redisService;
 
     @Autowired
-    private RemoteLogService remoteLogService;
+    private RemoteLoginLogService remoteLoginLogService;
 
     /**
      * 邀请码过期时间 30min
@@ -252,7 +252,7 @@ public class AuthServiceImpl implements AuthService {
         } else if (AuthConstants.LOGIN_FAIL.equals(status)) {
             loginInfo.setStatus(AuthConstants.LOGIN_FAIL_STATUS);
         }
-        remoteLogService.saveLoginInfo(loginInfo, AuthConstants.INNER);
+        remoteLoginLogService.saveLoginInfo(loginInfo, AuthConstants.INNER);
     }
 
 }

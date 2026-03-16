@@ -46,12 +46,12 @@ public class AuthFilter implements GlobalFilter, Ordered {
 
         String url = request.getURI().getPath();
         // 跳过白名单上的url
-        if (StringUtils.matches(url, ignoreWhite.getWhites())) {
+        if (StringUtils.matches(url, ignoreWhite.getWhites())) {// TODO:配置中心配置登录和注册白名单
             return chain.filter(exchange);
         }
 
         String token = getToken(request);
-        if (StringUtils.isEmpty(token)) { // TODO:配置中心配置登录和注册白名单
+        if (StringUtils.isEmpty(token)) {
             return unauthorizedResponse(exchange, "令牌不能为空");
         }
 

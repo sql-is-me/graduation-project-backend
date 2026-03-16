@@ -1,5 +1,6 @@
 package com.ruoyi.common.config;
 
+import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -10,6 +11,7 @@ import com.ruoyi.common.Interceptor.HeaderInterceptor;
  *
  * @author ruoyi
  */
+@Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
     /** 不需要拦截地址 */
     public static final String[] excludeUrls = { "/login", "/logout", "/refresh" }; // TODO: 需要优化，后续增加配置项

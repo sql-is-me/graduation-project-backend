@@ -1,4 +1,4 @@
-package com.ruoyi.system.api;
+package com.ruoyi.api;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ruoyi.api.factory.RemoteFileFallbackFactory;
 import com.ruoyi.common.Constants.ServiceNameConstants;
 import com.ruoyi.common.entity.File;
 import com.ruoyi.common.entity.result.R;
-import com.ruoyi.system.api.factory.RemoteFileFallbackFactory;
 
 /**
  * 文件服务

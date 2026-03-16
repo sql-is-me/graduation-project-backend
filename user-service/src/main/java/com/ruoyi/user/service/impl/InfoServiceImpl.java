@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.ruoyi.api.RemoteFileService;
 import com.ruoyi.common.entity.File;
 import com.ruoyi.common.entity.User;
 import com.ruoyi.common.entity.UserOnline;
@@ -13,7 +14,6 @@ import com.ruoyi.common.entity.result.R;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.header.ContextHolder;
 import com.ruoyi.common.tokens.UserTokenService;
-import com.ruoyi.system.api.RemoteFileService;
 import com.ruoyi.user.dto.UserInfoUpdateDTO;
 import com.ruoyi.user.dto.UserPasswordUpdateDTO;
 import com.ruoyi.user.mapper.UserMapper;

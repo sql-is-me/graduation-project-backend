@@ -35,7 +35,7 @@
 
         <dependency>
             <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-api-system</artifactId>
+            <artifactId>api-inner</artifactId>
         </dependency>
     </dependencies>
 </project>

@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ruoyi.api.RemoteLoginLogService;
 import com.ruoyi.common.Constants.AuthConstants;
 import com.ruoyi.common.JWT.service.JWTService;
 import com.ruoyi.common.entity.LoginInfo;
@@ -13,7 +14,6 @@ import com.ruoyi.common.enums.AccountStatus;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.redis.service.RedisService;
 import com.ruoyi.common.tokens.UserTokenService;
-import com.ruoyi.system.api.RemoteLogService;
 import com.ruoyi.user.dto.UserRegisterDTO;
 import com.ruoyi.user.mapper.UserMapper;
 import com.ruoyi.user.service.AuthService;
@@ -38,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
     private RedisService redisService;
 
     @Autowired
-    private RemoteLogService remoteLogService;
+    private RemoteLoginLogService remoteLoginLogService;
 
     /**
      * 用户/教练登录
@@ -202,6 +202,6 @@ public class AuthServiceImpl implements AuthService {
         } else if (AuthConstants.LOGIN_FAIL.equals(status)) {
             loginInfo.setStatus(AuthConstants.LOGIN_FAIL_STATUS);
         }
-        remoteLogService.saveLoginInfo(loginInfo, AuthConstants.INNER);
+        remoteLoginLogService.saveLoginInfo(loginInfo, AuthConstants.INNER);
     }
 }
