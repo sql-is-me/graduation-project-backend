@@ -3,8 +3,8 @@
     xmlns="http://maven.apache.org/POM/4.0.0"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.ruoyi</groupId>
-        <artifactId>ruoyi-common</artifactId>
+        <groupId>com.sql</groupId>
+        <artifactId>loveSport-common</artifactId>
         <version>3.6.7</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -22,14 +22,14 @@
             <artifactId>spring-webmvc</artifactId>
         </dependency>
 
-        <!-- RuoYi Api System -->
+        <!-- 内部调用接口 -->
         <dependency>
-            <groupId>com.ruoyi</groupId>
+            <groupId>com.sql</groupId>
             <artifactId>api-inner</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.ruoyi</groupId>
+            <groupId>com.sql</groupId>
             <artifactId>tools</artifactId>
         </dependency>
 

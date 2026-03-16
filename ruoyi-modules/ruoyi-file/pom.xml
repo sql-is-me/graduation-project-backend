@@ -3,16 +3,16 @@
     xmlns="http://maven.apache.org/POM/4.0.0"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>com.ruoyi</groupId>
-        <artifactId>ruoyi-modules</artifactId>
+        <groupId>com.sql</groupId>
+        <artifactId>loveSport-modules</artifactId>
         <version>3.6.7</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>ruoyi-modules-file</artifactId>
+    <artifactId>loveSport-modules-file</artifactId>
 
     <description>
-        ruoyi-modules-file文件服务
+        loveSport-modules-file文件服务
     </description>
 
     <dependencies>
@@ -54,15 +54,22 @@
             <version>${minio.version}</version>
         </dependency>
 
-        <!-- RuoYi Api System -->
+        <!-- OkHttp (Minio依赖) -->
         <dependency>
-            <groupId>com.ruoyi</groupId>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.12.0</version>
+        </dependency>
+
+        <!-- 内部调用接口 -->
+        <dependency>
+            <groupId>com.sql</groupId>
             <artifactId>api-inner</artifactId>
         </dependency>
 
         <!-- Tools -->
         <dependency>
-            <groupId>com.ruoyi</groupId>
+            <groupId>com.sql</groupId>
             <artifactId>tools</artifactId>
         </dependency>
 

@@ -1,2 +1,2 @@
-com.ruoyi.common.security.config.WebMvcConfig
-com.ruoyi.common.security.handler.GlobalExceptionHandler
+com.sql.common.config.WebMvcConfig
+com.sql.common.handler.GlobalExceptionHandler

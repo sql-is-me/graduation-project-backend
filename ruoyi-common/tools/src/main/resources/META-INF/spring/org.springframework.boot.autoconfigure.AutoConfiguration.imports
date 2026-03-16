@@ -1,7 +1,5 @@
-com.ruoyi.common.redis.configure.RedisConfig
-com.ruoyi.common.redis.service.RedisService
-com.ruoyi.common.log.service.AsyncLogService
-com.ruoyi.common.log.aspect.LogAspect
-com.ruoyi.common.tokens.TokenService
-com.ruoyi.common.auth.aspect.InnerAuthAspect
-com.ruoyi.common.auth.aspect.PermissionAspect
+com.sql.common.redis.configure.RedisConfig
+com.sql.common.log.service.AsyncLogService
+com.sql.common.log.aspect.LogAspect
+com.sql.common.auth.aspect.InnerAuthAspect
+com.sql.common.auth.aspect.PermissionAspect
