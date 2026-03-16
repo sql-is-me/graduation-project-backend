@@ -66,7 +66,7 @@ public class User {
     private String avatar;
 
     /**
-     * 所属店铺ID（仅教练有此字段）
+     * 所属店铺ID
      */
     @TableField("store_id")
     private Long storeId;

@@ -27,7 +27,7 @@ public class LogServiceImpl implements LogService {
      * 查询操作日志列表（支持按操作人、标题、业务类型、操作状态筛选）
      */
     @Override
-    public List<OperLog> listOperLog(OperLog query) {// TODO:待审查与添加分页
+    public List<OperLog> listOperLog(OperLog query) {// TODO:待审查
         LambdaQueryWrapper<OperLog> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(StringUtils.isNotEmpty(query.getOperName()), OperLog::getOperName, query.getOperName())
                 .like(StringUtils.isNotEmpty(query.getTitle()), OperLog::getTitle, query.getTitle())
@@ -67,7 +67,7 @@ public class LogServiceImpl implements LogService {
      * 查询登录日志列表（支持按用户名、IP、状态筛选）
      */
     @Override
-    public List<LoginInfo> listLoginInfo(LoginInfo query) {// TODO:待审查与添加分页
+    public List<LoginInfo> listLoginInfo(LoginInfo query) {// TODO:待审查
         LambdaQueryWrapper<LoginInfo> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(StringUtils.isNotEmpty(query.getUsername()), LoginInfo::getUsername, query.getUsername())
                 .like(StringUtils.isNotEmpty(query.getIpaddr()), LoginInfo::getIpaddr, query.getIpaddr())
