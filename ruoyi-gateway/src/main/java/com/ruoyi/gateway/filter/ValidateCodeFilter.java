@@ -12,10 +12,11 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
-import com.ruoyi.common.ServletUtils;
-import com.ruoyi.common.StringUtils;
 import com.ruoyi.gateway.config.properties.CaptchaProperties;
 import com.ruoyi.gateway.service.ValidateCodeService;
+import com.ruoyi.utils.ServletUtils;
+import com.ruoyi.utils.StringUtils;
+
 import reactor.core.publisher.Flux;
 
 /**

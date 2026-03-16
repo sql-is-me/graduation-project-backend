@@ -16,29 +16,11 @@
     </description>
 
     <dependencies>
-        <!-- SpringBoot Boot Redis -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-redis</artifactId>
-        </dependency>
-
-        <!-- lombok -->
+        <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-        </dependency>
-
-        <!-- Jwt -->
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-        </dependency>
-
-        <!-- RuoYi Api System -->
-        <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>ruoyi-api-system</artifactId>
         </dependency>
 
         <dependency>
@@ -53,8 +35,7 @@
 
         <dependency>
             <groupId>com.ruoyi</groupId>
-            <artifactId>utils</artifactId>
+            <artifactId>ruoyi-api-system</artifactId>
         </dependency>
-
     </dependencies>
 </project>

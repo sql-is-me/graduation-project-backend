@@ -10,12 +10,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <modules>
-        <module>system</module>
         <module>tools</module>
         <module>systemCore</module>
         <module>annotation</module>
         <module>infrastructures</module>
-        <module>utils</module>
     </modules>
 
     <artifactId>ruoyi-common</artifactId>

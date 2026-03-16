@@ -9,17 +9,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.ruoyi.common.IpUtils;
-import com.ruoyi.common.StringUtils;
-import com.ruoyi.common.TokenUtils;
 import com.ruoyi.common.Constants.CacheConstants;
 import com.ruoyi.common.Constants.JWTConstants;
 import com.ruoyi.common.Constants.TokenConstants;
-import com.ruoyi.common.JWT.JWTService;
-import com.ruoyi.common.core.utils.uuid.IdUtils;
+import com.ruoyi.common.JWT.service.JWTService;
+import com.ruoyi.common.JWT.utils.TokenUtils;
 import com.ruoyi.common.entity.Admin;
 import com.ruoyi.common.entity.AdminOnline;
 import com.ruoyi.common.redis.service.RedisService;
+import com.ruoyi.utils.IpUtils;
+import com.ruoyi.utils.StringUtils;
+import com.ruoyi.utils.uuid.IdUtils;
 
 /**
  * token验证处理

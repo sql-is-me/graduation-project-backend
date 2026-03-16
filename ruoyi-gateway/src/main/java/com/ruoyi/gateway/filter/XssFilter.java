@@ -19,9 +19,10 @@ import org.springframework.http.server.reactive.ServerHttpRequestDecorator;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 
-import com.ruoyi.common.StringUtils;
-import com.ruoyi.common.core.utils.html.EscapeUtil;
 import com.ruoyi.gateway.config.properties.XssProperties;
+import com.ruoyi.utils.StringUtils;
+import com.ruoyi.utils.html.EscapeUtil;
+
 import io.netty.buffer.ByteBufAllocator;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;

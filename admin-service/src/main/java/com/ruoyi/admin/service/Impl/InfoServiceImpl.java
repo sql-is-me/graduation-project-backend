@@ -10,18 +10,18 @@ import com.ruoyi.admin.dto.AdminPasswordUpdateDTO;
 import com.ruoyi.admin.dto.AdminInfoUpdateDTO;
 import com.ruoyi.admin.mapper.AdminMapper;
 import com.ruoyi.admin.service.InfoService;
-import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.entity.Admin;
 import com.ruoyi.common.entity.AdminOnline;
 import com.ruoyi.common.entity.File;
 import com.ruoyi.common.entity.result.R;
 import com.ruoyi.common.exception.ServiceException;
-import com.ruoyi.common.file.FileTypeUtils;
-import com.ruoyi.common.file.MimeTypeUtils;
 import com.ruoyi.common.header.ContextHolder;
 import com.ruoyi.common.tokens.AdminTokenService;
-import com.ruoyi.common.verifier.PWCheckUtils;
 import com.ruoyi.system.api.RemoteFileService;
+import com.ruoyi.utils.PWCheckUtils;
+import com.ruoyi.utils.StringUtils;
+import com.ruoyi.utils.file.FileTypeUtils;
+import com.ruoyi.utils.file.MimeTypeUtils;
 
 /**
  * 管理员个人信息服务

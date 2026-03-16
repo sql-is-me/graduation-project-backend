@@ -10,12 +10,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ruoyi.admin.service.LogService;
 import com.ruoyi.common.auth.annotation.RequiresType;
-import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.entity.LoginInfo;
 import com.ruoyi.common.entity.OperLog;
 import com.ruoyi.common.entity.TableDataInfo;
 import com.ruoyi.common.entity.result.R;
 import com.ruoyi.common.enums.UserTypes;
+import com.ruoyi.utils.BaseController;
 
 /**
  * 顶级管理员日志控制器（操作日志 + 登录日志）

@@ -12,11 +12,8 @@ import com.ruoyi.admin.dto.AdminInviteDTO;
 import com.ruoyi.admin.dto.AdminRegisterDTO;
 import com.ruoyi.admin.mapper.AdminMapper;
 import com.ruoyi.admin.service.AuthService;
-import com.ruoyi.common.DateUtils;
-import com.ruoyi.common.IpUtils;
-import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.Constants.AuthConstants;
-import com.ruoyi.common.JWT.JWTService;
+import com.ruoyi.common.JWT.service.JWTService;
 import com.ruoyi.common.entity.Admin;
 import com.ruoyi.common.entity.AdminOnline;
 import com.ruoyi.common.entity.LoginInfo;
@@ -24,8 +21,11 @@ import com.ruoyi.common.enums.AccountStatus;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.redis.service.RedisService;
 import com.ruoyi.common.tokens.AdminTokenService;
-import com.ruoyi.common.verifier.PWCheckUtils;
 import com.ruoyi.system.api.RemoteLogService;
+import com.ruoyi.utils.DateUtils;
+import com.ruoyi.utils.IpUtils;
+import com.ruoyi.utils.PWCheckUtils;
+import com.ruoyi.utils.StringUtils;
 
 /**
  * 管理员登录与注册服务

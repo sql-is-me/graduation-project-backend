@@ -14,13 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ruoyi.admin.service.NoticeService;
 import com.ruoyi.common.auth.annotation.RequiresType;
-import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.entity.Notice;
 import com.ruoyi.common.entity.TableDataInfo;
 import com.ruoyi.common.entity.result.R;
 import com.ruoyi.common.enums.UserTypes;
 import com.ruoyi.common.log.annotation.Log;
 import com.ruoyi.common.log.enums.BusinessType;
+import com.ruoyi.utils.BaseController;
 
 @RestController
 @RequestMapping("/admin/notice")

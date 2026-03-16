@@ -7,14 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 
-import com.ruoyi.common.ServletUtils;
-import com.ruoyi.common.TokenUtils;
 import com.ruoyi.common.Constants.ContextHolderConstants;
+import com.ruoyi.common.JWT.utils.TokenUtils;
 import com.ruoyi.common.entity.AdminOnline;
 import com.ruoyi.common.entity.UserOnline;
 import com.ruoyi.common.header.ContextHolder;
 import com.ruoyi.common.tokens.AdminTokenService;
 import com.ruoyi.common.tokens.UserTokenService;
+import com.ruoyi.utils.ServletUtils;
 
 /**
  * 自定义请求头拦截器，将Header数据封装到线程变量中方便获取

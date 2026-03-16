@@ -6,22 +6,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.entity.File;
 import com.ruoyi.common.entity.User;
 import com.ruoyi.common.entity.UserOnline;
 import com.ruoyi.common.entity.result.R;
 import com.ruoyi.common.exception.ServiceException;
-import com.ruoyi.common.file.FileTypeUtils;
-import com.ruoyi.common.file.MimeTypeUtils;
 import com.ruoyi.common.header.ContextHolder;
 import com.ruoyi.common.tokens.UserTokenService;
-import com.ruoyi.common.verifier.PWCheckUtils;
 import com.ruoyi.system.api.RemoteFileService;
 import com.ruoyi.user.dto.UserInfoUpdateDTO;
 import com.ruoyi.user.dto.UserPasswordUpdateDTO;
 import com.ruoyi.user.mapper.UserMapper;
 import com.ruoyi.user.service.InfoService;
+import com.ruoyi.utils.PWCheckUtils;
+import com.ruoyi.utils.StringUtils;
+import com.ruoyi.utils.file.FileTypeUtils;
+import com.ruoyi.utils.file.MimeTypeUtils;
 
 /**
  * 用户/教练个人信息服务

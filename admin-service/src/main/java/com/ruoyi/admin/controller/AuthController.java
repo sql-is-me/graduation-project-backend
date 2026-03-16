@@ -84,7 +84,7 @@ public class AuthController {
      * 地区管理员生成时自动使用自身storeId
      */
     @PostMapping("/invite")
-    @RequiresType({UserTypes.ADMIN, UserTypes.MANAGER})
+    @RequiresType({ UserTypes.ADMIN, UserTypes.MANAGER })
     public R<?> generateInviteCode(@RequestParam(required = false) Long storeId,
             HttpServletRequest request) {
         String code = authService.generateInviteCode(request, storeId);

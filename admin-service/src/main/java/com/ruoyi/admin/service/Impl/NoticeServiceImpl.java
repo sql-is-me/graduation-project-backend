@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.ruoyi.admin.mapper.NoticeMapper;
 import com.ruoyi.admin.service.NoticeService;
-import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.entity.Notice;
 import com.ruoyi.common.header.ContextHolder;
+import com.ruoyi.utils.StringUtils;
 
 @Service
 public class NoticeServiceImpl implements NoticeService {

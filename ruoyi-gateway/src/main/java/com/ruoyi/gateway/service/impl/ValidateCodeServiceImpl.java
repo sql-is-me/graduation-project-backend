@@ -9,16 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FastByteArrayOutputStream;
 import com.google.code.kaptcha.Producer;
-
-import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.Constants.AuthConstants;
-import com.ruoyi.common.core.utils.sign.Base64;
-import com.ruoyi.common.core.utils.uuid.IdUtils;
 import com.ruoyi.common.entity.result.AjaxResult;
 import com.ruoyi.common.exception.CaptchaException;
 import com.ruoyi.common.redis.service.RedisService;
 import com.ruoyi.gateway.config.properties.CaptchaProperties;
 import com.ruoyi.gateway.service.ValidateCodeService;
+import com.ruoyi.utils.StringUtils;
+import com.ruoyi.utils.sign.Base64;
+import com.ruoyi.utils.uuid.IdUtils;
 
 /**
  * 验证码实现处理

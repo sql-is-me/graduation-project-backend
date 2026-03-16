@@ -5,22 +5,22 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ruoyi.common.DateUtils;
-import com.ruoyi.common.IpUtils;
-import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.Constants.AuthConstants;
-import com.ruoyi.common.JWT.JWTService;
+import com.ruoyi.common.JWT.service.JWTService;
 import com.ruoyi.common.entity.LoginInfo;
 import com.ruoyi.common.entity.User;
 import com.ruoyi.common.enums.AccountStatus;
 import com.ruoyi.common.exception.ServiceException;
 import com.ruoyi.common.redis.service.RedisService;
 import com.ruoyi.common.tokens.UserTokenService;
-import com.ruoyi.common.verifier.PWCheckUtils;
 import com.ruoyi.system.api.RemoteLogService;
 import com.ruoyi.user.dto.UserRegisterDTO;
 import com.ruoyi.user.mapper.UserMapper;
 import com.ruoyi.user.service.AuthService;
+import com.ruoyi.utils.DateUtils;
+import com.ruoyi.utils.IpUtils;
+import com.ruoyi.utils.PWCheckUtils;
+import com.ruoyi.utils.StringUtils;
 
 /**
  * 用户/教练登录与注册服务

@@ -10,15 +10,16 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 
-import com.ruoyi.common.ServletUtils;
-import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.Constants.AuthConstants;
 import com.ruoyi.common.Constants.ContextHolderConstants;
 import com.ruoyi.common.Constants.HttpStatusConstants;
 import com.ruoyi.common.Constants.TokenConstants;
-import com.ruoyi.common.JWT.JWTService;
+import com.ruoyi.common.JWT.service.JWTService;
 import com.ruoyi.common.redis.service.RedisService;
 import com.ruoyi.gateway.config.properties.IgnoreWhiteProperties;
+import com.ruoyi.utils.ServletUtils;
+import com.ruoyi.utils.StringUtils;
+
 import io.jsonwebtoken.Claims;
 import reactor.core.publisher.Mono;
 

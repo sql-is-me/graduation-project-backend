@@ -6,12 +6,12 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
-import com.ruoyi.common.ServletUtils;
-import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.Constants.AuthConstants;
 import com.ruoyi.common.Constants.ContextHolderConstants;
 import com.ruoyi.common.auth.annotation.InnerAuth;
 import com.ruoyi.common.exception.InnerAuthException;
+import com.ruoyi.utils.ServletUtils;
+import com.ruoyi.utils.StringUtils;
 
 /**
  * 内部服务调用验证切面

@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.ruoyi.admin.service.Impl.MonitorServiceImpl;
 import com.ruoyi.common.VO.OnlineUserInfo;
 import com.ruoyi.common.auth.annotation.RequiresType;
-import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.entity.result.R;
 import com.ruoyi.common.enums.UserTypes;
+import com.ruoyi.utils.BaseController;
 
 /**
  * 管理员用户监控控制器（在线用户监控 + 管理员用户管理）

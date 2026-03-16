@@ -16,18 +16,10 @@
     </description>
 
     <dependencies>
-
-        <!-- RuoYi Common Core-->
-        <dependency>
-            <groupId>com.ruoyi</groupId>
-            <artifactId>system</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>com.ruoyi</groupId>
             <artifactId>infrastructures</artifactId>
         </dependency>
-
     </dependencies>
 
 </project>

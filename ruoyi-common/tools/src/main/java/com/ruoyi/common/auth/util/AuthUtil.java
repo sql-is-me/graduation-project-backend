@@ -1,12 +1,12 @@
 package com.ruoyi.common.auth.util;
 
-import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.entity.Admin;
 import com.ruoyi.common.entity.AdminOnline;
 import com.ruoyi.common.entity.User;
 import com.ruoyi.common.entity.UserOnline;
 import com.ruoyi.common.enums.UserTypes;
 import com.ruoyi.common.header.ContextHolder;
+import com.ruoyi.utils.StringUtils;
 
 /**
  * 权限验证工具类

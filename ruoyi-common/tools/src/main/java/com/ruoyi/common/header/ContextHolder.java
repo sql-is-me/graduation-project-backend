@@ -3,17 +3,15 @@ package com.ruoyi.common.header;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import com.alibaba.ttl.TransmittableThreadLocal;
-import com.ruoyi.common.Convert;
-import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.Constants.ContextHolderConstants;
 import com.ruoyi.common.entity.AdminOnline;
 import com.ruoyi.common.entity.UserOnline;
+import com.ruoyi.utils.Convert;
+import com.ruoyi.utils.StringUtils;
 
 /**
  * 获取当前线程变量中的 用户id、用户名称、Token等信息
  * 注意： 必须在网关通过请求头的方法传入，同时在HeaderInterceptor拦截器设置值。 否则这里无法获取
- *
- * @author ruoyi
  */
 public class ContextHolder {
     private static final TransmittableThreadLocal<Map<String, Object>> THREAD_LOCAL = new TransmittableThreadLocal<>();

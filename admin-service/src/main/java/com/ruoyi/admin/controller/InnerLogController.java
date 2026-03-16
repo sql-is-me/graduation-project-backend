@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ruoyi.admin.service.LogService;
 import com.ruoyi.common.auth.annotation.InnerAuth;
-import com.ruoyi.common.core.web.controller.BaseController;
 import com.ruoyi.common.entity.LoginInfo;
 import com.ruoyi.common.entity.OperLog;
 import com.ruoyi.common.entity.result.R;
+import com.ruoyi.utils.BaseController;
 
 /**
  * 日志内部接口

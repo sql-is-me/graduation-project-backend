@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-import com.ruoyi.common.Convert;
-import com.ruoyi.common.StringUtils;
 import com.ruoyi.common.Constants.HttpStatusConstants;
 import com.ruoyi.common.auth.aspect.PermissionAspect.PermissionDeniedException;
-import com.ruoyi.common.core.utils.html.EscapeUtil;
 import com.ruoyi.common.entity.result.R;
 import com.ruoyi.common.exception.InnerAuthException;
 import com.ruoyi.common.exception.ServiceException;
+import com.ruoyi.utils.Convert;
+import com.ruoyi.utils.StringUtils;
+import com.ruoyi.utils.html.EscapeUtil;
 
 /**
  * 用户服务全局异常处理器（返回统一 R 结构）
