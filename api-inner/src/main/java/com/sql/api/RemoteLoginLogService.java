@@ -14,7 +14,7 @@ import com.sql.common.entity.result.R;
 /**
  * 登录日志服务调用接口
  */
-@FeignClient(contextId = "remoteLogService", value = ServiceNameConstants.ADMINANDUSER_SERVICE, fallbackFactory = RemoteLoginLogFallbackFactory.class)
+@FeignClient(contextId = "remoteLogService", value = ServiceNameConstants.ADMIN_SERVICE, fallbackFactory = RemoteLoginLogFallbackFactory.class)
 public interface RemoteLoginLogService {
         /**
          * 保存登录记录

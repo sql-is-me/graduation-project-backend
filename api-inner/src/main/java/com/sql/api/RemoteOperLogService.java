@@ -14,7 +14,7 @@ import com.sql.common.entity.result.R;
 /**
  * 操作日志服务调用接口
  */
-@FeignClient(contextId = "remoteLogService", value = ServiceNameConstants.ALL_SERVICE, fallbackFactory = RemoteOperLogFallbackFactory.class)
+@FeignClient(contextId = "remoteLogService", value = ServiceNameConstants.ADMIN_SERVICE, fallbackFactory = RemoteOperLogFallbackFactory.class)
 public interface RemoteOperLogService {
         /**
          * 保存系统日志

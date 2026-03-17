@@ -30,7 +30,7 @@ public class SysFileController {
      * 文件上传请求（仅内部调用）
      */
     @InnerAuth
-    @PostMapping("upload")
+    @PostMapping("/upload")
     public R<File> upload(MultipartFile mf) {
         try {
             // 上传并返回访问地址
@@ -49,7 +49,7 @@ public class SysFileController {
      * 文件删除请求（仅内部调用）
      */
     @InnerAuth
-    @DeleteMapping("delete")
+    @DeleteMapping("/delete")
     public R<Boolean> delete(String fileUrl) {
         try {
             if (!FileUtils.validateFilePath(fileUrl)) {

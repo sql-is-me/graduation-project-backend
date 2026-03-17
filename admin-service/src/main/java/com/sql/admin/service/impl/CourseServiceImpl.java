@@ -48,19 +48,6 @@ public class CourseServiceImpl implements CourseService {
     @Autowired
     private ClassHourMapper classHourMapper;
 
-    /**
-     * 通过ContextHolder获取当前管理员所在店铺ID
-     * 
-     * @return storeId
-     */
-    private Long getStoreId() {
-        Long storeId = ContextHolder.getAO().getAdminInfo().getStoreId();
-        if (storeId == null) {
-            throw new ServiceException("当前管理员未绑定店铺");
-        }
-        return storeId;
-    }
-
     @Override
     @Transactional
     public int createCourse(CourseCreateDTO dto) {
@@ -252,6 +239,19 @@ public class CourseServiceImpl implements CourseService {
     }
 
     // ============ 私有工具方法 ============
+
+    /**
+     * 通过ContextHolder获取当前管理员所在店铺ID
+     * 
+     * @return storeId
+     */
+    private Long getStoreId() {
+        Long storeId = ContextHolder.getAO().getAdminInfo().getStoreId();
+        if (storeId == null) {
+            throw new ServiceException("当前管理员未绑定店铺");
+        }
+        return storeId;
+    }
 
     /**
      * 获取课程并校验归属
