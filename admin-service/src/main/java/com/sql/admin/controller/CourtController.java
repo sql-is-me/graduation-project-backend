@@ -36,8 +36,8 @@ public class CourtController extends BaseController {
      * 添加场地
      */
     @Log(title = "场地管理", businessType = BusinessType.INSERT)
-    @PostMapping("/add")
-    public R<?> addCourt(@Validated @RequestBody CourtCreateDTO dto) {
+    @PostMapping("/add/{courtId}")
+    public R<?> addCourt(@Validated @PathVariable Long courtId, @RequestBody CourtCreateDTO dto) {
         return R.ok(courtService.addCourt(dto), "场地添加成功");
     }
 
