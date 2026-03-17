@@ -59,6 +59,16 @@ public class LogController extends BaseController {
     }
 
     /**
+     * 清空操作日志
+     */
+    @Log(title = "操作日志", businessType = BusinessType.DELETE)
+    @DeleteMapping("/oper/clean")
+    public R<?> cleanOperLog() {
+        logService.cleanOperLog();
+        return R.ok();
+    }
+
+    /**
      * 查询登录日志列表（支持按用户名、IP地址、登录状态筛选）
      */
     @GetMapping("/login/list")
@@ -83,5 +93,15 @@ public class LogController extends BaseController {
     @DeleteMapping("/login/{loginInfoId}")
     public R<?> deleteLoginInfoById(@PathVariable Long loginInfoId) {
         return R.ok(logService.deleteLoginInfo(loginInfoId));
+    }
+
+    /**
+     * 清空登录日志
+     */
+    @Log(title = "登录日志", businessType = BusinessType.DELETE)
+    @DeleteMapping("/login/clean")
+    public R<?> cleanLoginInfo() {
+        logService.cleanLoginInfo();
+        return R.ok();
     }
 }

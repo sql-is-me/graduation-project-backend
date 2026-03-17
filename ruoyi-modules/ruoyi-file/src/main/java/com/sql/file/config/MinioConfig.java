@@ -7,8 +7,6 @@ import io.minio.MinioClient;
 
 /**
  * Minio 配置信息
- *
- * @author loveSport
  */
 @Configuration
 @ConfigurationProperties(prefix = "minio")

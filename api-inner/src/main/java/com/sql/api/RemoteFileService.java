@@ -15,8 +15,6 @@ import com.sql.common.entity.result.R;
 
 /**
  * 文件服务
- * 
- * @author loveSport
  */
 @FeignClient(contextId = "remoteFileService", value = ServiceNameConstants.FILE_SERVICE, fallbackFactory = RemoteFileFallbackFactory.class)
 public interface RemoteFileService {

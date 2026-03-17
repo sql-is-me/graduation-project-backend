@@ -8,8 +8,6 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * XSS跨站脚本配置
- * 
- * @author loveSport
  */
 @Configuration
 @RefreshScope

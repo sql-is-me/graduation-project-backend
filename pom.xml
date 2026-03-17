@@ -174,10 +174,10 @@
     <modules>
         <module>admin-service</module>
         <module>user-service</module>
+        <module>api-inner</module>
+        <module>common</module>
         <module>ruoyi-gateway</module>
         <module>ruoyi-modules</module>
-        <module>api-inner</module>
-        <module>ruoyi-common</module>
     </modules>
     <packaging>pom</packaging>
 

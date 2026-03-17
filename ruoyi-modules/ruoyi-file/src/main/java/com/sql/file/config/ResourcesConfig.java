@@ -9,8 +9,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  * 通用映射配置
- * 
- * @author loveSport
  */
 @Configuration
 public class ResourcesConfig implements WebMvcConfigurer {

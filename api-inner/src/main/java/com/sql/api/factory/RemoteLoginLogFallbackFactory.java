@@ -13,8 +13,6 @@ import com.sql.common.entity.result.R;
  * 日志服务降级处理
  * 当日志微服务不可用时，提供降级返回，避免影响主流程
  * 登录日志记录所有用户的登录登出信息
- *
- * @author loveSport
  */
 @Component
 public class RemoteLoginLogFallbackFactory implements FallbackFactory<RemoteLoginLogService> {

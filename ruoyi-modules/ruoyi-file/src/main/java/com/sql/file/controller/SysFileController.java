@@ -18,8 +18,6 @@ import com.sql.utils.file.FileUtils;
 /**
  * 文件请求处理
  * 仅允许内部服务调用（通过Feign）
- *
- * @author loveSport
  */
 @RestController
 public class SysFileController {

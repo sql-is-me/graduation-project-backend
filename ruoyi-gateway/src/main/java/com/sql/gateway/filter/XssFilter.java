@@ -29,8 +29,6 @@ import reactor.core.publisher.Mono;
 
 /**
  * 跨站脚本过滤器
- *
- * @author loveSport
  */
 @Component
 @ConditionalOnProperty(value = "security.xss.enabled", havingValue = "true")

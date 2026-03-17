@@ -21,8 +21,6 @@ import com.sql.utils.uuid.IdUtils;
 
 /**
  * 验证码实现处理
- *
- * @author loveSport
  */
 @Service
 public class ValidateCodeServiceImpl implements ValidateCodeService {

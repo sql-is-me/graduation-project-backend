@@ -16,8 +16,6 @@ import reactor.core.publisher.Mono;
 
 /**
  * 验证码获取
- *
- * @author loveSport
  */
 @Component
 public class ValidateCodeHandler implements HandlerFunction<ServerResponse> {

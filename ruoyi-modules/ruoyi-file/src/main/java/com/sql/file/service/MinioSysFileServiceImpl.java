@@ -15,8 +15,6 @@ import io.minio.RemoveObjectArgs;
 
 /**
  * Minio 文件存储
- *
- * @author loveSport
  */
 @Service
 public class MinioSysFileServiceImpl implements ISysFileService {

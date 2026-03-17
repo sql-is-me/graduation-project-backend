@@ -11,8 +11,6 @@ import com.sql.utils.file.FileUtils;
 
 /**
  * 本地文件存储
- * 
- * @author loveSport
  */
 @Primary
 @Service

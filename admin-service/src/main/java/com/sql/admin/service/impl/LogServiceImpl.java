@@ -1,6 +1,5 @@
 package com.sql.admin.service.impl;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ public class LogServiceImpl implements LogService {
      * 查询操作日志列表（支持按操作人、标题、业务类型、操作状态筛选）
      */
     @Override
-    public List<OperLog> listOperLog(OperLog query) {// TODO:待审查
+    public List<OperLog> listOperLog(OperLog query) {
         LambdaQueryWrapper<OperLog> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(StringUtils.isNotEmpty(query.getOperName()), OperLog::getOperName, query.getOperName())
                 .like(StringUtils.isNotEmpty(query.getTitle()), OperLog::getTitle, query.getTitle())
@@ -57,7 +56,7 @@ public class LogServiceImpl implements LogService {
     /**
      * 清空操作日志
      */
-    public void cleanOperLog() { // TODO: 待添加相关接口
+    public void cleanOperLog() {
         LambdaQueryWrapper<OperLog> wrapper = new LambdaQueryWrapper<>();
         wrapper.gt(OperLog::getOperId, 0);
         operLogMapper.delete(wrapper);
@@ -67,7 +66,7 @@ public class LogServiceImpl implements LogService {
      * 查询登录日志列表（支持按用户名、IP、状态筛选）
      */
     @Override
-    public List<LoginInfo> listLoginInfo(LoginInfo query) {// TODO:待审查
+    public List<LoginInfo> listLoginInfo(LoginInfo query) {
         LambdaQueryWrapper<LoginInfo> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(StringUtils.isNotEmpty(query.getUsername()), LoginInfo::getUsername, query.getUsername())
                 .like(StringUtils.isNotEmpty(query.getIpaddr()), LoginInfo::getIpaddr, query.getIpaddr())
@@ -91,16 +90,9 @@ public class LogServiceImpl implements LogService {
     }
 
     /**
-     * 批量删除登录日志
-     */
-    public int deleteLoginInfoByIds(Long[] infoIds) {// TODO: 待添加相关接口
-        return loginInfoMapper.deleteByIds(Arrays.asList(infoIds));
-    }
-
-    /**
      * 清空登录日志
      */
-    public void cleanLoginInfo() {// TODO: 待添加相关接口
+    public void cleanLoginInfo() {
         LambdaQueryWrapper<LoginInfo> wrapper = new LambdaQueryWrapper<>();
         wrapper.gt(LoginInfo::getInfoId, 0);
         loginInfoMapper.delete(wrapper);

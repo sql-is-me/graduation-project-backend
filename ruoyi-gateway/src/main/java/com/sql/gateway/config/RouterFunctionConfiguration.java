@@ -11,8 +11,6 @@ import com.sql.gateway.handler.ValidateCodeHandler;
 
 /**
  * 路由配置信息
- * 
- * @author loveSport
  */
 @Configuration
 public class RouterFunctionConfiguration {

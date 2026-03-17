@@ -8,8 +8,6 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * 放行白名单配置
- * 
- * @author loveSport
  */
 @Configuration
 @RefreshScope

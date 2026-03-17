@@ -12,8 +12,6 @@ import com.sql.common.entity.result.R;
 
 /**
  * 文件服务降级处理
- * 
- * @author loveSport
  */
 @Component
 public class RemoteFileFallbackFactory implements FallbackFactory<RemoteFileService> {

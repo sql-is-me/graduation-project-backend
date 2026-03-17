@@ -12,8 +12,6 @@ import com.sql.file.filter.RefererFilter;
 
 /**
  * Filter配置
- *
- * @author loveSport
  */
 @Configuration
 public class FilterConfig {

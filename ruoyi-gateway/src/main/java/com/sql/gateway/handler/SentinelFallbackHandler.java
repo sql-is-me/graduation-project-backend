@@ -11,8 +11,6 @@ import reactor.core.publisher.Mono;
 
 /**
  * 自定义限流异常处理
- *
- * @author loveSport
  */
 public class SentinelFallbackHandler implements WebExceptionHandler {
     private Mono<Void> writeResponse(ServerResponse response, ServerWebExchange exchange) {

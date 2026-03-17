@@ -25,8 +25,6 @@ import reactor.core.publisher.Mono;
 
 /**
  * 网关鉴权
- * 
- * @author loveSport
  */
 @Component
 public class AuthFilter implements GlobalFilter, Ordered {
@@ -46,7 +44,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
 
         String url = request.getURI().getPath();
         // 跳过白名单上的url
-        if (StringUtils.matches(url, ignoreWhite.getWhites())) {// TODO:配置中心配置登录和注册白名单
+        if (StringUtils.matches(url, ignoreWhite.getWhites())) {
             return chain.filter(exchange);
         }
 

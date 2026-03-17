@@ -7,8 +7,6 @@ import com.sql.common.exception.CaptchaException;
 
 /**
  * 验证码处理
- *
- * @author loveSport
  */
 public interface ValidateCodeService {
     /**

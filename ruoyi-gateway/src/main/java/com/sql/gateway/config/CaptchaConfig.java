@@ -9,8 +9,6 @@ import static com.google.code.kaptcha.Constants.*;
 
 /**
  * 验证码配置
- * 
- * @author loveSport
  */
 @Configuration
 public class CaptchaConfig {

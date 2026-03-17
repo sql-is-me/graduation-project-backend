@@ -11,8 +11,6 @@ import com.sql.utils.ServletUtils;
 
 /**
  * 黑名单过滤器
- * 
- * @author loveSport
  */
 @Component
 public class BlackListUrlFilter extends AbstractGatewayFilterFactory<BlackListUrlFilter.Config> {
