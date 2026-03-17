@@ -47,7 +47,7 @@ public class CouponController extends BaseController {
      * 停用/启用优惠券
      */
     @Log(title = "优惠券管理", businessType = BusinessType.UPDATE)
-    @PutMapping("/{couponId}/toggle")
+    @PutMapping("/toggle/{couponId}")
     public R<?> toggleCouponStatus(@PathVariable Long couponId) {
         return R.ok(couponService.toggleCouponStatus(couponId), "操作成功");
     }

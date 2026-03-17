@@ -22,13 +22,14 @@ import com.sql.common.exception.PreAuthorizeException;
  * 权限验证切面
  *
  * 处理以下注解:
- *   @LoginRequired  — 仅需登录
- *   @RequiresType   — 需要指定用户类型
+ * 
+ * @LoginRequired — 仅需登录
+ * @RequiresType — 需要指定用户类型
  *
- * 验证逻辑:
- *   1. 先检查方法级注解，再检查类级注解
- *   2. 方法级注解优先于类级注解（方法级存在时忽略类级）
- *   3. @RequiresType 内部隐含登录校验
+ *               验证逻辑:
+ *               1. 先检查方法级注解，再检查类级注解
+ *               2. 方法级注解优先于类级注解（方法级存在时忽略类级）
+ *               3. @RequiresType 内部隐含登录校验
  */
 @Aspect
 @Component
@@ -37,11 +38,10 @@ public class PermissionAspect implements Ordered {
     /**
      * 切入所有使用权限注解的方法
      */
-    public static final String POINTCUT_SIGN =
-            "@annotation(com.sql.common.auth.annotation.LoginRequired) || "
-                    + "@annotation(com.sql.common.auth.annotation.RequiresType) || "
-                    + "@within(com.sql.common.auth.annotation.LoginRequired) || "
-                    + "@within(com.sql.common.auth.annotation.RequiresType)";
+    public static final String POINTCUT_SIGN = "@annotation(com.sql.common.auth.annotation.LoginRequired) || "
+            + "@annotation(com.sql.common.auth.annotation.RequiresType) || "
+            + "@within(com.sql.common.auth.annotation.LoginRequired) || "
+            + "@within(com.sql.common.auth.annotation.RequiresType)";
 
     @Pointcut(POINTCUT_SIGN)
     public void pointcut() {
@@ -89,7 +89,7 @@ public class PermissionAspect implements Ordered {
      */
     private void checkLogin() {
         if (!AuthUtil.isLoggedIn()) {
-            throw new PreAuthorizeException();
+            throw new PreAuthorizeException("用户未登录");
         }
     }
 
@@ -100,7 +100,7 @@ public class PermissionAspect implements Ordered {
         // 隐含登录校验
         UserTypes currentType = AuthUtil.getCurrentUserType();
         if (currentType == null) {
-            throw new PreAuthorizeException();
+            throw new PreAuthorizeException("用户权限不符");
         }
 
         UserTypes[] allowedTypes = requiresType.value();

@@ -10,13 +10,15 @@ import com.sql.admin.service.ClassHourService;
 import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.result.R;
 import com.sql.common.enums.UserTypes;
+import com.sql.common.log.annotation.Log;
+import com.sql.common.log.enums.BusinessType;
 
 /**
  * 课时管理接口
  * 供管理员调用
  */
 @RestController
-@RequestMapping
+@RequestMapping("/classHour")
 public class ClassHourController {
 
     @Autowired
@@ -25,8 +27,9 @@ public class ClassHourController {
     /**
      * 增加用户课时
      */
+    @Log(title = "课时管理", businessType = BusinessType.UPDATE)
     @RequiresType(UserTypes.ADMIN)
-    @PostMapping("/classHour/add")
+    @PostMapping("/add")
     public R<Boolean> addClassHours(@RequestParam("userId") Long userId,
             @RequestParam("hours") int hours) {
         int rows = classHourService.addClassHours(userId, hours);

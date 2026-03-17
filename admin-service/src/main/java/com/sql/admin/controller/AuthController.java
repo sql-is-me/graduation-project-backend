@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sql.admin.dto.AdminLoginDTO;
 import com.sql.admin.dto.AdminRegisterDTO;
 import com.sql.admin.service.AuthService;
+import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.result.R;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;
 import com.sql.common.log.enums.BusinessType;
-
 
 /**
  * 管理员认证控制器
@@ -48,6 +48,8 @@ public class AuthController {
     /**
      * 管理员退出登录
      */
+    // @LoginRequired
+    // TODO: 测试完成后记得加入登录校验，确保只有已登录的管理员才能调用退出接口
     @DeleteMapping("/logout")
     public R<?> logout(HttpServletRequest request) {
         authService.logout(request);

@@ -6,6 +6,7 @@ package com.sql.common.exception;
 public class PreAuthorizeException extends RuntimeException {
     private static final long serialVersionUID = 1L;
 
-    public PreAuthorizeException() {
+    public PreAuthorizeException(String message) {
+        super(message);
     }
 }
