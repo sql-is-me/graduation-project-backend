@@ -15,7 +15,7 @@ public interface CourtService {
     /**
      * 更改场地信息
      */
-    int updateCourt(CourtUpdateDTO dto);
+    int updateCourt(Long courtId, CourtUpdateDTO dto);
 
     /**
      * 查询当前店铺的场地列表

@@ -36,8 +36,8 @@ public class CourtController extends BaseController {
      * 添加场地
      */
     @Log(title = "场地管理", businessType = BusinessType.INSERT)
-    @PostMapping("/add/{courtId}")
-    public R<?> addCourt(@Validated @PathVariable Long courtId, @RequestBody CourtCreateDTO dto) {
+    @PostMapping("/add")
+    public R<?> addCourt(@Validated @RequestBody CourtCreateDTO dto) {
         return R.ok(courtService.addCourt(dto), "场地添加成功");
     }
 
@@ -45,9 +45,9 @@ public class CourtController extends BaseController {
      * 修改场地信息
      */
     @Log(title = "场地管理", businessType = BusinessType.UPDATE)
-    @PutMapping("/update")
-    public R<?> updateCourt(@Validated @RequestBody CourtUpdateDTO dto) {
-        return R.ok(courtService.updateCourt(dto), "场地信息修改成功");
+    @PutMapping("/update/{courtId}")
+    public R<?> updateCourt(@PathVariable Long courtId, @RequestBody CourtUpdateDTO dto) {
+        return R.ok(courtService.updateCourt(courtId, dto), "场地信息修改成功");
     }
 
     /**

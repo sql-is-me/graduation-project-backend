@@ -43,9 +43,9 @@ public class CourtServiceImpl implements CourtService {
     }
 
     @Override
-    public int updateCourt(CourtUpdateDTO dto) {
+    public int updateCourt(Long courtId, CourtUpdateDTO dto) {
         Long storeId = getStoreId();
-        Court court = courtMapper.selectById(dto.getCourtId());
+        Court court = courtMapper.selectById(courtId);
         if (court == null) {
             throw new ServiceException("场地不存在");
         }
