@@ -1,12 +1,11 @@
-package com.sql.common.entity;
+package com.sql.common.entity.db;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-
 import lombok.Data;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 用户/教练统一实体类
@@ -40,7 +39,8 @@ public class User {
     private String nickName;
 
     /**
-     * 用户类型（0:会员 1:教练）
+     * 用户类型
+     * 0:会员 1:教练
      */
     @TableField("user_type")
     private String userType;
@@ -56,7 +56,8 @@ public class User {
     private String phone;
 
     /**
-     * 性别（0男 1女 2未知）
+     * 性别
+     * 0男 1女 2未知
      */
     private String sex;
 
@@ -72,7 +73,8 @@ public class User {
     private Long storeId;
 
     /**
-     * 账号状态（0正常 1停用）
+     * 账号状态
+     * 0正常 1停用
      */
     private String status;
 
@@ -86,19 +88,19 @@ public class User {
      * 最后登录时间
      */
     @TableField("login_date")
-    private Date loginDate;
+    private LocalDateTime loginDate;
 
     /**
      * 创建时间
      */
     @TableField("create_time")
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
     @TableField("update_time")
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 是否是教练

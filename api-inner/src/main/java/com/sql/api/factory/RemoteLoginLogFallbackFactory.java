@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 
 import com.sql.api.RemoteLoginLogService;
-import com.sql.common.entity.LoginInfo;
+import com.sql.common.entity.db.LoginInfo;
 import com.sql.common.entity.result.R;
 
 /**

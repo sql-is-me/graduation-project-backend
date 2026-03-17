@@ -1,4 +1,4 @@
-package com.sql.common.entity;
+package com.sql.common.entity.db;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -7,7 +7,9 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 
 import lombok.Data;
-import java.util.Date;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 /**
  * 孩子实体类
@@ -37,7 +39,7 @@ public class Children {
     /**
      * 出生日期
      */
-    private Date birthday;
+    private LocalDate birthday;
 
     /**
      * 孩子照片URL地址
@@ -47,17 +49,23 @@ public class Children {
     /**
      * 孩子性别（0男孩 1女孩 2未知）
      */
-    private String sex = "0";
+    private String sex = "2";
+
+    /**
+     * 状态
+     * 0正常 1关闭
+     */
+    private String status = "0";
 
     /**
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT, value = "create_time")
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
     @TableField(fill = FieldFill.INSERT_UPDATE, value = "update_time")
-    private Date updateTime;
+    private LocalDateTime updateTime;
 }

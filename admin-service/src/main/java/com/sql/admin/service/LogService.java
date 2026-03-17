@@ -2,8 +2,8 @@ package com.sql.admin.service;
 
 import java.util.List;
 
-import com.sql.common.entity.LoginInfo;
-import com.sql.common.entity.OperLog;
+import com.sql.common.entity.db.LoginInfo;
+import com.sql.common.entity.db.OperLog;
 
 public interface LogService {
     /**

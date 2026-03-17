@@ -1,18 +1,18 @@
 package com.sql.user.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sql.common.entity.Children;
 import com.sql.common.entity.UserOnline;
+import com.sql.common.entity.db.Children;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 import com.sql.user.dto.ChildrenDTO;
 import com.sql.user.mapper.ChildrenMapper;
 import com.sql.user.service.ChildrenService;
-import com.sql.utils.DateUtils;
 
 /**
  * 孩子信息管理服务
@@ -69,7 +69,7 @@ public class ChildrenServiceImpl implements ChildrenService {
         child.setBirthday(dto.getBirthday());
         child.setPhoto(dto.getPhoto() != null ? dto.getPhoto() : "");
         child.setSex(dto.getSex() != null ? dto.getSex() : "0");
-        child.setCreateTime(DateUtils.getNowDate());
+        child.setCreateTime(LocalDateTime.now());
 
         int rows = childrenMapper.insert(child);
         if (rows <= 0) {
@@ -110,7 +110,7 @@ public class ChildrenServiceImpl implements ChildrenService {
         if (dto.getSex() != null) {
             existChild.setSex(dto.getSex());
         }
-        existChild.setUpdateTime(DateUtils.getNowDate());
+        existChild.setUpdateTime(LocalDateTime.now());
 
         int rows = childrenMapper.updateById(existChild);
         if (rows <= 0) {

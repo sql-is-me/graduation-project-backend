@@ -1,4 +1,4 @@
-package com.sql.common.entity;
+package com.sql.common.entity.db;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -6,10 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 登录日志记录实体类
@@ -17,10 +14,7 @@ import java.util.Date;
  */
 @Data
 @TableName("loginInfo")
-public class LoginInfo implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
+public class LoginInfo {
 
     /**
      * 日志主键
@@ -35,14 +29,16 @@ public class LoginInfo implements Serializable {
     private String username;
 
     /**
-     * 登录状态（0=成功 1=失败）
+     * 登录状态
+     * 0=成功、1=失败
      */
     private String status;
 
     /**
      * 登录IP地址
      */
-    private String ipaddr;
+    @TableField("ip_addr")
+    private String ipAddr;
 
     /**
      * 提示消息
@@ -54,5 +50,5 @@ public class LoginInfo implements Serializable {
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField("access_time")
-    private Date accessTime;
+    private LocalDateTime accessTime;
 }

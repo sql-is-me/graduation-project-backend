@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.sql.api.RemoteOperLogService;
 import com.sql.common.constants.AuthConstants;
-import com.sql.common.entity.OperLog;
+import com.sql.common.entity.db.OperLog;
 
 /**
  * 异步调用日志服务

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.sql.common.entity.Children;
+import com.sql.common.entity.db.Children;
 
 /**
  * 孩子信息Mapper接口

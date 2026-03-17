@@ -1,9 +1,9 @@
 package com.sql.common.auth.util;
 
-import com.sql.common.entity.Admin;
 import com.sql.common.entity.AdminOnline;
-import com.sql.common.entity.User;
 import com.sql.common.entity.UserOnline;
+import com.sql.common.entity.db.Admin;
+import com.sql.common.entity.db.User;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.header.ContextHolder;
 import com.sql.utils.StringUtils;

@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sql.admin.service.NoticeService;
 import com.sql.common.auth.annotation.RequiresType;
-import com.sql.common.entity.Notice;
 import com.sql.common.entity.TableDataInfo;
+import com.sql.common.entity.db.Notice;
 import com.sql.common.entity.result.R;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;

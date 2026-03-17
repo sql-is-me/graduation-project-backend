@@ -2,7 +2,7 @@ package com.sql.user.dto;
 
 import lombok.Data;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  * 孩子信息请求体（新增/修改）
@@ -22,7 +22,7 @@ public class ChildrenDTO {
     /**
      * 出生日期
      */
-    private Date birthday;
+    private LocalDate birthday;
 
     /**
      * 孩子照片URL地址

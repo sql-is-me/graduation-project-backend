@@ -28,7 +28,7 @@ import com.sql.utils.ExceptionUtil;
 import com.sql.utils.IpUtils;
 import com.sql.utils.ServletUtils;
 import com.sql.utils.StringUtils;
-import com.sql.common.entity.OperLog;
+import com.sql.common.entity.db.OperLog;
 import com.sql.common.header.ContextHolder;
 
 /**

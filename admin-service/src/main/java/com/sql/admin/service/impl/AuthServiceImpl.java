@@ -1,5 +1,6 @@
 package com.sql.admin.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -15,14 +16,13 @@ import com.sql.admin.service.AuthService;
 import com.sql.api.RemoteLoginLogService;
 import com.sql.common.constants.AuthConstants;
 import com.sql.common.jwt.service.JWTService;
-import com.sql.common.entity.Admin;
 import com.sql.common.entity.AdminOnline;
-import com.sql.common.entity.LoginInfo;
+import com.sql.common.entity.db.Admin;
+import com.sql.common.entity.db.LoginInfo;
 import com.sql.common.enums.AccountStatus;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.redis.service.RedisService;
 import com.sql.common.tokens.AdminTokenService;
-import com.sql.utils.DateUtils;
 import com.sql.utils.IpUtils;
 import com.sql.utils.PWCheckUtils;
 import com.sql.utils.StringUtils;
@@ -84,7 +84,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         admin.setLoginIp(IpUtils.getIpAddr());
-        admin.setLoginDate(DateUtils.getNowDate());
+        admin.setLoginDate(LocalDateTime.now());
         adminMapper.updateById(admin);
 
         recordLoginInfo(admin.getUsername(), AuthConstants.LOGIN_SUCCESS, "登录成功");
@@ -243,7 +243,7 @@ public class AuthServiceImpl implements AuthService {
     public void recordLoginInfo(String username, String status, String message) {
         LoginInfo loginInfo = new LoginInfo();
         loginInfo.setUsername(username);
-        loginInfo.setIpaddr(IpUtils.getIpAddr());
+        loginInfo.setIpAddr(IpUtils.getIpAddr());
         loginInfo.setMsg(message);
 
         // 日志状态

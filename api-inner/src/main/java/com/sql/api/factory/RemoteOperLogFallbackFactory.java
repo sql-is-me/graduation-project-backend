@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 
 import com.sql.api.RemoteOperLogService;
-import com.sql.common.entity.OperLog;
+import com.sql.common.entity.db.OperLog;
 import com.sql.common.entity.result.R;
 
 /**

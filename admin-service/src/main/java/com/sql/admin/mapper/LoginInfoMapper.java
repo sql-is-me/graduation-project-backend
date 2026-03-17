@@ -1,7 +1,8 @@
 package com.sql.admin.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.sql.common.entity.LoginInfo;
+import com.sql.common.entity.db.LoginInfo;
+
 import org.apache.ibatis.annotations.Mapper;
 
 /**

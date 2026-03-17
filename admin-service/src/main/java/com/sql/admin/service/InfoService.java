@@ -4,7 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.sql.admin.dto.AdminInfoUpdateDTO;
 import com.sql.admin.dto.AdminPasswordUpdateDTO;
-import com.sql.common.entity.Admin;
+import com.sql.common.entity.db.Admin;
 
 public interface InfoService {
     /**

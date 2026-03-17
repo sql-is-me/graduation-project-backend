@@ -8,8 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.sql.api.RemoteFileService;
 import com.sql.common.entity.File;
-import com.sql.common.entity.User;
 import com.sql.common.entity.UserOnline;
+import com.sql.common.entity.db.User;
 import com.sql.common.entity.result.R;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;

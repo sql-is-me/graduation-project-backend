@@ -1,13 +1,12 @@
-package com.sql.common.entity;
+package com.sql.common.entity.db;
 
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-
 import lombok.Data;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 管理员实体类
@@ -65,7 +64,8 @@ public class Admin {
     private Long storeId;
 
     /**
-     * 管理员类型（0:TOP 超级管理员 / 1:STORE 店铺管理员）
+     * 管理员类型
+     * 0:TOP 超级管理员 / 1:STORE 店铺管理员
      */
     @TableField("admin_type")
     private String adminType = "1"; // 默认店铺管理员
@@ -77,7 +77,8 @@ public class Admin {
     private Long referrerId;
 
     /**
-     * 账号状态（0正常 1停用）
+     * 账号状态
+     * 0正常、1停用
      */
     private String status = "0"; // 默认正常
 
@@ -91,19 +92,19 @@ public class Admin {
      * 最后登录时间
      */
     @TableField("login_date")
-    private Date loginDate;
+    private LocalDateTime loginDate;
 
     /**
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT, value = "create_time")
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
     @TableField(fill = FieldFill.INSERT_UPDATE, value = "update_time")
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     public boolean isTopAdmin() {
         return Integer.parseInt(getAdminType()) == 0;

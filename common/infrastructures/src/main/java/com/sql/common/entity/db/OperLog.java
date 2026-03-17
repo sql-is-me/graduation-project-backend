@@ -1,4 +1,4 @@
-package com.sql.common.entity;
+package com.sql.common.entity.db;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -6,10 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
-
-import java.io.Serial;
-import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 /**
  * 操作日志记录实体类
@@ -17,11 +14,7 @@ import java.util.Date;
  */
 @Data
 @TableName("operLog")
-public class OperLog implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
-
+public class OperLog {
     /**
      * 日志主键
      */
@@ -63,7 +56,8 @@ public class OperLog implements Serializable {
     private String operName;
 
     /**
-     * 请求URL(0-255)
+     * 请求URL
+     * 0-255
      */
     @TableField("oper_url")
     private String operUrl;
@@ -87,12 +81,14 @@ public class OperLog implements Serializable {
     private String jsonResult;
 
     /**
-     * 操作状态（0=正常 1=异常）
+     * 操作状态
+     * 0=正常 1=异常
      */
     private Integer status;
 
     /**
      * 错误消息
+     * substring取了0-2000
      */
     @TableField("error_msg")
     private String errorMsg;
@@ -102,7 +98,7 @@ public class OperLog implements Serializable {
      */
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @TableField("oper_time")
-    private Date operTime;
+    private LocalDateTime operTime;
 
     /**
      * 消耗时间（毫秒）

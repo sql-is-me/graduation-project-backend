@@ -6,8 +6,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-
-import com.sql.common.entity.Admin;
+import com.sql.common.entity.db.Admin;
 
 /**
  * 管理员用户Mapper接口

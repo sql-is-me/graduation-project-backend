@@ -1,5 +1,6 @@
 package com.sql.user.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.Map;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,8 +9,8 @@ import org.springframework.stereotype.Service;
 import com.sql.api.RemoteLoginLogService;
 import com.sql.common.constants.AuthConstants;
 import com.sql.common.jwt.service.JWTService;
-import com.sql.common.entity.LoginInfo;
-import com.sql.common.entity.User;
+import com.sql.common.entity.db.LoginInfo;
+import com.sql.common.entity.db.User;
 import com.sql.common.enums.AccountStatus;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.redis.service.RedisService;
@@ -17,7 +18,6 @@ import com.sql.common.tokens.UserTokenService;
 import com.sql.user.dto.UserRegisterDTO;
 import com.sql.user.mapper.UserMapper;
 import com.sql.user.service.AuthService;
-import com.sql.utils.DateUtils;
 import com.sql.utils.IpUtils;
 import com.sql.utils.PWCheckUtils;
 import com.sql.utils.StringUtils;
@@ -73,7 +73,7 @@ public class AuthServiceImpl implements AuthService {
 
         // 更新登录信息
         user.setLoginIp(IpUtils.getIpAddr());
-        user.setLoginDate(DateUtils.getNowDate());
+        user.setLoginDate(LocalDateTime.now());
         userMapper.updateById(user);
 
         recordLoginInfo(user.getUsername(), AuthConstants.LOGIN_SUCCESS, "登录成功");
@@ -145,7 +145,7 @@ public class AuthServiceImpl implements AuthService {
         user.setUsername(username);
         user.setPassword(PWCheckUtils.encryptPassword(password));
         user.setUserType(type);
-        user.setCreateTime(DateUtils.getNowDate());
+        user.setCreateTime(LocalDateTime.now());
 
         if ("1".equals(type)) {
             user.setStoreId(registerDTO.getStoreId());
@@ -194,7 +194,7 @@ public class AuthServiceImpl implements AuthService {
     private void recordLoginInfo(String username, String status, String message) {
         LoginInfo loginInfo = new LoginInfo();
         loginInfo.setUsername(username);
-        loginInfo.setIpaddr(IpUtils.getIpAddr());
+        loginInfo.setIpAddr(IpUtils.getIpAddr());
         loginInfo.setMsg(message);
 
         if (StringUtils.equalsAny(status, AuthConstants.LOGIN_SUCCESS, AuthConstants.LOGOUT, AuthConstants.REGISTER)) {

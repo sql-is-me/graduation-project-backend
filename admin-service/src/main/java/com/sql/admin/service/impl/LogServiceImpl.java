@@ -8,8 +8,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sql.admin.mapper.LoginInfoMapper;
 import com.sql.admin.mapper.OperLogMapper;
 import com.sql.admin.service.LogService;
-import com.sql.common.entity.LoginInfo;
-import com.sql.common.entity.OperLog;
+import com.sql.common.entity.db.LoginInfo;
+import com.sql.common.entity.db.OperLog;
 import com.sql.utils.StringUtils;
 
 public class LogServiceImpl implements LogService {
@@ -69,7 +69,7 @@ public class LogServiceImpl implements LogService {
     public List<LoginInfo> listLoginInfo(LoginInfo query) {
         LambdaQueryWrapper<LoginInfo> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(StringUtils.isNotEmpty(query.getUsername()), LoginInfo::getUsername, query.getUsername())
-                .like(StringUtils.isNotEmpty(query.getIpaddr()), LoginInfo::getIpaddr, query.getIpaddr())
+                .like(StringUtils.isNotEmpty(query.getIpAddr()), LoginInfo::getIpAddr, query.getIpAddr())
                 .eq(StringUtils.isNotEmpty(query.getStatus()), LoginInfo::getStatus, query.getStatus())
                 .orderByDesc(LoginInfo::getInfoId);
         return loginInfoMapper.selectList(wrapper);

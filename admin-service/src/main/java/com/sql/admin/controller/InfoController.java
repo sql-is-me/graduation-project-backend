@@ -13,7 +13,7 @@ import com.sql.admin.dto.AdminPasswordUpdateDTO;
 import com.sql.admin.dto.AdminInfoUpdateDTO;
 import com.sql.admin.service.InfoService;
 import com.sql.common.auth.annotation.RequiresType;
-import com.sql.common.entity.Admin;
+import com.sql.common.entity.db.Admin;
 import com.sql.common.entity.result.R;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;

@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sql.admin.service.LogService;
 import com.sql.common.auth.annotation.InnerAuth;
-import com.sql.common.entity.LoginInfo;
-import com.sql.common.entity.OperLog;
+import com.sql.common.entity.db.LoginInfo;
+import com.sql.common.entity.db.OperLog;
 import com.sql.common.entity.result.R;
 import com.sql.utils.BaseController;
 

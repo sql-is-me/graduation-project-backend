@@ -2,7 +2,7 @@ package com.sql.admin.service;
 
 import java.util.List;
 
-import com.sql.common.entity.Notice;
+import com.sql.common.entity.db.Notice;
 
 public interface NoticeService {
     Notice getNoticeById(Long noticeId);

@@ -1,5 +1,7 @@
 package com.sql.common.entity;
 
+import com.sql.common.entity.db.User;
+
 import lombok.Data;
 
 /**
