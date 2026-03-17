@@ -10,10 +10,11 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.sql.common.handler.LongListTypeHandler;
 import lombok.Data;
 
 @Data
-@TableName("courses")
+@TableName(value = "courses", autoResultMap = true)
 public class Course {
     @TableId(value = "course_id", type = IdType.AUTO)
     private Long courseId;
@@ -62,7 +63,7 @@ public class Course {
      * 上课孩子id列表
      * 关联children表
      */
-    @TableField("child_ids")
+    @TableField(value = "child_ids", typeHandler = LongListTypeHandler.class)
     private List<Long> childIds = new ArrayList<>();
 
     /**

@@ -1,0 +1,112 @@
+package com.sql.admin.controller;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.sql.admin.dto.CourseCreateDTO;
+import com.sql.admin.service.CourseService;
+import com.sql.common.auth.annotation.RequiresType;
+import com.sql.common.entity.TableDataInfo;
+import com.sql.common.entity.db.ClassHour;
+import com.sql.common.entity.db.Course;
+import com.sql.common.entity.result.R;
+import com.sql.common.enums.UserTypes;
+import com.sql.common.log.annotation.Log;
+import com.sql.common.log.enums.BusinessType;
+import com.sql.utils.BaseController;
+
+@RestController
+@RequestMapping("/admin/course")
+@RequiresType(UserTypes.MANAGER)
+public class CourseController extends BaseController {
+
+    @Autowired
+    private CourseService courseService;
+
+    /**
+     * 创建课程
+     */
+    @Log(title = "课程管理", businessType = BusinessType.INSERT)
+    @PostMapping("/create")
+    public R<?> createCourse(@Validated @RequestBody CourseCreateDTO dto) {
+        return R.ok(courseService.createCourse(dto), "课程创建成功");
+    }
+
+    /**
+     * 安排/更换教练
+     */
+    @Log(title = "课程管理", businessType = BusinessType.UPDATE)
+    @PutMapping("/{courseId}/coach/{coachId}")
+    public R<?> assignCoach(@PathVariable Long courseId, @PathVariable Long coachId) {
+        return R.ok(courseService.assignCoach(courseId, coachId), "教练安排成功");
+    }
+
+    /**
+     * 取消课程
+     */
+    @Log(title = "课程管理", businessType = BusinessType.DELETE)
+    @DeleteMapping("/{courseId}")
+    public R<?> cancelCourse(@PathVariable Long courseId) {
+        return R.ok(courseService.cancelCourse(courseId), "课程取消成功");
+    }
+
+    /**
+     * 安排孩子上课（支持批量，1到多个）
+     */
+    @Log(title = "课程管理", businessType = BusinessType.UPDATE)
+    @PutMapping("/{courseId}/children")
+    public R<?> arrangeChildren(@PathVariable Long courseId, @RequestBody List<Long> childIds) {
+        return R.ok(courseService.arrangeChildren(courseId, childIds), "学员安排成功");
+    }
+
+    /**
+     * 取消孩子的上课安排
+     */
+    @Log(title = "课程管理", businessType = BusinessType.UPDATE)
+    @DeleteMapping("/{courseId}/child/{childId}")
+    public R<?> cancelChild(@PathVariable Long courseId, @PathVariable Long childId) {
+        return R.ok(courseService.cancelChild(courseId, childId), "取消安排成功");
+    }
+
+    /**
+     * 查询课程列表（可按日期筛选）
+     */
+    @GetMapping("/list")
+    public TableDataInfo listCourses(
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate courseDate) {
+        startPage();
+        List<Course> list = courseService.listCourses(courseDate);
+        return getDataTable(list);
+    }
+
+    /**
+     * 查询课程详情
+     */
+    @GetMapping("/{courseId}")
+    public R<?> getCourseById(@PathVariable Long courseId) {
+        return R.ok(courseService.getCourseById(courseId));
+    }
+
+    /**
+     * 查看当前店铺旗下会员的课时余额
+     */
+    @GetMapping("/classHours")
+    public TableDataInfo listClassHours() {
+        startPage();
+        List<ClassHour> list = courseService.listClassHours();
+        return getDataTable(list);
+    }
+}
