@@ -13,6 +13,7 @@ import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.core.NamedThreadLocal;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
@@ -36,6 +37,7 @@ import com.sql.common.header.ContextHolder;
  */
 @Aspect
 @Component
+@ConditionalOnBean(AsyncLogService.class)
 public class LogAspect {
     private static final Logger log = LoggerFactory.getLogger(LogAspect.class);
 

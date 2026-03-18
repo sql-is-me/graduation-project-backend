@@ -14,6 +14,8 @@ import com.sql.common.annotation.EnableCustomFeignClients;
 public class AdminServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(AdminServiceApplication.class, args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  管理员服务模块启动成功   ლ(´ڡ`ლ)ﾞ");
+        System.out.println("==================================" + "\n" +
+                "      管理员服务模块启动成功" + "\n"
+                + "==================================");
     }
 }

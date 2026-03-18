@@ -1,6 +1,7 @@
 package com.sql.common.log.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -12,6 +13,7 @@ import com.sql.common.entity.db.OperLog;
  * 异步调用日志服务
  */
 @Service
+@ConditionalOnBean(RemoteOperLogService.class)
 public class AsyncLogService {
     @Autowired
     private RemoteOperLogService remoteLogService;

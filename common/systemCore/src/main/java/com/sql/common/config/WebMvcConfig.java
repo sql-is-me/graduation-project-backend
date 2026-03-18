@@ -1,5 +1,6 @@
 package com.sql.common.config;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -26,6 +27,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     /**
      * 自定义请求头拦截器
      */
+    @Bean
     public HeaderInterceptor getHeaderInterceptor() {
         return new HeaderInterceptor();
     }

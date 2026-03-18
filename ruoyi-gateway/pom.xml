@@ -74,12 +74,24 @@
         <dependency>
             <groupId>com.sql</groupId>
             <artifactId>tools</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-webmvc</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Infrastructures-->
         <dependency>
             <groupId>com.sql</groupId>
             <artifactId>infrastructures</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework</groupId>
+                    <artifactId>spring-webmvc</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
     </dependencies>

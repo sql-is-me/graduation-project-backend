@@ -1,3 +1,4 @@
 com.sql.api.factory.RemoteFileFallbackFactory
 com.sql.api.factory.RemoteLoginLogFallbackFactory
 com.sql.api.factory.RemoteOperLogFallbackFactory
+com.sql.api.factory.RemoteClassHourFallbackFactory

@@ -11,7 +11,9 @@ import com.sql.admin.service.LogService;
 import com.sql.common.entity.db.LoginInfo;
 import com.sql.common.entity.db.OperLog;
 import com.sql.utils.StringUtils;
+import org.springframework.stereotype.Service;
 
+@Service
 public class LogServiceImpl implements LogService {
 
     @Autowired
