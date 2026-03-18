@@ -47,6 +47,11 @@ public class AuthConstants {
     public static final String REGISTER = "Register";
 
     /**
+     * 邀请码缓存前缀
+     */
+    public static final String INVITE_CODE = "inviteCode:";
+
+    /**
      * 用户名长度限制
      */
     public static final int USERNAME_MIN_LENGTH = 2;
@@ -64,5 +69,4 @@ public class AuthConstants {
      * 验证码有效期（分钟）
      */
     public static final long CAPTCHA_EXPIRATION = 2;
-
 }

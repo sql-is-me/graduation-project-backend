@@ -40,9 +40,9 @@ public class AuthController {
      */
     @PostMapping("/login")
     public R<?> login(@Valid @RequestBody AdminLoginDTO loginDTO) {
-        Map<String, Object> retMap = authService.login(loginDTO.getUsername(), loginDTO.getPassword());
+        String accessToken = authService.login(loginDTO.getUsername(), loginDTO.getPassword());
 
-        return R.ok(retMap);
+        return R.ok(accessToken, "登录成功");
     }
 
     /**
@@ -50,30 +50,19 @@ public class AuthController {
      */
     // @LoginRequired
     // TODO: 测试完成后记得加入登录校验，确保只有已登录的管理员才能调用退出接口
+    @LoginRequired
     @DeleteMapping("/logout")
     public R<?> logout(HttpServletRequest request) {
         authService.logout(request);
 
-        return R.ok();
+        return R.ok("退出成功");
     }
-
-    /**
-     * 刷新Token有效期
-     */
-    @PostMapping("/refresh")
-    public R<?> refresh(HttpServletRequest request) {
-        authService.refreshToken(request);
-
-        return R.ok();
-    }
-
-    /**
-     * 注册成为地区管理员需要另一位顶级管理员或地区管理员的邀请码
-     * 顶级管理员无法通过注册创建，只能预置在数据库中
-     */
 
     /**
      * 地区管理员注册（需邀请码）
+     * 
+     * 注册成为地区管理员需要另一位顶级管理员或地区管理员的邀请码
+     * 顶级管理员无法通过注册创建，只能预置在数据库中
      */
     @PostMapping("/register")
     public R<?> register(@RequestBody AdminRegisterDTO registerBody) {
@@ -90,6 +79,7 @@ public class AuthController {
      */
     @Log(title = "生成邀请码", businessType = BusinessType.OTHER)
     @PostMapping("/invite")
+    @LoginRequired
     @RequiresType({ UserTypes.ADMIN, UserTypes.MANAGER })
     public R<?> generateInviteCode(@RequestParam(required = false) Long storeId,
             HttpServletRequest request) {

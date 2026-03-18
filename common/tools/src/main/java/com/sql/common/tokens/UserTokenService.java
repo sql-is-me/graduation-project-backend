@@ -1,5 +1,6 @@
 package com.sql.common.tokens;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -67,10 +68,13 @@ public class UserTokenService {
      * 验证令牌有效期，相差不足120分钟，自动刷新缓存
      */
     public void verifyToken(UserOnline uo) {
-        long expireTime = uo.getExpireTime();
-        long currentTime = System.currentTimeMillis();
-        if (expireTime - currentTime <= TOKEN_REFRESH_THRESHOLD_MINUTES) {
-            refreshToken(uo);
+        LocalDateTime expireTime = uo.getExpireTime();
+        LocalDateTime currentTime = LocalDateTime.now();
+        if (expireTime.isAfter(currentTime)) {
+            long minutesDiff = java.time.Duration.between(currentTime, expireTime).toMinutes();
+            if (minutesDiff <= TOKEN_REFRESH_THRESHOLD_MINUTES) {
+                refreshToken(uo);
+            }
         }
     }
 
@@ -78,8 +82,8 @@ public class UserTokenService {
      * 刷新用户token时间并重设个人信息
      */
     public void refreshToken(UserOnline uo) {
-        uo.setLoginTime(System.currentTimeMillis());
-        uo.setExpireTime(uo.getLoginTime() + CacheConstants.TOKEN_EXPIRE_TIME * CacheConstants.MILLIS_MINUTE);
+        uo.setLoginTime(LocalDateTime.now());
+        uo.setExpireTime(uo.getLoginTime().plusMinutes(CacheConstants.TOKEN_EXPIRE_TIME));
 
         String uoKey = TokenConstants.USER_TOKENS + uo.getToken();
         redisService.setCacheObject(uoKey, uo, CacheConstants.TOKEN_EXPIRE_TIME, TimeUnit.MINUTES);

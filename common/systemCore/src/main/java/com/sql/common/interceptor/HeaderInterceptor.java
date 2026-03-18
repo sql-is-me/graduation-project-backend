@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.AsyncHandlerInterceptor;
 
+import com.sql.common.constants.AuthConstants;
 import com.sql.common.constants.ContextHolderConstants;
 import com.sql.common.jwt.utils.TokenUtils;
 import com.sql.common.entity.AdminOnline;
@@ -35,15 +36,22 @@ public class HeaderInterceptor implements AsyncHandlerInterceptor {
             return true;
         }
 
+        // 内部Feign调用不经过用户认证
+        String source = ServletUtils.getHeader(request, AuthConstants.FROM_SOURCE);
+        if (AuthConstants.INNER.equals(source)) {
+            return true;
+        }
+
         ContextHolder.setId(ServletUtils.getHeader(request, ContextHolderConstants.CH_ID));
         ContextHolder.setUsername(ServletUtils.getHeader(request, ContextHolderConstants.CH_USERNAME));
         ContextHolder.setToken(ServletUtils.getHeader(request, ContextHolderConstants.CH_TOKEN));
 
         String type = ServletUtils.getHeader(request, ContextHolderConstants.CH_TYPE);
         ContextHolder.setType(type);
+        System.out.println("type = " + type); // FIXME: 调试
 
         String token = TokenUtils.getToken();
-        if (Integer.valueOf(type) == 0) {
+        if (Integer.parseInt(type) == 0) {
             AdminOnline ao = adminTokenService.getAO(token);
             adminTokenService.verifyToken(ao);
 

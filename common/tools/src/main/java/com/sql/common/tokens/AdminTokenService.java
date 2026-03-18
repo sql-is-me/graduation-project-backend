@@ -1,5 +1,6 @@
 package com.sql.common.tokens;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -38,14 +39,17 @@ public class AdminTokenService {
      * 创建令牌
      * 管理员版本
      */
-    public Map<String, Object> createToken(Admin admin) {
+    public String createToken(Admin admin) {
         String token = IdUtils.fastUUID();
 
         AdminOnline ao = new AdminOnline();
         ao.setAdminInfo(admin);
         ao.setIpaddr(IpUtils.getIpAddr());
         ao.setToken(token);
-        refreshToken(ao);
+        ao.setLoginTime(LocalDateTime.now());
+        ao.setExpireTime(ao.getLoginTime().plusMinutes(CacheConstants.TOKEN_EXPIRE_TIME));
+
+        createAndSetCacheObject(ao);
 
         // Jwt存储信息
         Map<String, Object> claimsMap = new HashMap<String, Object>();
@@ -55,20 +59,30 @@ public class AdminTokenService {
         claimsMap.put(JWTConstants.DETAILS_TYPE, "0");
 
         // 接口返回信息
-        Map<String, Object> rspMap = new HashMap<String, Object>();
-        rspMap.put("access_token", JWTService.createToken(claimsMap));
-        rspMap.put("expires_in", CacheConstants.TOKEN_EXPIRE_TIME);
-        return rspMap;
+        String accessToken = JWTService.createToken(claimsMap);
+
+        return accessToken;
+    }
+
+    /**
+     * 创建并设置缓存对象
+     */
+    public void createAndSetCacheObject(AdminOnline ao) {
+        String aoKey = TokenConstants.ADMIN_TOKENS + ao.getToken();
+        redisService.setCacheObject(aoKey, ao, CacheConstants.TOKEN_EXPIRE_TIME, TimeUnit.MINUTES);
     }
 
     /**
      * 验证令牌有效期，相差不足120分钟，自动刷新缓存
      */
     public void verifyToken(AdminOnline ao) {
-        long expireTime = ao.getExpireTime();
-        long currentTime = System.currentTimeMillis();
-        if (expireTime - currentTime <= TOKEN_REFRESH_THRESHOLD_MINUTES) {
-            refreshToken(ao);
+        LocalDateTime expireTime = ao.getExpireTime();
+        LocalDateTime currentTime = LocalDateTime.now();
+        if (expireTime.isAfter(currentTime)) {
+            long minutesDiff = java.time.Duration.between(currentTime, expireTime).toMinutes();
+            if (minutesDiff <= TOKEN_REFRESH_THRESHOLD_MINUTES) {
+                refreshToken(ao);
+            }
         }
     }
 
@@ -78,11 +92,8 @@ public class AdminTokenService {
      * @param ao adminOnline
      */
     public void refreshToken(AdminOnline ao) {
-        ao.setLoginTime(System.currentTimeMillis());
-        ao.setExpireTime(ao.getLoginTime() + CacheConstants.TOKEN_EXPIRE_TIME * CacheConstants.MILLIS_MINUTE);
-
-        String aoKey = TokenConstants.ADMIN_TOKENS + ao.getToken();
-        redisService.setCacheObject(aoKey, ao, CacheConstants.TOKEN_EXPIRE_TIME, TimeUnit.MINUTES);
+        ao.setExpireTime(ao.getLoginTime().plusMinutes(CacheConstants.TOKEN_EXPIRE_TIME));
+        createAndSetCacheObject(ao);
     }
 
     /**

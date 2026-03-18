@@ -22,6 +22,7 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import com.alibaba.fastjson2.JSON;
+import java.nio.charset.StandardCharsets;
 import com.sql.common.entity.result.R;
 
 import reactor.core.publisher.Mono;
@@ -283,7 +284,8 @@ public class ServletUtils {
         response.setStatusCode(status);
         response.getHeaders().add(HttpHeaders.CONTENT_TYPE, contentType);
         R<?> result = R.fail(code, value.toString());
-        DataBuffer dataBuffer = response.bufferFactory().wrap(JSON.toJSONString(result).getBytes());
+        DataBuffer dataBuffer = response.bufferFactory()
+                .wrap(JSON.toJSONString(result).getBytes(StandardCharsets.UTF_8));
         return response.writeWith(Mono.just(dataBuffer));
     }
 }

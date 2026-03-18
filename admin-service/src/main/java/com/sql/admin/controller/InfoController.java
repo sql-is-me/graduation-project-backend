@@ -13,11 +13,11 @@ import com.sql.admin.dto.AdminPasswordUpdateDTO;
 import com.sql.admin.dto.AdminInfoUpdateDTO;
 import com.sql.admin.service.InfoService;
 import com.sql.common.auth.annotation.RequiresType;
-import com.sql.common.entity.db.Admin;
 import com.sql.common.entity.result.R;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;
 import com.sql.common.log.enums.BusinessType;
+import com.sql.common.vo.AdminInfo;
 
 /**
  * 管理员个人信息控制器
@@ -25,7 +25,7 @@ import com.sql.common.log.enums.BusinessType;
  */
 @RestController
 @RequestMapping("/admin/info")
-@RequiresType({UserTypes.ADMIN, UserTypes.MANAGER})
+@RequiresType({ UserTypes.ADMIN, UserTypes.MANAGER })
 public class InfoController {
 
     @Autowired
@@ -36,8 +36,8 @@ public class InfoController {
      */
     @GetMapping
     public R<?> getInfo() {
-        Admin admin = infoService.getInfo();
-        return R.ok(admin);
+        AdminInfo adminInfo = infoService.getInfo();
+        return R.ok(adminInfo);
     }
 
     /**

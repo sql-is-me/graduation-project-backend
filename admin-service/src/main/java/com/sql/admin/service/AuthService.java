@@ -1,7 +1,5 @@
 package com.sql.admin.service;
 
-import java.util.Map;
-
 import com.sql.admin.dto.AdminRegisterDTO;
 
 import jakarta.servlet.http.HttpServletRequest;;
@@ -13,17 +11,12 @@ public interface AuthService {
     /**
      * 管理员登录
      */
-    public Map<String, Object> login(String username, String password);
+    public String login(String username, String password);
 
     /**
      * 退出登录
      */
     public void logout(HttpServletRequest request);
-
-    /**
-     * 刷新token时间
-     */
-    public void refreshToken(HttpServletRequest request);
 
     /**
      * 管理员注册

@@ -1,5 +1,7 @@
 package com.sql.common.entity;
 
+import java.time.LocalDateTime;
+
 import com.sql.common.entity.db.User;
 
 import lombok.Data;
@@ -18,12 +20,12 @@ public class UserOnline {
     /**
      * 登录时间
      */
-    private Long loginTime;
+    private LocalDateTime loginTime;
 
     /**
      * 过期时间
      */
-    private Long expireTime;
+    private LocalDateTime expireTime;
 
     /**
      * 登录IP地址

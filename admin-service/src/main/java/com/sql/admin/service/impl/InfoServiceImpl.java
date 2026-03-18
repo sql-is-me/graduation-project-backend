@@ -18,6 +18,7 @@ import com.sql.common.entity.result.R;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 import com.sql.common.tokens.AdminTokenService;
+import com.sql.common.vo.AdminInfo;
 import com.sql.utils.PWCheckUtils;
 import com.sql.utils.StringUtils;
 import com.sql.utils.file.FileTypeUtils;
@@ -42,8 +43,9 @@ public class InfoServiceImpl implements InfoService {
      * 获取管理员个人信息
      */
     @Override
-    public Admin getInfo() {
-        return ContextHolder.getAO().getAdminInfo();
+    public AdminInfo getInfo() {
+        Admin admin = ContextHolder.getAO().getAdminInfo();
+        return new AdminInfo(admin);
     }
 
     /**

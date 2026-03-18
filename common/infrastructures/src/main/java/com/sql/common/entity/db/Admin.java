@@ -106,6 +106,7 @@ public class Admin {
     @TableField(fill = FieldFill.INSERT_UPDATE, value = "update_time")
     private LocalDateTime updateTime;
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
     public boolean isTopAdmin() {
         return Integer.parseInt(getAdminType()) == 0;
     }

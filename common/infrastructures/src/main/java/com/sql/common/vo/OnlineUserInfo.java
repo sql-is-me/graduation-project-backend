@@ -1,5 +1,7 @@
 package com.sql.common.vo;
 
+import java.time.LocalDateTime;
+
 import lombok.Data;
 
 /**
@@ -17,7 +19,7 @@ public class OnlineUserInfo {
 
     private String ipaddr;
 
-    private Long loginTime;
+    private LocalDateTime loginTime;
 
     private String userType;
 }

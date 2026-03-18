@@ -1,7 +1,6 @@
 package com.sql.admin.service.impl;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -54,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
      * 管理员登录
      */
     @Override
-    public Map<String, Object> login(String username, String password) {
+    public String login(String username, String password) {
         Admin admin;
         try {
             // 密码长度校验
@@ -87,9 +86,10 @@ public class AuthServiceImpl implements AuthService {
         admin.setLoginDate(LocalDateTime.now());
         adminMapper.updateById(admin);
 
+        String accessToken = adminTokenService.createToken(admin);
         recordLoginInfo(admin.getUsername(), AuthConstants.LOGIN_SUCCESS, "登录成功");
 
-        return adminTokenService.createToken(admin);
+        return accessToken;
     }
 
     /**
@@ -98,22 +98,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void logout(HttpServletRequest request) {
         String token = adminTokenService.getAOToken(request);
-        if (StringUtils.isNotEmpty(token)) {
-            String username = JWTService.getUsername(JWTService.parseToken(token));
-            // 删除用户缓存记录
-            adminTokenService.delAdminOnline(token);
+        String username = JWTService.getUsername(JWTService.parseToken(token));
+        // 删除用户缓存记录
+        adminTokenService.delAdminOnline(token);
 
-            recordLoginInfo(username, AuthConstants.LOGOUT, "退出成功");
-        }
-    }
-
-    /**
-     * 刷新当前管理员Token
-     */
-    @Override
-    public void refreshToken(HttpServletRequest request) {
-        String token = adminTokenService.getAOToken(request);
-        adminTokenService.refreshToken(adminTokenService.getAO(token));
+        recordLoginInfo(username, AuthConstants.LOGOUT, "退出成功");
     }
 
     /**
@@ -140,7 +129,9 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // 校验邀请码
-        String inviteKey = registerDTO.getInviteCode();
+        String inviteCode = registerDTO.getInviteCode();
+        String inviteKey = AuthConstants.INVITE_CODE + inviteCode;
+
         AdminInviteDTO inviteDTO = redisService.getCacheObject(inviteKey);
         if (inviteDTO == null) {
             throw new ServiceException("邀请码无效或已过期");
@@ -196,9 +187,10 @@ public class AuthServiceImpl implements AuthService {
         }
 
         String inviteCode = UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase();
+        String inviteKey = AuthConstants.INVITE_CODE + inviteCode;
         AdminInviteDTO inviteDTO = new AdminInviteDTO(referrer.getReferrerId(), storeId);
 
-        redisService.setCacheObject(inviteCode, inviteDTO, ADMIN_INVITE_EXPIRE, TimeUnit.MINUTES);
+        redisService.setCacheObject(inviteKey, inviteDTO, ADMIN_INVITE_EXPIRE, TimeUnit.MINUTES);
 
         return inviteCode;
     }
@@ -242,6 +234,7 @@ public class AuthServiceImpl implements AuthService {
      */
     public void recordLoginInfo(String username, String status, String message) {
         LoginInfo loginInfo = new LoginInfo();
+        loginInfo.setAccessTime(LocalDateTime.now());
         loginInfo.setUsername(username);
         loginInfo.setIpAddr(IpUtils.getIpAddr());
         loginInfo.setMsg(message);
@@ -252,7 +245,7 @@ public class AuthServiceImpl implements AuthService {
         } else if (AuthConstants.LOGIN_FAIL.equals(status)) {
             loginInfo.setStatus(AuthConstants.LOGIN_FAIL_STATUS);
         }
+
         remoteLoginLogService.saveLoginInfo(loginInfo, AuthConstants.INNER);
     }
-
 }
