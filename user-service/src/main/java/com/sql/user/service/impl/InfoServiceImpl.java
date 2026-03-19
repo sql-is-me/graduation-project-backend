@@ -14,6 +14,7 @@ import com.sql.common.entity.result.R;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 import com.sql.common.tokens.UserTokenService;
+import com.sql.common.vo.UserInfo;
 import com.sql.user.dto.UserInfoUpdateDTO;
 import com.sql.user.dto.UserPasswordUpdateDTO;
 import com.sql.user.mapper.UserMapper;
@@ -42,8 +43,9 @@ public class InfoServiceImpl implements InfoService {
      * 获取当前登录用户信息
      */
     @Override
-    public User getInfo() {
-        return ContextHolder.getUO().getUserInfo();
+    public UserInfo getInfo() {
+        User user = ContextHolder.getUO().getUserInfo();
+        return new UserInfo(user);
     }
 
     /**
@@ -89,7 +91,7 @@ public class InfoServiceImpl implements InfoService {
         }
 
         // 更新缓存中的用户信息
-        userTokenService.refreshToken(uo);
+        userTokenService.refreshCacheInfo(uo);
     }
 
     /**
@@ -122,7 +124,7 @@ public class InfoServiceImpl implements InfoService {
 
         // 更新缓存
         uo.getUserInfo().setPassword(encryptedPW);
-        userTokenService.refreshToken(uo);
+        userTokenService.refreshCacheInfo(uo);
     }
 
     /**
@@ -161,7 +163,7 @@ public class InfoServiceImpl implements InfoService {
 
         // 更新缓存
         uo.getUserInfo().setAvatar(fileUrl);
-        userTokenService.refreshToken(uo);
+        userTokenService.refreshCacheInfo(uo);
     }
 
     private boolean isNotDefaultUserAvatar(String avatarUrl) {

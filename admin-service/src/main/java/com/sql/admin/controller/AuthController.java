@@ -2,7 +2,6 @@ package com.sql.admin.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
-import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,8 +47,6 @@ public class AuthController {
     /**
      * 管理员退出登录
      */
-    // @LoginRequired
-    // TODO: 测试完成后记得加入登录校验，确保只有已登录的管理员才能调用退出接口
     @LoginRequired
     @DeleteMapping("/logout")
     public R<?> logout(HttpServletRequest request) {

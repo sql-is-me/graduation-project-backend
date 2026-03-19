@@ -1,8 +1,5 @@
 package com.sql.common.vo;
 
-import java.time.LocalDateTime;
-
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.sql.common.entity.db.Admin;
 
 import lombok.Data;
@@ -48,14 +45,7 @@ public class AdminInfo {
      * 管理员类型
      * 0:TOP 超级管理员 / 1:STORE 店铺管理员
      */
-    @TableField("admin_type")
     private String adminType; // 默认店铺管理员
-
-    /**
-     * 最后登录时间
-     */
-    @TableField("login_date")
-    private LocalDateTime loginDate;
 
     public AdminInfo(Admin admin) {
         this.username = admin.getUsername();
@@ -66,6 +56,5 @@ public class AdminInfo {
         this.avatar = admin.getAvatar();
         this.storeId = admin.getStoreId();
         this.adminType = admin.getAdminType();
-        this.loginDate = admin.getLoginDate();
     }
 }

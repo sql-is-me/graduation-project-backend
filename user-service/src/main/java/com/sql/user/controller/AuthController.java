@@ -1,7 +1,5 @@
 package com.sql.user.controller;
 
-import java.util.Map;
-
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.entity.result.R;
 import com.sql.user.dto.UserLoginDTO;
 import com.sql.user.dto.UserRegisterDTO;
@@ -30,26 +29,20 @@ public class AuthController {
      */
     @PostMapping("/login")
     public R<?> login(@Valid @RequestBody UserLoginDTO loginDTO) {
-        Map<String, Object> retMap = authService.login(loginDTO.getUsername(), loginDTO.getPassword());
-        return R.ok(retMap);
+        String accessToken = authService.login(loginDTO.getUsername(), loginDTO.getPassword());
+
+        return R.ok(accessToken, "登录成功");
     }
 
     /**
      * 退出登录
      */
+    @LoginRequired
     @DeleteMapping("/logout")
     public R<?> logout(HttpServletRequest request) {
         authService.logout(request);
-        return R.ok();
-    }
 
-    /**
-     * 刷新Token有效期
-     */
-    @PostMapping("/refresh")
-    public R<?> refresh(HttpServletRequest request) {
-        authService.refreshToken(request);
-        return R.ok();
+        return R.ok("退出成功");
     }
 
     /**

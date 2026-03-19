@@ -46,7 +46,7 @@ public class AdminTokenService {
         ao.setAdminInfo(admin);
         ao.setIpaddr(IpUtils.getIpAddr());
         ao.setToken(token);
-        ao.setLoginTime(LocalDateTime.now());
+        ao.setLoginTime(LocalDateTime.now().withNano(0));
         ao.setExpireTime(ao.getLoginTime().plusMinutes(CacheConstants.TOKEN_EXPIRE_TIME));
 
         createAndSetCacheObject(ao);
@@ -77,23 +77,32 @@ public class AdminTokenService {
      */
     public void verifyToken(AdminOnline ao) {
         LocalDateTime expireTime = ao.getExpireTime();
-        LocalDateTime currentTime = LocalDateTime.now();
+        LocalDateTime currentTime = LocalDateTime.now().withNano(0);
         if (expireTime.isAfter(currentTime)) {
             long minutesDiff = java.time.Duration.between(currentTime, expireTime).toMinutes();
             if (minutesDiff <= TOKEN_REFRESH_THRESHOLD_MINUTES) {
-                refreshToken(ao);
+                resetExpireTime(ao);
             }
         }
     }
 
     /**
-     * 刷新管理员token时间并重设个人信息
+     * 重设缓存中个人信息
      *
      * @param ao adminOnline
      */
-    public void refreshToken(AdminOnline ao) {
-        ao.setExpireTime(ao.getLoginTime().plusMinutes(CacheConstants.TOKEN_EXPIRE_TIME));
+    public void refreshCacheInfo(AdminOnline ao) {
         createAndSetCacheObject(ao);
+    }
+
+    /**
+     * 刷新管理员token过期时间并重设个人信息
+     *
+     * @param ao adminOnline
+     */
+    public void resetExpireTime(AdminOnline ao) {
+        ao.setExpireTime(ao.getLoginTime().plusMinutes(CacheConstants.TOKEN_EXPIRE_TIME));
+        refreshCacheInfo(ao);
     }
 
     /**

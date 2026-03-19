@@ -1,7 +1,6 @@
 com.sql.common.redis.configure.RedisConfig
 com.sql.common.redis.service.RedisService
-com.sql.common.log.service.AsyncLogService
-com.sql.common.log.aspect.LogAspect
+com.sql.common.log.config.LogAutoConfiguration
 com.sql.common.auth.aspect.InnerAuthAspect
 com.sql.common.auth.aspect.PermissionAspect
 com.sql.common.tokens.AdminTokenService

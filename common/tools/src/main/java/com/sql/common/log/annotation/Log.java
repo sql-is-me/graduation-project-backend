@@ -1,6 +1,5 @@
 package com.sql.common.log.annotation;
 
-import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -13,7 +12,6 @@ import com.sql.common.enums.UserTypes;
  * 自定义操作日志记录注解
  *
  */
-@Documented
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Log {

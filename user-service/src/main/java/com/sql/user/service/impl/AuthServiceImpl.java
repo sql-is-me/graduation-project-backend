@@ -1,7 +1,6 @@
 package com.sql.user.service.impl;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,7 +43,7 @@ public class AuthServiceImpl implements AuthService {
      * 用户/教练登录
      */
     @Override
-    public Map<String, Object> login(String username, String password) {
+    public String login(String username, String password) {
         User user;
         try {
             if (password.length() < AuthConstants.PASSWORD_MIN_LENGTH
@@ -71,14 +70,12 @@ public class AuthServiceImpl implements AuthService {
             throw new ServiceException(e.getMessage());
         }
 
-        // 更新登录信息
-        user.setLoginIp(IpUtils.getIpAddr());
-        user.setLoginDate(LocalDateTime.now());
         userMapper.updateById(user);
 
+        String accessToken = userTokenService.createToken(user);
         recordLoginInfo(user.getUsername(), AuthConstants.LOGIN_SUCCESS, "登录成功");
 
-        return userTokenService.createToken(user, user.getUserType());
+        return accessToken;
     }
 
     /**
@@ -87,21 +84,11 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void logout(HttpServletRequest request) {
         String token = userTokenService.getUOToken(request);
-        if (StringUtils.isNotEmpty(token)) {
-            String username = JWTService.getUsername(JWTService.parseToken(token));
-            userTokenService.delUserOnline(token);
+        String username = JWTService.getUsername(JWTService.parseToken(token));
+        // 删除用户缓存记录
+        userTokenService.delUserOnline(token);
 
-            recordLoginInfo(username, AuthConstants.LOGOUT, "退出成功");
-        }
-    }
-
-    /**
-     * 刷新当前用户Token
-     */
-    @Override
-    public void refreshToken(HttpServletRequest request) {
-        String token = userTokenService.getUOToken(request);
-        userTokenService.refreshToken(userTokenService.getUO(token));
+        recordLoginInfo(username, AuthConstants.LOGOUT, "退出成功");
     }
 
     /**
@@ -145,8 +132,6 @@ public class AuthServiceImpl implements AuthService {
         user.setUsername(username);
         user.setPassword(PWCheckUtils.encryptPassword(password));
         user.setUserType(type);
-        user.setCreateTime(LocalDateTime.now());
-
         if ("1".equals(type)) {
             user.setStoreId(registerDTO.getStoreId());
         }
@@ -193,6 +178,7 @@ public class AuthServiceImpl implements AuthService {
      */
     private void recordLoginInfo(String username, String status, String message) {
         LoginInfo loginInfo = new LoginInfo();
+        loginInfo.setAccessTime(LocalDateTime.now());
         loginInfo.setUsername(username);
         loginInfo.setIpAddr(IpUtils.getIpAddr());
         loginInfo.setMsg(message);

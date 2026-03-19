@@ -48,7 +48,6 @@ public class HeaderInterceptor implements AsyncHandlerInterceptor {
 
         String type = ServletUtils.getHeader(request, ContextHolderConstants.CH_TYPE);
         ContextHolder.setType(type);
-        System.out.println("type = " + type); // FIXME: 调试
 
         String token = TokenUtils.getToken();
         if (Integer.parseInt(type) == 0) {

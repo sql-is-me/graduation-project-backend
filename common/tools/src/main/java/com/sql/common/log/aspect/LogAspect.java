@@ -1,5 +1,6 @@
 package com.sql.common.log.aspect;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Map;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,10 +14,8 @@ import org.aspectj.lang.annotation.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.core.NamedThreadLocal;
 import org.springframework.http.HttpMethod;
-import org.springframework.stereotype.Component;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 import com.alibaba.fastjson2.JSON;
@@ -36,8 +35,6 @@ import com.sql.common.header.ContextHolder;
  * 操作日志记录处理
  */
 @Aspect
-@Component
-@ConditionalOnBean(AsyncLogService.class)
 public class LogAspect {
     private static final Logger log = LoggerFactory.getLogger(LogAspect.class);
 
@@ -86,19 +83,17 @@ public class LogAspect {
         try {
             // *========数据库日志=========*//
             OperLog operLog = new OperLog();
-            operLog.setStatus(BusinessStatus.SUCCESS.ordinal());
+            operLog.setOperTime(LocalDateTime.now());
 
-            String username = ContextHolder.getUsername();
-            if (StringUtils.isNotBlank(username)) {
-                operLog.setOperName(username);
-            }
-
-            // 设计错误信息
             if (e != null) {
                 operLog.setStatus(BusinessStatus.FAIL.ordinal());
                 operLog.setErrorMsg(StringUtils
                         .substring(Convert.toStr(e.getMessage(), ExceptionUtil.getExceptionMessage(e)), 0, 2000));
+            } else {
+                operLog.setStatus(BusinessStatus.SUCCESS.ordinal());
             }
+
+            operLog.setOperName(ContextHolder.getUsername());
 
             // 设置方法名称
             String className = joinPoint.getTarget().getClass().getName();

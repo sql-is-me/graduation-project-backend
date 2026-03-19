@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sql.common.auth.annotation.RequiresType;
-import com.sql.common.entity.db.User;
 import com.sql.common.entity.result.R;
 import com.sql.common.enums.UserTypes;
+import com.sql.common.vo.UserInfo;
 import com.sql.common.log.annotation.Log;
 import com.sql.common.log.enums.BusinessType;
 import com.sql.user.dto.UserInfoUpdateDTO;
@@ -36,8 +36,8 @@ public class InfoController {
      */
     @GetMapping
     public R<?> getInfo() {
-        User user = infoService.getInfo();
-        return R.ok(user);
+        UserInfo userInfo = infoService.getInfo();
+        return R.ok(userInfo);
     }
 
     /**

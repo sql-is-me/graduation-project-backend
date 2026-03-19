@@ -82,8 +82,6 @@ public class AuthServiceImpl implements AuthService {
             throw new ServiceException(e.getMessage());
         }
 
-        admin.setLoginIp(IpUtils.getIpAddr());
-        admin.setLoginDate(LocalDateTime.now());
         adminMapper.updateById(admin);
 
         String accessToken = adminTokenService.createToken(admin);

@@ -3,6 +3,7 @@ package com.sql.common.entity.db;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -56,15 +57,14 @@ public class User {
     private String phone;
 
     /**
-     * 性别
-     * 0男 1女 2未知
+     * 性别（0男 1女 2未知）
      */
-    private String sex;
+    private String sex = "2";
 
     /**
      * 头像URL地址
      */
-    private String avatar;
+    private String avatar = "";
 
     /**
      * 所属店铺ID
@@ -73,33 +73,20 @@ public class User {
     private Long storeId;
 
     /**
-     * 账号状态
-     * 0正常 1停用
+     * 账号状态（0正常 1停用）
      */
-    private String status;
-
-    /**
-     * 最后登录IP
-     */
-    @TableField("login_ip")
-    private String loginIp;
-
-    /**
-     * 最后登录时间
-     */
-    @TableField("login_date")
-    private LocalDateTime loginDate;
+    private String status = "0";
 
     /**
      * 创建时间
      */
-    @TableField("create_time")
+    @TableField(fill = FieldFill.INSERT, value = "create_time")
     private LocalDateTime createTime;
 
     /**
      * 更新时间
      */
-    @TableField("update_time")
+    @TableField(fill = FieldFill.INSERT_UPDATE, value = "update_time")
     private LocalDateTime updateTime;
 
     /**

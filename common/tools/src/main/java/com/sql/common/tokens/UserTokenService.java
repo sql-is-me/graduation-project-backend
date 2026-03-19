@@ -36,19 +36,20 @@ public class UserTokenService {
 
     /**
      * 创建令牌
-     *
-     * @param user     用户信息
-     * @param userType 用户类型（0:会员 1:教练）
+     * 用户/教练版本
      */
-    public Map<String, Object> createToken(User user, String userType) {
+    public String createToken(User user) {
         String token = IdUtils.fastUUID();
 
         UserOnline uo = new UserOnline();
         uo.setUserInfo(user);
         uo.setIpaddr(IpUtils.getIpAddr());
         uo.setToken(token);
-        uo.setUserType(userType);
-        refreshToken(uo);
+        uo.setUserType(user.getUserType());
+        uo.setLoginTime(LocalDateTime.now().withNano(0));
+        uo.setExpireTime(uo.getLoginTime().plusMinutes(CacheConstants.TOKEN_EXPIRE_TIME));
+
+        createAndSetCacheObject(uo);
 
         // Jwt存储信息
         Map<String, Object> claimsMap = new HashMap<String, Object>();
@@ -58,10 +59,17 @@ public class UserTokenService {
         claimsMap.put(JWTConstants.DETAILS_TYPE, "1"); // 1表示用户端
 
         // 接口返回信息
-        Map<String, Object> rspMap = new HashMap<String, Object>();
-        rspMap.put("access_token", JWTService.createToken(claimsMap));
-        rspMap.put("expires_in", CacheConstants.TOKEN_EXPIRE_TIME);
-        return rspMap;
+        String accessToken = JWTService.createToken(claimsMap);
+
+        return accessToken;
+    }
+
+    /**
+     * 创建并设置缓存对象
+     */
+    public void createAndSetCacheObject(UserOnline uo) {
+        String uoKey = TokenConstants.USER_TOKENS + uo.getToken();
+        redisService.setCacheObject(uoKey, uo, CacheConstants.TOKEN_EXPIRE_TIME, TimeUnit.MINUTES);
     }
 
     /**
@@ -69,24 +77,28 @@ public class UserTokenService {
      */
     public void verifyToken(UserOnline uo) {
         LocalDateTime expireTime = uo.getExpireTime();
-        LocalDateTime currentTime = LocalDateTime.now();
+        LocalDateTime currentTime = LocalDateTime.now().withNano(0);
         if (expireTime.isAfter(currentTime)) {
             long minutesDiff = java.time.Duration.between(currentTime, expireTime).toMinutes();
             if (minutesDiff <= TOKEN_REFRESH_THRESHOLD_MINUTES) {
-                refreshToken(uo);
+                resetExpireTime(uo);
             }
         }
     }
 
     /**
-     * 刷新用户token时间并重设个人信息
+     * 重设缓存中个人信息
      */
-    public void refreshToken(UserOnline uo) {
-        uo.setLoginTime(LocalDateTime.now());
-        uo.setExpireTime(uo.getLoginTime().plusMinutes(CacheConstants.TOKEN_EXPIRE_TIME));
+    public void refreshCacheInfo(UserOnline uo) {
+        createAndSetCacheObject(uo);
+    }
 
-        String uoKey = TokenConstants.USER_TOKENS + uo.getToken();
-        redisService.setCacheObject(uoKey, uo, CacheConstants.TOKEN_EXPIRE_TIME, TimeUnit.MINUTES);
+    /**
+     * 刷新用户token过期时间并重设个人信息
+     */
+    public void resetExpireTime(UserOnline uo) {
+        uo.setExpireTime(uo.getLoginTime().plusMinutes(CacheConstants.TOKEN_EXPIRE_TIME));
+        refreshCacheInfo(uo);
     }
 
     /**

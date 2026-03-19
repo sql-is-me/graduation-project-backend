@@ -1,7 +1,5 @@
 package com.sql.user.service;
 
-import java.util.Map;
-
 import com.sql.user.dto.UserRegisterDTO;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,17 +14,12 @@ public interface AuthService {
      * @param username 用户名
      * @param password 密码
      */
-    Map<String, Object> login(String username, String password);
+    String login(String username, String password);
 
     /**
      * 退出登录
      */
     void logout(HttpServletRequest request);
-
-    /**
-     * 刷新token时间
-     */
-    void refreshToken(HttpServletRequest request);
 
     /**
      * 用户/教练注册

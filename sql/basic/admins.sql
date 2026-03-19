@@ -12,8 +12,6 @@ CREATE TABLE admins (
   admin_type CHAR(1) DEFAULT '1',
   referrer_id BIGINT DEFAULT NULL,
   status CHAR(1) DEFAULT '0',
-  login_ip VARCHAR(128) DEFAULT '',
-  login_date DATETIME DEFAULT NULL,
   create_time DATETIME DEFAULT NULL,
   update_time DATETIME DEFAULT NULL,
   PRIMARY KEY (admin_id),
@@ -22,7 +20,7 @@ CREATE TABLE admins (
   KEY idx_admin_referrer_id (referrer_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO admins (admin_id, username, password, nick_name, email, phone, sex, avatar, store_id, admin_type, referrer_id, status, login_ip, login_date, create_time, update_time) VALUES
-(1, 'topadmin', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '超级管理员', 'topadmin@example.com', '13900000001', '0', '', NULL, '0', NULL, '0', '10.0.0.1', '2026-03-18 08:00:00', '2026-03-18 08:00:00', '2026-03-18 08:00:00'),
-(2, 'store_admin_1', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '店铺管理员1', 'store1@example.com', '13900000002', '0', '', 1, '1', 1, '0', '10.0.0.2', '2026-03-18 08:05:00', '2026-03-18 08:05:00', '2026-03-18 08:05:00'),
-(3, 'store_admin_2', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '店铺管理员2', 'store2@example.com', '13900000003', '1', '', 2, '1', 1, '0', '10.0.0.3', '2026-03-18 08:10:00', '2026-03-18 08:10:00', '2026-03-18 08:10:00');
+INSERT INTO admins (admin_id, username, password, nick_name, email, phone, sex, avatar, store_id, admin_type, referrer_id, status, create_time, update_time) VALUES
+(1, 'topadmin', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '超级管理员', 'topadmin@example.com', '13900000001', '0', '', NULL, '0', NULL, '0', '2026-03-18 08:00:00', '2026-03-18 08:00:00'),
+(2, 'store_admin_1', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '店铺管理员1', 'store1@example.com', '13900000002', '0', '', 1, '1', 1, '0', '2026-03-18 08:05:00', '2026-03-18 08:05:00'),
+(3, 'store_admin_2', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '店铺管理员2', 'store2@example.com', '13900000003', '1', '', 2, '1', 1, '0', '2026-03-18 08:10:00', '2026-03-18 08:10:00');

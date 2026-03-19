@@ -91,7 +91,7 @@ public class InfoServiceImpl implements InfoService {
         }
 
         // 更新缓存中的用户信息
-        adminTokenService.refreshToken(ao);
+        adminTokenService.refreshCacheInfo(ao);
     }
 
     /**
@@ -124,7 +124,7 @@ public class InfoServiceImpl implements InfoService {
 
         // 更新缓存
         ao.getAdminInfo().setPassword(encryptedPW);
-        adminTokenService.refreshToken(ao);
+        adminTokenService.refreshCacheInfo(ao);
     }
 
     /**
@@ -161,7 +161,7 @@ public class InfoServiceImpl implements InfoService {
 
         // 更新缓存
         ao.getAdminInfo().setAvatar(fileUrl);
-        adminTokenService.refreshToken(ao);
+        adminTokenService.refreshCacheInfo(ao);
     }
 
     private boolean isNotDefaultAdminAvatar(String avatarUrl) {

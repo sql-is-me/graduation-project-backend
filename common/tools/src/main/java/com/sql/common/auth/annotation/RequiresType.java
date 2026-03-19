@@ -22,7 +22,6 @@ import com.sql.common.enums.UserTypes;
  */
 @Target({ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Documented
 public @interface RequiresType {
     /**
      * 允许访问的用户类型列表（满足其一即可）

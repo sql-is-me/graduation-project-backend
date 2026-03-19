@@ -83,18 +83,6 @@ public class Admin {
     private String status = "0"; // 默认正常
 
     /**
-     * 最后登录IP
-     */
-    @TableField("login_ip")
-    private String loginIp;
-
-    /**
-     * 最后登录时间
-     */
-    @TableField("login_date")
-    private LocalDateTime loginDate;
-
-    /**
      * 创建时间
      */
     @TableField(fill = FieldFill.INSERT, value = "create_time")
