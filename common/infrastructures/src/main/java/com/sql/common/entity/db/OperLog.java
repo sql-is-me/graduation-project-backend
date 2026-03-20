@@ -83,7 +83,7 @@ public class OperLog {
      * 操作状态
      * 0=正常 1=异常
      */
-    private Integer status;
+    private String status;
 
     /**
      * 错误消息

@@ -18,7 +18,7 @@ import com.sql.user.dto.UserRegisterDTO;
 import com.sql.user.mapper.UserMapper;
 import com.sql.user.service.AuthService;
 import com.sql.utils.IpUtils;
-import com.sql.utils.PWCheckUtils;
+import com.sql.utils.PasswordUtils;
 import com.sql.utils.StringUtils;
 
 /**
@@ -130,7 +130,7 @@ public class AuthServiceImpl implements AuthService {
         // 创建用户
         User user = new User();
         user.setUsername(username);
-        user.setPassword(PWCheckUtils.encryptPassword(password));
+        user.setPassword(PasswordUtils.encryptPassword(password));
         user.setUserType(type);
         if ("1".equals(type)) {
             user.setStoreId(registerDTO.getStoreId());
@@ -150,25 +150,25 @@ public class AuthServiceImpl implements AuthService {
     private void validatePassword(User user, String password) {
         String username = user.getUsername();
 
-        Integer retryCounter = redisService.getCacheObject(PWCheckUtils.getWrongPWTimesKey(username));
+        Integer retryCounter = redisService.getCacheObject(PasswordUtils.getWrongPWTimesKey(username));
         if (retryCounter == null) {
             retryCounter = 0;
         }
 
-        if (retryCounter >= PWCheckUtils.PASSWORD_MAX_RETRY_COUNT) {
+        if (retryCounter >= PasswordUtils.PASSWORD_MAX_RETRY_COUNT) {
             String errMsg = String.format("密码输入错误%s次，帐户锁定%s分钟",
-                    PWCheckUtils.PASSWORD_MAX_RETRY_COUNT, PWCheckUtils.PASSWORD_LOCK_TIME);
+                    PasswordUtils.PASSWORD_MAX_RETRY_COUNT, PasswordUtils.PASSWORD_LOCK_TIME);
             throw new ServiceException(errMsg);
         }
 
-        if (!PWCheckUtils.matchesPassword(password, user.getPassword())) {
+        if (!PasswordUtils.matchesPassword(password, user.getPassword())) {
             retryCounter++;
-            redisService.setCacheObject(PWCheckUtils.getWrongPWTimesKey(username), retryCounter,
-                    PWCheckUtils.PASSWORD_LOCK_TIME, java.util.concurrent.TimeUnit.MINUTES);
+            redisService.setCacheObject(PasswordUtils.getWrongPWTimesKey(username), retryCounter,
+                    PasswordUtils.PASSWORD_LOCK_TIME, java.util.concurrent.TimeUnit.MINUTES);
             throw new ServiceException("用户不存在/密码错误");
         } else {
-            if (redisService.hasKey(PWCheckUtils.getWrongPWTimesKey(username))) {
-                redisService.deleteObject(PWCheckUtils.getWrongPWTimesKey(username));
+            if (redisService.hasKey(PasswordUtils.getWrongPWTimesKey(username))) {
+                redisService.deleteObject(PasswordUtils.getWrongPWTimesKey(username));
             }
         }
     }

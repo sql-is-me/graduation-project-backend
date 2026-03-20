@@ -39,7 +39,7 @@ public class CourseController extends BaseController {
     /**
      * 创建课程
      */
-    @Log(title = "课程管理", businessType = BusinessType.INSERT)
+    @Log(title = "课程管理", businessType = BusinessType.INSERT, operatorType = UserTypes.MANAGER)
     @PostMapping("/create")
     public R<?> createCourse(@Validated @RequestBody CourseCreateDTO dto) {
         return R.ok(courseService.createCourse(dto), "课程创建成功");
@@ -48,7 +48,7 @@ public class CourseController extends BaseController {
     /**
      * 安排/更换教练
      */
-    @Log(title = "课程管理", businessType = BusinessType.UPDATE)
+    @Log(title = "课程管理", businessType = BusinessType.UPDATE, operatorType = UserTypes.MANAGER)
     @PutMapping("/{courseId}/coach/{coachId}")
     public R<?> assignCoach(@PathVariable Long courseId, @PathVariable Long coachId) {
         return R.ok(courseService.assignCoach(courseId, coachId), "教练安排成功");
@@ -57,7 +57,7 @@ public class CourseController extends BaseController {
     /**
      * 取消课程
      */
-    @Log(title = "课程管理", businessType = BusinessType.DELETE)
+    @Log(title = "课程管理", businessType = BusinessType.DELETE, operatorType = UserTypes.MANAGER)
     @DeleteMapping("/{courseId}")
     public R<?> cancelCourse(@PathVariable Long courseId) {
         return R.ok(courseService.cancelCourse(courseId), "课程取消成功");
@@ -66,7 +66,7 @@ public class CourseController extends BaseController {
     /**
      * 安排孩子上课（支持批量，1到多个）
      */
-    @Log(title = "课程管理", businessType = BusinessType.UPDATE)
+    @Log(title = "课程管理", businessType = BusinessType.UPDATE, operatorType = UserTypes.MANAGER)
     @PutMapping("/{courseId}/children")
     public R<?> arrangeChildren(@PathVariable Long courseId, @RequestBody List<Long> childIds) {
         return R.ok(courseService.arrangeChildren(courseId, childIds), "学员安排成功");
@@ -75,7 +75,7 @@ public class CourseController extends BaseController {
     /**
      * 取消孩子的上课安排
      */
-    @Log(title = "课程管理", businessType = BusinessType.UPDATE)
+    @Log(title = "课程管理", businessType = BusinessType.UPDATE, operatorType = UserTypes.MANAGER)
     @DeleteMapping("/{courseId}/child/{childId}")
     public R<?> cancelChild(@PathVariable Long courseId, @PathVariable Long childId) {
         return R.ok(courseService.cancelChild(courseId, childId), "取消安排成功");

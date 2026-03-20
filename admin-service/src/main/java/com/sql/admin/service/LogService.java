@@ -2,6 +2,8 @@ package com.sql.admin.service;
 
 import java.util.List;
 
+import com.sql.admin.dto.LoginInfoSelectDTO;
+import com.sql.admin.dto.OperLogSelectDTO;
 import com.sql.common.entity.db.LoginInfo;
 import com.sql.common.entity.db.OperLog;
 
@@ -9,7 +11,7 @@ public interface LogService {
     /**
      * 查询操作日志列表（支持按操作人、标题、业务类型、操作状态筛选）
      */
-    List<OperLog> listOperLog(OperLog operLog);
+    List<OperLog> listOperLog(OperLogSelectDTO operLog);
 
     /**
      * 查询操作日志详情
@@ -34,7 +36,7 @@ public interface LogService {
     /**
      * 查询操作日志列表
      */
-    List<LoginInfo> listLoginInfo(LoginInfo loginInfo);
+    List<LoginInfo> listLoginInfo(LoginInfoSelectDTO dto);
 
     /**
      * 查询登录日志详情

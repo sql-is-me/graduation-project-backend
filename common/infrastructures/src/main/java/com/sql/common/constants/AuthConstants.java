@@ -69,4 +69,9 @@ public class AuthConstants {
      * 验证码有效期（分钟）
      */
     public static final long CAPTCHA_EXPIRATION = 2;
+
+    /**
+     * 邮箱验证码缓存前缀
+     */
+    public static final String EMAIL_CODE_KEY = "email_code:";
 }

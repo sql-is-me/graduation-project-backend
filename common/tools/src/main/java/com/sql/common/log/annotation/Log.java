@@ -28,7 +28,7 @@ public @interface Log {
     /**
      * 操作人类别
      */
-    public UserTypes operatorType() default UserTypes.MANAGER;
+    public UserTypes operatorType() default UserTypes.UNKNOWN;
 
     /**
      * 是否保存请求的参数

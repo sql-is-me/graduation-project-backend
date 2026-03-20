@@ -20,7 +20,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.multipart.MultipartFile;
 import com.alibaba.fastjson2.JSON;
 import com.sql.common.log.annotation.Log;
-import com.sql.common.log.enums.BusinessStatus;
 import com.sql.common.log.filter.PropertyPreExcludeFilter;
 import com.sql.common.log.service.AsyncLogService;
 import com.sql.utils.Convert;
@@ -28,7 +27,9 @@ import com.sql.utils.ExceptionUtil;
 import com.sql.utils.IpUtils;
 import com.sql.utils.ServletUtils;
 import com.sql.utils.StringUtils;
+import com.sql.common.auth.util.AuthUtil;
 import com.sql.common.entity.db.OperLog;
+import com.sql.common.enums.UserTypes;
 import com.sql.common.header.ContextHolder;
 
 /**
@@ -86,11 +87,11 @@ public class LogAspect {
             operLog.setOperTime(LocalDateTime.now());
 
             if (e != null) {
-                operLog.setStatus(BusinessStatus.FAIL.ordinal());
+                operLog.setStatus("1");
                 operLog.setErrorMsg(StringUtils
                         .substring(Convert.toStr(e.getMessage(), ExceptionUtil.getExceptionMessage(e)), 0, 2000));
             } else {
-                operLog.setStatus(BusinessStatus.SUCCESS.ordinal());
+                operLog.setStatus("0");
             }
 
             operLog.setOperName(ContextHolder.getUsername());
@@ -133,8 +134,13 @@ public class LogAspect {
         operLog.setBusinessType(log.businessType().ordinal());
         // 设置标题
         operLog.setTitle(log.title());
-        // 设置操作人类别
-        operLog.setOperatorType(log.operatorType().ordinal());
+        // 设置操作人类别（UNKNOWN时动态获取当前用户类型）
+        if (log.operatorType() == UserTypes.UNKNOWN) {
+            UserTypes currentType = AuthUtil.getCurrentUserType();
+            operLog.setOperatorType(currentType != null ? currentType.ordinal() : UserTypes.UNKNOWN.ordinal());
+        } else {
+            operLog.setOperatorType(log.operatorType().ordinal());
+        }
         // 是否需要保存request，参数和值
         if (log.isSaveRequestData()) {
             // 获取参数的信息，传入到数据库中。

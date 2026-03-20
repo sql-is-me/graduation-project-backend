@@ -19,7 +19,7 @@ import com.sql.user.dto.UserInfoUpdateDTO;
 import com.sql.user.dto.UserPasswordUpdateDTO;
 import com.sql.user.mapper.UserMapper;
 import com.sql.user.service.InfoService;
-import com.sql.utils.PWCheckUtils;
+import com.sql.utils.PasswordUtils;
 import com.sql.utils.StringUtils;
 import com.sql.utils.file.FileTypeUtils;
 import com.sql.utils.file.MimeTypeUtils;
@@ -79,7 +79,7 @@ public class InfoServiceImpl implements InfoService {
 
         // 校验邮箱唯一
         if (StringUtils.isNotEmpty(dto.getEmail())) {
-            User emailOwner = userMapper.checkEmailUnique(dto.getEmail());
+            User emailOwner = userMapper.selectByEmail(dto.getEmail());
             if (emailOwner != null && !emailOwner.getUserId().equals(currentUser.getUserId())) {
                 throw new ServiceException("修改用户'" + currentUser.getUsername() + "'失败，邮箱账号已存在");
             }
@@ -108,14 +108,14 @@ public class InfoServiceImpl implements InfoService {
         if (StringUtils.isAnyBlank(oldPassword, newPassword)) {
             throw new ServiceException("旧密码和新密码不能为空");
         }
-        if (!PWCheckUtils.matchesPassword(oldPassword, currentUser.getPassword())) {
+        if (!PasswordUtils.matchesPassword(oldPassword, currentUser.getPassword())) {
             throw new ServiceException("修改密码失败，旧密码错误");
         }
-        if (PWCheckUtils.matchesPassword(newPassword, currentUser.getPassword())) {
+        if (PasswordUtils.matchesPassword(newPassword, currentUser.getPassword())) {
             throw new ServiceException("新密码不能与旧密码相同");
         }
 
-        String encryptedPW = PWCheckUtils.encryptPassword(newPassword);
+        String encryptedPW = PasswordUtils.encryptPassword(newPassword);
 
         int rows = userMapper.updatePassword(currentUser.getUserId(), encryptedPW);
         if (rows <= 0) {

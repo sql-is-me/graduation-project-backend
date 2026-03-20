@@ -18,4 +18,9 @@ public class CacheConstants {
      * 分钟转毫秒
      */
     public final static Long MILLIS_MINUTE = 60000L;
+
+    /**
+     * 邮箱验证码有效期（分钟）
+     */
+    public final static Long EMAIL_CODE_EXPIRATION = 5L;
 }

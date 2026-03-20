@@ -5,9 +5,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sql.admin.dto.LoginInfoSelectDTO;
+import com.sql.admin.dto.OperLogSelectDTO;
 import com.sql.admin.service.LogService;
 import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.TableDataInfo;
@@ -35,9 +38,9 @@ public class LogController extends BaseController {
      * 查询操作日志列表（支持按操作人、模块标题、业务类型、操作状态筛选）
      */
     @GetMapping("/oper/list")
-    public TableDataInfo listOperLog(OperLog operLog) {
+    public TableDataInfo listOperLog(@RequestBody OperLogSelectDTO dto) {
         startPage();
-        List<OperLog> list = logService.listOperLog(operLog);
+        List<OperLog> list = logService.listOperLog(dto);
         return getDataTable(list);
     }
 
@@ -52,7 +55,7 @@ public class LogController extends BaseController {
     /**
      * 删除操作日志
      */
-    @Log(title = "操作日志", businessType = BusinessType.DELETE)
+    @Log(title = "操作日志", businessType = BusinessType.DELETE, operatorType = UserTypes.ADMIN)
     @DeleteMapping("/oper/{operId}")
     public R<?> deleteOperLogById(@PathVariable Long operId) {
         return R.ok(logService.deleteOperLog(operId));
@@ -61,7 +64,7 @@ public class LogController extends BaseController {
     /**
      * 清空操作日志
      */
-    @Log(title = "操作日志", businessType = BusinessType.DELETE)
+    @Log(title = "操作日志", businessType = BusinessType.DELETE, operatorType = UserTypes.ADMIN)
     @DeleteMapping("/oper/clean")
     public R<?> cleanOperLog() {
         logService.cleanOperLog();
@@ -72,9 +75,10 @@ public class LogController extends BaseController {
      * 查询登录日志列表（支持按用户名、IP地址、登录状态筛选）
      */
     @GetMapping("/login/list")
-    public TableDataInfo listLogininfor(LoginInfo loginInfo) {
+    public TableDataInfo listLogininfor(@RequestBody LoginInfoSelectDTO dto) {
+        System.out.println("接收到查询登录日志列表的请求，查询条件：" + dto);
         startPage();
-        List<LoginInfo> list = logService.listLoginInfo(loginInfo);
+        List<LoginInfo> list = logService.listLoginInfo(dto);
         return getDataTable(list);
     }
 
@@ -89,7 +93,7 @@ public class LogController extends BaseController {
     /**
      * 删除登录日志
      */
-    @Log(title = "登录日志", businessType = BusinessType.DELETE)
+    @Log(title = "登录日志", businessType = BusinessType.DELETE, operatorType = UserTypes.ADMIN)
     @DeleteMapping("/login/{loginInfoId}")
     public R<?> deleteLoginInfoById(@PathVariable Long loginInfoId) {
         return R.ok(logService.deleteLoginInfo(loginInfoId));
@@ -98,7 +102,7 @@ public class LogController extends BaseController {
     /**
      * 清空登录日志
      */
-    @Log(title = "登录日志", businessType = BusinessType.DELETE)
+    @Log(title = "登录日志", businessType = BusinessType.DELETE, operatorType = UserTypes.ADMIN)
     @DeleteMapping("/login/clean")
     public R<?> cleanLoginInfo() {
         logService.cleanLoginInfo();

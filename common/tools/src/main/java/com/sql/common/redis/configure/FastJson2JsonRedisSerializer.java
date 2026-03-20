@@ -14,7 +14,7 @@ import com.alibaba.fastjson2.filter.Filter;
 public class FastJson2JsonRedisSerializer<T> implements RedisSerializer<T> {
     public static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
-    static final Filter AUTO_TYPE_FILTER = JSONReader.autoTypeFilter("com.sql"); // FIXME:验证是否可靠
+    static final Filter AUTO_TYPE_FILTER = JSONReader.autoTypeFilter("com.sql");
 
     private Class<T> clazz;
 

@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sql.admin.dto.NoticeCreateDTO;
+import com.sql.admin.dto.NoticeUpdateDTO;
 import com.sql.admin.service.NoticeService;
 import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.TableDataInfo;
@@ -44,24 +46,25 @@ public class NoticeController extends BaseController {
         return R.ok(noticeService.getNoticeById(noticeId));
     }
 
-    @Log(title = "通知公告", businessType = BusinessType.INSERT)
-    @PutMapping("/add")
+    @Log(title = "通知公告", businessType = BusinessType.INSERT, operatorType = UserTypes.ADMIN)
+    @PutMapping("/publish")
     @RequiresType(UserTypes.ADMIN)
-    public R<?> addNotice(@Validated @RequestBody Notice notice) {
-        return R.ok(noticeService.addNotice(notice));
+    public R<?> publishNotice(@Validated @RequestBody NoticeCreateDTO dto) {
+        noticeService.publishNotice(dto);
+        return R.ok("发布公告成功");
     }
 
-    @Log(title = "通知公告", businessType = BusinessType.UPDATE)
-    @PutMapping("/edit")
+    @Log(title = "通知公告", businessType = BusinessType.UPDATE, operatorType = UserTypes.ADMIN)
+    @PutMapping("/edit/{noticeId}")
     @RequiresType(UserTypes.ADMIN)
-    public R<?> edit(@Validated @RequestBody Notice notice) {
-        return R.ok(noticeService.updateNotice(notice));
+    public R<?> edit(@Validated @RequestBody NoticeUpdateDTO dto, @PathVariable Long noticeId) {
+        return R.ok(noticeService.updateNotice(dto, noticeId), "编辑公告成功");
     }
 
-    @Log(title = "通知公告", businessType = BusinessType.DELETE)
-    @DeleteMapping("/{noticeIds}")
+    @Log(title = "通知公告", businessType = BusinessType.DELETE, operatorType = UserTypes.ADMIN)
+    @DeleteMapping("/{noticeId}")
     @RequiresType(UserTypes.ADMIN)
-    public R<?> remove(@PathVariable Long[] noticeIds) {
-        return R.ok(noticeService.deleteNoticeByIds(noticeIds));
+    public R<?> remove(@PathVariable Long noticeId) {
+        return R.ok(noticeService.deleteNotice(noticeId), "删除公告成功");
     }
 }

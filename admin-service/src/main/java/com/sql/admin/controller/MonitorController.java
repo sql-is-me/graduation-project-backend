@@ -50,7 +50,7 @@ public class MonitorController extends BaseController {
     /**
      * 强退在线管理员
      */
-    @Log(title = "在线管理员", businessType = BusinessType.DELETE)
+    @Log(title = "在线管理员", businessType = BusinessType.DELETE, operatorType = UserTypes.ADMIN)
     @DeleteMapping("/forceAdminLogout/{token}")
     public R<?> forceAdminLogout(@PathVariable String token) {
         monitorService.forceAdminLogout(token);
@@ -60,7 +60,7 @@ public class MonitorController extends BaseController {
     /**
      * 强退在线用户
      */
-    @Log(title = "在线用户", businessType = BusinessType.DELETE)
+    @Log(title = "在线用户", businessType = BusinessType.DELETE, operatorType = UserTypes.ADMIN)
     @DeleteMapping("/forceUserLogout/{token}")
     public R<?> forceUserLogout(@PathVariable String token) {
         monitorService.forceUserLogout(token);

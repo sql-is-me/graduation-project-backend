@@ -56,7 +56,7 @@ CREATE TABLE admins (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO admins (admin_id, username, password, nick_name, email, phone, sex, avatar, store_id, admin_type, referrer_id, status, create_time, update_time) VALUES
-(1, 'topadmin', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '超级管理员', 'topadmin@example.com', '13900000001', '0', '', NULL, '0', NULL, '0', '2026-03-18 08:00:00', '2026-03-18 08:00:00'),
+(1, 'topadmin', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '超级管理员', '2244509212@qq.com', '13900000001', '0', '', NULL, '0', NULL, '0', '2026-03-18 08:00:00', '2026-03-18 08:00:00'),
 (2, 'store_admin_1', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '店铺管理员1', 'store1@example.com', '13900000002', '0', '', 1, '1', 1, '0', '2026-03-18 08:05:00', '2026-03-18 08:05:00'),
 (3, 'store_admin_2', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '店铺管理员2', 'store2@example.com', '13900000003', '1', '', 2, '1', 1, '0', '2026-03-18 08:10:00', '2026-03-18 08:10:00');
 
@@ -306,7 +306,7 @@ CREATE TABLE loginInfo (
 
 INSERT INTO loginInfo (info_id, username, status, ip_addr, msg, access_time) VALUES
 (1, 'topadmin', '0', '10.0.0.1', '登录成功', '2026-03-18 19:00:00'),
-(2, 'member_1', '0', '192.168.1.1', '登录成功', '2026-03-18 19:05:00'),
+(2, 'topadmin', '0', '192.168.1.1', '登录成功', '2026-03-18 19:05:00'),
 (3, 'store_admin_1', '1', '10.0.0.2', '密码错误', '2026-03-18 19:10:00');
 
 -- ----------------------------
@@ -325,7 +325,7 @@ CREATE TABLE operLog (
   oper_ip VARCHAR(128) DEFAULT NULL,
   oper_param TEXT,
   json_result TEXT,
-  status INT DEFAULT 0,
+  status CHAR(1) NOT NULL,
   error_msg VARCHAR(2000) DEFAULT NULL,
   oper_time DATETIME DEFAULT NULL,
   cost_time BIGINT DEFAULT 0,

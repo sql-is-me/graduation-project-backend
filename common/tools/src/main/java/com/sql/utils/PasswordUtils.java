@@ -2,7 +2,7 @@ package com.sql.utils;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-public class PWCheckUtils {
+public class PasswordUtils {
     public final static String PWD_ERR_CNT_KEY = "pwd_err_ctr:";
 
     public final static Integer PASSWORD_MAX_RETRY_COUNT = 5;

@@ -37,7 +37,7 @@ public class CouponController extends BaseController {
     /**
      * 创建优惠券
      */
-    @Log(title = "优惠券管理", businessType = BusinessType.INSERT)
+    @Log(title = "优惠券管理", businessType = BusinessType.INSERT, operatorType = UserTypes.MANAGER)
     @PostMapping("/create")
     public R<?> createCoupon(@Validated @RequestBody CouponCreateDTO dto) {
         return R.ok(couponService.createCoupon(dto), "优惠券创建成功");
@@ -46,7 +46,7 @@ public class CouponController extends BaseController {
     /**
      * 停用/启用优惠券
      */
-    @Log(title = "优惠券管理", businessType = BusinessType.UPDATE)
+    @Log(title = "优惠券管理", businessType = BusinessType.UPDATE, operatorType = UserTypes.MANAGER)
     @PutMapping("/toggle/{couponId}")
     public R<?> toggleCouponStatus(@PathVariable Long couponId) {
         return R.ok(couponService.toggleCouponStatus(couponId), "操作成功");

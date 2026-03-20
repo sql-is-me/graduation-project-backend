@@ -19,7 +19,12 @@ public enum UserTypes {
     /**
      * 会员
      */
-    VIP("3");
+    VIP("3"),
+
+    /**
+     * 未知
+     */
+    UNKNOWN("4");
 
     private final String code;
 

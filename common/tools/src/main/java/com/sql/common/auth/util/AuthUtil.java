@@ -29,7 +29,6 @@ public class AuthUtil {
      */
     public static UserTypes getCurrentUserType() {
         String type = ContextHolder.getType();
-        System.out.println("AuthUtil - ContextHolder type: " + type);
 
         if (StringUtils.isEmpty(type)) {
             return null;

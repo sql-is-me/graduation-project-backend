@@ -27,7 +27,7 @@ public class ClassHourController {
     /**
      * 增加用户课时
      */
-    @Log(title = "课时管理", businessType = BusinessType.UPDATE)
+    @Log(title = "课时管理", businessType = BusinessType.UPDATE, operatorType = UserTypes.ADMIN)
     @RequiresType(UserTypes.ADMIN)
     @PostMapping("/add")
     public R<Boolean> addClassHours(@RequestParam("userId") Long userId,

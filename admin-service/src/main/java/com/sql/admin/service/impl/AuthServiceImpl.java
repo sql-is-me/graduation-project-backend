@@ -5,16 +5,18 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sql.admin.dto.AdminInviteDTO;
 import com.sql.admin.dto.AdminRegisterDTO;
+import com.sql.admin.dto.AdminResetPasswordDTO;
 import com.sql.admin.mapper.AdminMapper;
 import com.sql.admin.service.AuthService;
 import com.sql.api.RemoteLoginLogService;
 import com.sql.common.constants.AuthConstants;
-import com.sql.common.jwt.service.JWTService;
+import com.sql.common.constants.CacheConstants;
 import com.sql.common.entity.AdminOnline;
 import com.sql.common.entity.db.Admin;
 import com.sql.common.entity.db.LoginInfo;
@@ -23,12 +25,18 @@ import com.sql.common.exception.ServiceException;
 import com.sql.common.redis.service.RedisService;
 import com.sql.common.tokens.AdminTokenService;
 import com.sql.utils.IpUtils;
-import com.sql.utils.PWCheckUtils;
+import com.sql.utils.PasswordUtils;
 import com.sql.utils.StringUtils;
+
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
+import org.springframework.beans.factory.annotation.Value;
 
 /**
  * 管理员登录与注册服务
  */
+@Slf4j
 @Service
 public class AuthServiceImpl implements AuthService {
 
@@ -43,6 +51,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private RemoteLoginLogService remoteLoginLogService;
+
+    @Autowired
+    private JavaMailSender mailSender;
+
+    @Value("${spring.mail.username}")
+    private String mailFrom;
 
     /**
      * 邀请码过期时间 30min
@@ -95,10 +109,11 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public void logout(HttpServletRequest request) {
-        String token = adminTokenService.getAOToken(request);
-        String username = JWTService.getUsername(JWTService.parseToken(token));
+        AdminOnline ao = adminTokenService.getAO(adminTokenService.getAOToken(request));
+        String username = ao.getAdminInfo().getUsername();
+
         // 删除用户缓存记录
-        adminTokenService.delAdminOnline(token);
+        adminTokenService.delAdminCache(ao);
 
         recordLoginInfo(username, AuthConstants.LOGOUT, "退出成功");
     }
@@ -145,7 +160,7 @@ public class AuthServiceImpl implements AuthService {
         Admin admin = new Admin();
         admin.setUsername(username);
         admin.setNickName(username);
-        admin.setPassword(PWCheckUtils.encryptPassword(password));
+        admin.setPassword(PasswordUtils.encryptPassword(password));
         admin.setStoreId(inviteDTO.getStoreId());
         admin.setReferrerId(inviteDTO.getReferrerId());
 
@@ -194,32 +209,136 @@ public class AuthServiceImpl implements AuthService {
     }
 
     /**
+     * 发送邮箱验证码
+     */
+    @Override
+    public String sendEmailCode(String email) {
+        if (StringUtils.isEmpty(email)) {
+            throw new ServiceException("邮箱不能为空");
+        }
+
+        // 校验邮箱是否绑定管理员账号
+        Admin admin = adminMapper.selectByEmail(email);
+        if (admin == null) {
+            throw new ServiceException("该邮箱未绑定任何管理员账号");
+        }
+
+        // 生成6位随机验证码
+        String emailCode = String.valueOf((int) ((Math.random() * 9 + 1) * 100000));
+
+        // 存入Redis，有效期5分钟
+        String codeKey = AuthConstants.EMAIL_CODE_KEY + email;
+        redisService.setCacheObject(codeKey, emailCode, CacheConstants.EMAIL_CODE_EXPIRATION, TimeUnit.MINUTES);
+
+        // 发送邮件
+        MimeMessagePreparator msg = mimeMessage -> {
+            MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
+            message.setFrom(mailFrom);
+            message.setTo(email);
+            message.setSubject("【LoveSport】忘记密码 - 邮箱验证码");
+            message.setText(
+                    "<div style='background-color:#0d1117; color:#ffffff; border:1px solid #30363d; padding: 20px; border-radius: 8px; font-family: Arial, sans-serif; font-size: 16px;'>"
+                            + "<h2 style='color:#58a6ff;'>LoveSport 安全验证</h2>"
+                            + "<p style='margin-top:10px;'>您好，</p>"
+                            + "<p>这是您的 <strong>LoveSport</strong> 账号生成的临时验证码：</p>"
+                            + "<p style='font-size:32px; font-weight:bold; color:#ffffff; background-color:#21262d; padding:10px 15px; display:inline-block; border-radius:6px; border:1px dashed #58a6ff;'>"
+                            + emailCode + "</p>"
+                            + "<p style='margin-top:20px;'>有效期5分钟</p>"
+                            + "<p style='margin-top:20px;'>如非本人操作,请忽略此邮件</p>"
+                            + "<hr style='margin-top:30px; border:none; border-top:1px solid #30363d;'>"
+                            + "<p style='font-size:12px; color:#8b949e;'>loveSport 官方团队</p>"
+                            + "</div>",
+                    true);
+        };
+        mailSender.send(msg);
+
+        log.info("向邮箱 {} 发送验证码成功", email);
+        return emailCode;// FIXME:自动化测试使用，正式环境不应返回验证码
+    }
+
+    /**
+     * 通过邮箱验证码重置密码
+     */
+    @Override
+    public void resetPassword(AdminResetPasswordDTO dto) {
+        String email = dto.getEmail();
+        String emailCode = dto.getEmailCode();
+        String newPassword = dto.getNewPassword();
+
+        // 校验邮箱验证码
+        String codeKey = AuthConstants.EMAIL_CODE_KEY + email;
+        String cachedCode = redisService.getCacheObject(codeKey);
+        if (cachedCode == null) {
+            throw new ServiceException("验证码已过期，请重新获取");
+        }
+        if (!cachedCode.equals(emailCode)) {
+            throw new ServiceException("验证码错误");
+        }
+        // 验证码使用后立即删除
+        redisService.deleteObject(codeKey);
+
+        // 密码长度校验
+        if (newPassword.length() < AuthConstants.PASSWORD_MIN_LENGTH
+                || newPassword.length() > AuthConstants.PASSWORD_MAX_LENGTH) {
+            throw new ServiceException("密码长度必须在5到20个字符之间");
+        }
+
+        // 查询管理员
+        Admin admin = adminMapper.selectByEmail(email);
+        if (admin == null) {
+            throw new ServiceException("该邮箱未绑定任何管理员账号");
+        }
+
+        // 更新密码
+        int rows = adminMapper.updatePassword(admin.getAdminId(), PasswordUtils.encryptPassword(newPassword));
+        if (rows <= 0) {
+            throw new ServiceException("密码重置失败，请联系管理员");
+        }
+
+        // 强制已登录的盗号者下线
+        adminTokenService.checkAndDeleteCacheObject(admin.getAdminId());
+
+        // 清除密码错误次数缓存
+        delWrongPWTimesCache(admin.getUsername());
+    }
+
+    /**
      * 密码校验
      */
     public void validatePassword(Admin admin, String password) {
         String username = admin.getUsername();
 
-        Integer retryCounter = redisService.getCacheObject(PWCheckUtils.getWrongPWTimesKey(username));
+        Integer retryCounter = redisService.getCacheObject(PasswordUtils.getWrongPWTimesKey(username));
         if (retryCounter == null) {
             retryCounter = 0;
         }
 
-        if (retryCounter >= PWCheckUtils.PASSWORD_MAX_RETRY_COUNT) {
-            String errMsg = String.format("密码输入错误%s次，帐户锁定%s分钟", PWCheckUtils.PASSWORD_MAX_RETRY_COUNT,
-                    PWCheckUtils.PASSWORD_LOCK_TIME);
+        if (retryCounter >= PasswordUtils.PASSWORD_MAX_RETRY_COUNT) {
+            String errMsg = String.format("密码输入错误%s次，帐户锁定%s分钟", PasswordUtils.PASSWORD_MAX_RETRY_COUNT,
+                    PasswordUtils.PASSWORD_LOCK_TIME);
             throw new ServiceException(errMsg);
         }
 
-        if (!PWCheckUtils.matchesPassword(password, admin.getPassword())) {
+        if (!PasswordUtils.matchesPassword(password, admin.getPassword())) {
             retryCounter++;
 
-            redisService.setCacheObject(PWCheckUtils.getWrongPWTimesKey(username), retryCounter,
-                    PWCheckUtils.PASSWORD_LOCK_TIME, TimeUnit.MINUTES);
+            redisService.setCacheObject(PasswordUtils.getWrongPWTimesKey(username), retryCounter,
+                    PasswordUtils.PASSWORD_LOCK_TIME, TimeUnit.MINUTES);
             throw new ServiceException("用户不存在/密码错误");
         } else {
-            if (redisService.hasKey(PWCheckUtils.getWrongPWTimesKey(username))) {
-                redisService.deleteObject(PWCheckUtils.getWrongPWTimesKey(username));
-            }
+            delWrongPWTimesCache(username);
+        }
+    }
+
+    /**
+     * 删除登录密码错误次数缓存
+     *
+     * @param username
+     */
+    private void delWrongPWTimesCache(String username) {
+        String key = PasswordUtils.getWrongPWTimesKey(username);
+        if (redisService.hasKey(key)) {
+            redisService.deleteObject(key);
         }
     }
 

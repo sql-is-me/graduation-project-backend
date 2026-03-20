@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.sql.admin.dto.LoginInfoSelectDTO;
+import com.sql.admin.dto.OperLogSelectDTO;
 import com.sql.admin.mapper.LoginInfoMapper;
 import com.sql.admin.mapper.OperLogMapper;
 import com.sql.admin.service.LogService;
@@ -28,15 +30,14 @@ public class LogServiceImpl implements LogService {
      * 查询操作日志列表（支持按操作人、标题、业务类型、操作状态筛选）
      */
     @Override
-    public List<OperLog> listOperLog(OperLog query) {
+    public List<OperLog> listOperLog(OperLogSelectDTO dto) {
         LambdaQueryWrapper<OperLog> wrapper = new LambdaQueryWrapper<>();
-        wrapper.like(StringUtils.isNotEmpty(query.getOperName()), OperLog::getOperName, query.getOperName())
-                .like(StringUtils.isNotEmpty(query.getTitle()), OperLog::getTitle, query.getTitle())
-                .eq(query.getBusinessType() != null, OperLog::getBusinessType, query.getBusinessType())
-                .eq(query.getStatus() != null, OperLog::getStatus, query.getStatus())
-                .eq(query.getOperatorType() != null, OperLog::getOperatorType, query.getOperatorType())
-                .like(StringUtils.isNotEmpty(query.getOperIp()), OperLog::getOperIp, query.getOperIp())
+        wrapper.eq(dto.getOperatorType() != null, OperLog::getOperatorType, dto.getOperatorType())
+                .like(StringUtils.isNotEmpty(dto.getOperName()), OperLog::getOperName, dto.getOperName())
+                .like(StringUtils.isNotEmpty(dto.getOperIp()), OperLog::getOperIp, dto.getOperIp())
+                .eq(StringUtils.isNotEmpty(dto.getStatus()), OperLog::getStatus, dto.getStatus())
                 .orderByDesc(OperLog::getOperId);
+
         return operLogMapper.selectList(wrapper);
     }
 
@@ -68,12 +69,16 @@ public class LogServiceImpl implements LogService {
      * 查询登录日志列表（支持按用户名、IP、状态筛选）
      */
     @Override
-    public List<LoginInfo> listLoginInfo(LoginInfo query) {
+    public List<LoginInfo> listLoginInfo(LoginInfoSelectDTO dto) {
         LambdaQueryWrapper<LoginInfo> wrapper = new LambdaQueryWrapper<>();
-        wrapper.like(StringUtils.isNotEmpty(query.getUsername()), LoginInfo::getUsername, query.getUsername())
-                .like(StringUtils.isNotEmpty(query.getIpAddr()), LoginInfo::getIpAddr, query.getIpAddr())
-                .eq(StringUtils.isNotEmpty(query.getStatus()), LoginInfo::getStatus, query.getStatus())
+        wrapper.like(StringUtils.isNotEmpty(dto.getUsername()), LoginInfo::getUsername, dto.getUsername())
+                .like(StringUtils.isNotEmpty(dto.getIpAddr()), LoginInfo::getIpAddr, dto.getIpAddr())
+                .eq(StringUtils.isNotEmpty(dto.getStatus()), LoginInfo::getStatus, dto.getStatus())
                 .orderByDesc(LoginInfo::getInfoId);
+
+        System.out.println("查询登录日志列表，查询条件：" + dto);
+        System.out.println("\n" + wrapper);
+
         return loginInfoMapper.selectList(wrapper);
     }
 

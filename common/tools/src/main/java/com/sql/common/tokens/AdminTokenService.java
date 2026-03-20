@@ -19,7 +19,6 @@ import com.sql.common.entity.AdminOnline;
 import com.sql.common.entity.db.Admin;
 import com.sql.common.redis.service.RedisService;
 import com.sql.utils.IpUtils;
-import com.sql.utils.StringUtils;
 import com.sql.utils.uuid.IdUtils;
 
 /**
@@ -49,6 +48,7 @@ public class AdminTokenService {
         ao.setLoginTime(LocalDateTime.now().withNano(0));
         ao.setExpireTime(ao.getLoginTime().plusMinutes(CacheConstants.TOKEN_EXPIRE_TIME));
 
+        checkAndDeleteCacheObject(admin.getAdminId());
         createAndSetCacheObject(ao);
 
         // Jwt存储信息
@@ -65,11 +65,30 @@ public class AdminTokenService {
     }
 
     /**
+     * 若已经登录，则删除AO缓存对象，强制下线
+     * 
+     * 用于单点登录以及忘记密码
+     */
+    public void checkAndDeleteCacheObject(Long adminId) {
+        String mappingKey = TokenConstants.ADMIN_TOKEN_MAPPING + adminId;
+        String uuid = redisService.getCacheObject(mappingKey);
+        if (uuid != null) {
+            String aoKey = TokenConstants.ADMIN_TOKENS + uuid;
+            redisService.deleteObject(aoKey);
+            redisService.deleteObject(mappingKey);
+        }
+    }
+
+    /**
      * 创建并设置缓存对象
      */
     public void createAndSetCacheObject(AdminOnline ao) {
         String aoKey = TokenConstants.ADMIN_TOKENS + ao.getToken();
         redisService.setCacheObject(aoKey, ao, CacheConstants.TOKEN_EXPIRE_TIME, TimeUnit.MINUTES);
+
+        // 维护 adminId -> uuid 反向映射，用于强制下线
+        String mappingKey = TokenConstants.ADMIN_TOKEN_MAPPING + ao.getAdminInfo().getAdminId();
+        redisService.setCacheObject(mappingKey, ao.getToken(), CacheConstants.TOKEN_EXPIRE_TIME, TimeUnit.MINUTES);
     }
 
     /**
@@ -87,15 +106,6 @@ public class AdminTokenService {
     }
 
     /**
-     * 重设缓存中个人信息
-     *
-     * @param ao adminOnline
-     */
-    public void refreshCacheInfo(AdminOnline ao) {
-        createAndSetCacheObject(ao);
-    }
-
-    /**
      * 刷新管理员token过期时间并重设个人信息
      *
      * @param ao adminOnline
@@ -106,9 +116,18 @@ public class AdminTokenService {
     }
 
     /**
-     * 获取当前登录管理员的token
+     * 重设缓存中个人信息
      *
-     * @return token
+     * @param ao adminOnline
+     */
+    public void refreshCacheInfo(AdminOnline ao) {
+        createAndSetCacheObject(ao);
+    }
+
+    /**
+     * 获取当前登录管理员的access_token
+     *
+     * @return access_token
      */
     public String getAOToken(HttpServletRequest request) {
         return TokenUtils.getToken(request);
@@ -117,6 +136,7 @@ public class AdminTokenService {
     /**
      * 获取当前登录管理员存储在redis中的key
      *
+     * @param token
      * @return aoKey
      */
     public String getAOKey(String token) {
@@ -124,9 +144,19 @@ public class AdminTokenService {
     }
 
     /**
+     * 获取当前登录管理员存储在redis中的key
+     *
+     * @param ao
+     * @return aoKey
+     */
+    public String getAOKey(AdminOnline ao) {
+        return TokenConstants.ADMIN_TOKENS + ao.getToken();
+    }
+
+    /**
      * 获取管理员身份信息
      *
-     * @param token JWT令牌
+     * @param token access_token
      * @return 用户信息
      */
     public AdminOnline getAO(String token) {
@@ -141,11 +171,18 @@ public class AdminTokenService {
 
     /**
      * 删除管理员缓存信息
+     * 
+     * @param access_token
      */
-    public void delAdminOnline(String token) {
-        if (StringUtils.isNotEmpty(token)) {
-            String aoKey = getAOKey(token);
-            redisService.deleteObject(aoKey);
-        }
+    public void delAdminCache(AdminOnline ao) {
+        Long adminId = ao.getAdminInfo().getAdminId();
+
+        // 删除ao缓存
+        String aoKey = getAOKey(ao);
+        redisService.deleteObject(aoKey);
+
+        // 删除 adminId -> uuid 反向映射缓存
+        String mappingKey = TokenConstants.ADMIN_TOKEN_MAPPING + adminId;
+        redisService.deleteObject(mappingKey);
     }
 }

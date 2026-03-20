@@ -24,4 +24,8 @@ public class TokenConstants {
      */
     public final static String USER_TOKENS = "user_tokens:";
 
+    /**
+     * 管理员ID到token的反向映射前缀
+     */
+    public final static String ADMIN_TOKEN_MAPPING = "admin_token_mapping:";
 }

@@ -6,12 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sql.admin.dto.AdminLoginDTO;
 import com.sql.admin.dto.AdminRegisterDTO;
+import com.sql.admin.dto.AdminResetPasswordDTO;
 import com.sql.admin.service.AuthService;
 import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
@@ -83,5 +86,23 @@ public class AuthController {
         String code = authService.generateInviteCode(request, storeId);
 
         return R.ok(code, "邀请码生成成功");
+    }
+
+    /**
+     * 发送邮箱验证码
+     */
+    @GetMapping("/emailCode")
+    public R<?> sendEmailCode(@RequestParam String email) {
+        String code = authService.sendEmailCode(email);
+        return R.ok(code, "验证码已发送");
+    }
+
+    /**
+     * 忘记密码 - 通过邮箱验证码重置密码
+     */
+    @PutMapping("/resetPassword")
+    public R<?> resetPassword(@Valid @RequestBody AdminResetPasswordDTO dto) {
+        authService.resetPassword(dto);
+        return R.ok("密码重置成功，请重新登录");
     }
 }

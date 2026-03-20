@@ -32,7 +32,7 @@ public class Notice {
      * 公告状态
      * 0正常 1关闭
      */
-    private String status;
+    private String status = "0"; // 默认正常
 
     /**
      * 创建者
@@ -44,7 +44,7 @@ public class Notice {
     /**
      * 创建时间
      */
-    @TableField(fill = FieldFill.INSERT_UPDATE, value = "create_time")
+    @TableField(fill = FieldFill.INSERT, value = "create_time")
     private LocalDateTime createTime;
 
     /**

@@ -80,8 +80,6 @@ public class AuthFilter implements GlobalFilter, Ordered {
         }
 
         // 设置用户信息到请求
-        System.out.println(
-                "\n\n\n\n" + "AuthFilter - 用户ID: " + id + ", 用户名: " + username + ", 用户类型: " + type + "\n\n\n\n");
         addHeader(mutate, ContextHolderConstants.CH_TOKEN, UUIDtoken);
         addHeader(mutate, ContextHolderConstants.CH_ID, id);
         addHeader(mutate, ContextHolderConstants.CH_USERNAME, username);

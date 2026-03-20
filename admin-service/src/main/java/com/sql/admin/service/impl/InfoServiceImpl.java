@@ -11,6 +11,7 @@ import com.sql.admin.dto.AdminInfoUpdateDTO;
 import com.sql.admin.mapper.AdminMapper;
 import com.sql.admin.service.InfoService;
 import com.sql.api.RemoteFileService;
+import com.sql.common.constants.AuthConstants;
 import com.sql.common.entity.AdminOnline;
 import com.sql.common.entity.File;
 import com.sql.common.entity.db.Admin;
@@ -19,7 +20,7 @@ import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 import com.sql.common.tokens.AdminTokenService;
 import com.sql.common.vo.AdminInfo;
-import com.sql.utils.PWCheckUtils;
+import com.sql.utils.PasswordUtils;
 import com.sql.utils.StringUtils;
 import com.sql.utils.file.FileTypeUtils;
 import com.sql.utils.file.MimeTypeUtils;
@@ -79,7 +80,7 @@ public class InfoServiceImpl implements InfoService {
 
         // 校验邮箱唯一
         if (StringUtils.isNotEmpty(dto.getEmail())) {
-            Admin emailOwner = adminMapper.checkEmailUnique(dto.getEmail());
+            Admin emailOwner = adminMapper.selectByEmail(dto.getEmail());
             if (emailOwner != null && !emailOwner.getAdminId().equals(currentAdmin.getAdminId())) {
                 throw new ServiceException("修改用户'" + currentAdmin.getUsername() + "'失败，邮箱账号已存在");
             }
@@ -108,23 +109,29 @@ public class InfoServiceImpl implements InfoService {
         if (StringUtils.isAnyBlank(oldPassword, newPassword)) {
             throw new ServiceException("旧密码和新密码不能为空");
         }
-        if (PWCheckUtils.isEqualPassword(oldPassword, newPassword)) {
+
+        if (!PasswordUtils.matchesPassword(oldPassword, currentAdmin.getPassword())) {
             throw new ServiceException("修改密码失败，旧密码错误");
         }
 
-        if (PWCheckUtils.matchesPassword(newPassword, currentAdmin.getPassword())) {
+        if (PasswordUtils.isEqualPassword(oldPassword, newPassword)) {
             throw new ServiceException("新密码不能与旧密码相同");
         }
 
-        String encryptedPW = PWCheckUtils.encryptPassword(newPassword);
-        int rows = adminMapper.updatePassword(currentAdmin.getAdminId(), encryptedPW);
-        if (rows <= 0) {
-            throw new ServiceException("修改密码异常，请联系管理员");
+        // 密码长度校验
+        if (newPassword.length() < AuthConstants.PASSWORD_MIN_LENGTH
+                || newPassword.length() > AuthConstants.PASSWORD_MAX_LENGTH) {
+            throw new ServiceException("新密码长度必须在5到20个字符之间");
         }
 
-        // 更新缓存
-        ao.getAdminInfo().setPassword(encryptedPW);
-        adminTokenService.refreshCacheInfo(ao);
+        String encryptedPW = PasswordUtils.encryptPassword(newPassword);
+        int rows = adminMapper.updatePassword(currentAdmin.getAdminId(), encryptedPW);
+        if (rows <= 0) {
+            throw new ServiceException("更换密码失败，请联系管理员");
+        }
+
+        // 更新完用户密码后删除用户缓存记录
+        adminTokenService.delAdminCache(ao);
     }
 
     /**

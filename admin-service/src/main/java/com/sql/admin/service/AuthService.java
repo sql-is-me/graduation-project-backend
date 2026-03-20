@@ -1,8 +1,9 @@
 package com.sql.admin.service;
 
 import com.sql.admin.dto.AdminRegisterDTO;
+import com.sql.admin.dto.AdminResetPasswordDTO;
 
-import jakarta.servlet.http.HttpServletRequest;;
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * 管理员登录与注册服务
@@ -27,4 +28,14 @@ public interface AuthService {
      * 生成管理员注册邀请码
      */
     public String generateInviteCode(HttpServletRequest request, Long storeId);
+
+    /**
+     * 发送邮箱验证码
+     */
+    public String sendEmailCode(String email);
+
+    /**
+     * 通过短信验证码重置密码
+     */
+    public void resetPassword(AdminResetPasswordDTO dto);
 }
