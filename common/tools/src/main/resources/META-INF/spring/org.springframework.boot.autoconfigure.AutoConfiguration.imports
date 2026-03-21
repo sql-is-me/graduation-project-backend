@@ -3,5 +3,6 @@ com.sql.common.redis.service.RedisService
 com.sql.common.log.config.LogAutoConfiguration
 com.sql.common.auth.aspect.InnerAuthAspect
 com.sql.common.auth.aspect.PermissionAspect
+com.sql.common.mail.service.MailService
 com.sql.common.tokens.AdminTokenService
 com.sql.common.tokens.UserTokenService

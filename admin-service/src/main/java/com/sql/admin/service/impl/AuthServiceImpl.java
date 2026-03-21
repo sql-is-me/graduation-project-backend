@@ -16,22 +16,17 @@ import com.sql.admin.mapper.AdminMapper;
 import com.sql.admin.service.AuthService;
 import com.sql.api.RemoteLoginLogService;
 import com.sql.common.constants.AuthConstants;
-import com.sql.common.constants.CacheConstants;
 import com.sql.common.entity.AdminOnline;
 import com.sql.common.entity.db.Admin;
 import com.sql.common.entity.db.LoginInfo;
 import com.sql.common.enums.AccountStatus;
 import com.sql.common.exception.ServiceException;
+import com.sql.common.mail.service.MailService;
 import com.sql.common.redis.service.RedisService;
 import com.sql.common.tokens.AdminTokenService;
 import com.sql.utils.IpUtils;
 import com.sql.utils.PasswordUtils;
 import com.sql.utils.StringUtils;
-
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.mail.javamail.MimeMessagePreparator;
-import org.springframework.beans.factory.annotation.Value;
 
 /**
  * 管理员登录与注册服务
@@ -50,18 +45,10 @@ public class AuthServiceImpl implements AuthService {
     private RedisService redisService;
 
     @Autowired
-    private RemoteLoginLogService remoteLoginLogService;
+    private MailService mailService;
 
     @Autowired
-    private JavaMailSender mailSender;
-
-    @Value("${spring.mail.username}")
-    private String mailFrom;
-
-    /**
-     * 邀请码过期时间 30min
-     */
-    private static final Long ADMIN_INVITE_EXPIRE = 30L;
+    private RemoteLoginLogService remoteLoginLogService;
 
     /**
      * 管理员登录
@@ -123,15 +110,8 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     public void register(AdminRegisterDTO registerDTO) {
-        if (registerDTO == null) {
-            throw new ServiceException("请求参数不能为空");
-        }
-
         String username = registerDTO.getUsername();
         String password = registerDTO.getPassword();
-        if (StringUtils.isAnyBlank(username, password, registerDTO.getInviteCode())) {
-            throw new ServiceException("用户名/密码/邀请码必须填写");
-        }
         if (username.length() < AuthConstants.USERNAME_MIN_LENGTH
                 || username.length() > AuthConstants.USERNAME_MAX_LENGTH) {
             throw new ServiceException("账户长度必须在2到20个字符之间");
@@ -141,6 +121,12 @@ public class AuthServiceImpl implements AuthService {
             throw new ServiceException("密码长度必须在5到20个字符之间");
         }
 
+        // 校验用户名唯一性
+        Admin existAdmin = adminMapper.selectByUsername(username);
+        if (existAdmin != null) {
+            throw new ServiceException("账号'" + username + "'已存在");
+        }
+
         // 校验邀请码
         String inviteCode = registerDTO.getInviteCode();
         String inviteKey = AuthConstants.INVITE_CODE + inviteCode;
@@ -148,12 +134,6 @@ public class AuthServiceImpl implements AuthService {
         AdminInviteDTO inviteDTO = redisService.getCacheObject(inviteKey);
         if (inviteDTO == null) {
             throw new ServiceException("邀请码无效或已过期");
-        }
-
-        // 校验用户名唯一性
-        Admin existAdmin = adminMapper.selectByUsername(username);
-        if (existAdmin != null) {
-            throw new ServiceException("账号'" + username + "'已存在");
         }
 
         // 创建用户
@@ -203,57 +183,9 @@ public class AuthServiceImpl implements AuthService {
         String inviteKey = AuthConstants.INVITE_CODE + inviteCode;
         AdminInviteDTO inviteDTO = new AdminInviteDTO(referrer.getReferrerId(), storeId);
 
-        redisService.setCacheObject(inviteKey, inviteDTO, ADMIN_INVITE_EXPIRE, TimeUnit.MINUTES);
+        redisService.setCacheObject(inviteKey, inviteDTO, AuthConstants.ADMIN_INVITE_EXPIRE, TimeUnit.MINUTES);
 
         return inviteCode;
-    }
-
-    /**
-     * 发送邮箱验证码
-     */
-    @Override
-    public String sendEmailCode(String email) {
-        if (StringUtils.isEmpty(email)) {
-            throw new ServiceException("邮箱不能为空");
-        }
-
-        // 校验邮箱是否绑定管理员账号
-        Admin admin = adminMapper.selectByEmail(email);
-        if (admin == null) {
-            throw new ServiceException("该邮箱未绑定任何管理员账号");
-        }
-
-        // 生成6位随机验证码
-        String emailCode = String.valueOf((int) ((Math.random() * 9 + 1) * 100000));
-
-        // 存入Redis，有效期5分钟
-        String codeKey = AuthConstants.EMAIL_CODE_KEY + email;
-        redisService.setCacheObject(codeKey, emailCode, CacheConstants.EMAIL_CODE_EXPIRATION, TimeUnit.MINUTES);
-
-        // 发送邮件
-        MimeMessagePreparator msg = mimeMessage -> {
-            MimeMessageHelper message = new MimeMessageHelper(mimeMessage);
-            message.setFrom(mailFrom);
-            message.setTo(email);
-            message.setSubject("【LoveSport】忘记密码 - 邮箱验证码");
-            message.setText(
-                    "<div style='background-color:#0d1117; color:#ffffff; border:1px solid #30363d; padding: 20px; border-radius: 8px; font-family: Arial, sans-serif; font-size: 16px;'>"
-                            + "<h2 style='color:#58a6ff;'>LoveSport 安全验证</h2>"
-                            + "<p style='margin-top:10px;'>您好，</p>"
-                            + "<p>这是您的 <strong>LoveSport</strong> 账号生成的临时验证码：</p>"
-                            + "<p style='font-size:32px; font-weight:bold; color:#ffffff; background-color:#21262d; padding:10px 15px; display:inline-block; border-radius:6px; border:1px dashed #58a6ff;'>"
-                            + emailCode + "</p>"
-                            + "<p style='margin-top:20px;'>有效期5分钟</p>"
-                            + "<p style='margin-top:20px;'>如非本人操作,请忽略此邮件</p>"
-                            + "<hr style='margin-top:30px; border:none; border-top:1px solid #30363d;'>"
-                            + "<p style='font-size:12px; color:#8b949e;'>loveSport 官方团队</p>"
-                            + "</div>",
-                    true);
-        };
-        mailSender.send(msg);
-
-        log.info("向邮箱 {} 发送验证码成功", email);
-        return emailCode;// FIXME:自动化测试使用，正式环境不应返回验证码
     }
 
     /**
@@ -266,16 +198,11 @@ public class AuthServiceImpl implements AuthService {
         String newPassword = dto.getNewPassword();
 
         // 校验邮箱验证码
-        String codeKey = AuthConstants.EMAIL_CODE_KEY + email;
-        String cachedCode = redisService.getCacheObject(codeKey);
-        if (cachedCode == null) {
-            throw new ServiceException("验证码已过期，请重新获取");
+        try {
+            mailService.verifyEmailCode(email, emailCode);
+        } catch (Exception e) {
+            throw new ServiceException(e.getMessage());
         }
-        if (!cachedCode.equals(emailCode)) {
-            throw new ServiceException("验证码错误");
-        }
-        // 验证码使用后立即删除
-        redisService.deleteObject(codeKey);
 
         // 密码长度校验
         if (newPassword.length() < AuthConstants.PASSWORD_MIN_LENGTH
@@ -300,6 +227,22 @@ public class AuthServiceImpl implements AuthService {
 
         // 清除密码错误次数缓存
         delWrongPWTimesCache(admin.getUsername());
+    }
+
+    /**
+     * 发送邮箱验证码
+     */
+    @Override
+    public String sendEmailCode(String email) {
+        if (StringUtils.isEmpty(email)) {
+            throw new ServiceException("邮箱不能为空");
+        }
+
+        String emailCode = mailService.setEmailCode2Cache(email);
+
+        mailService.sendEmailCode(email, emailCode);
+
+        return emailCode;// FIXME:自动化测试使用，正式环境不应返回验证码
     }
 
     /**

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sql.admin.dto.AdminPasswordUpdateDTO;
+import com.sql.admin.dto.AdminUpdateEmailDTO;
 import com.sql.admin.dto.AdminInfoUpdateDTO;
 import com.sql.admin.mapper.AdminMapper;
 import com.sql.admin.service.InfoService;
@@ -18,6 +19,7 @@ import com.sql.common.entity.db.Admin;
 import com.sql.common.entity.result.R;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
+import com.sql.common.mail.service.MailService;
 import com.sql.common.tokens.AdminTokenService;
 import com.sql.common.vo.AdminInfo;
 import com.sql.utils.PasswordUtils;
@@ -36,6 +38,9 @@ public class InfoServiceImpl implements InfoService {
 
     @Autowired
     private AdminTokenService adminTokenService;
+
+    @Autowired
+    private MailService mailService;
 
     @Autowired
     private RemoteFileService remoteFileService;
@@ -60,9 +65,6 @@ public class InfoServiceImpl implements InfoService {
         if (dto.getNickName() != null) {
             currentAdmin.setNickName(dto.getNickName());
         }
-        if (dto.getEmail() != null) {
-            currentAdmin.setEmail(dto.getEmail());
-        }
         if (dto.getPhone() != null) {
             currentAdmin.setPhone(dto.getPhone());
         }
@@ -72,23 +74,57 @@ public class InfoServiceImpl implements InfoService {
 
         // 校验手机号唯一
         if (StringUtils.isNotEmpty(dto.getPhone())) {
-            Admin phoneOwner = adminMapper.checkPhoneUnique(dto.getPhone());
+            Admin phoneOwner = adminMapper.selectByPhone(dto.getPhone());
             if (phoneOwner != null && !phoneOwner.getAdminId().equals(currentAdmin.getAdminId())) {
                 throw new ServiceException("修改用户'" + currentAdmin.getUsername() + "'失败，手机号码已存在");
-            }
-        }
-
-        // 校验邮箱唯一
-        if (StringUtils.isNotEmpty(dto.getEmail())) {
-            Admin emailOwner = adminMapper.selectByEmail(dto.getEmail());
-            if (emailOwner != null && !emailOwner.getAdminId().equals(currentAdmin.getAdminId())) {
-                throw new ServiceException("修改用户'" + currentAdmin.getUsername() + "'失败，邮箱账号已存在");
             }
         }
 
         int rows = adminMapper.updateById(currentAdmin);
         if (rows <= 0) {
             throw new ServiceException("修改个人信息异常，请联系管理员");
+        }
+
+        // 更新缓存中的用户信息
+        adminTokenService.refreshCacheInfo(ao);
+    }
+
+    
+
+    /**
+     * 修改管理员邮箱
+     */
+    @Override
+    public void updateAdminEmail(AdminUpdateEmailDTO dto) {
+        AdminOnline ao = ContextHolder.getAO();
+        Admin currentAdmin = ao.getAdminInfo();
+        String email = dto.getEmail();
+
+        // 校验新邮箱与旧邮箱不能相同
+        if (ao.getAdminInfo().getEmail() != null) {
+            mailService.sendWarningEmail(ao.getAdminInfo().getEmail());
+
+            if (ao.getAdminInfo().getEmail().equals(email))
+                throw new ServiceException("新邮箱不能与旧邮箱相同");
+        }
+
+        // 校验邮箱唯一
+        Admin emailOwner = adminMapper.selectByEmail(email);
+        if (emailOwner != null && !emailOwner.getAdminId().equals(currentAdmin.getAdminId())) {
+            throw new ServiceException("修改用户'" + currentAdmin.getUsername() + "'失败，邮箱账号已存在");
+        }
+
+        // 验证验证码是否有效
+        try {
+            mailService.verifyEmailCode(email, dto.getEmailCode());
+        } catch (Exception e) {
+            throw new ServiceException(e.getMessage());
+        }
+
+        currentAdmin.setEmail(email);
+        int rows = adminMapper.updateById(currentAdmin);
+        if (rows <= 0) {
+            throw new ServiceException("修改邮箱失败，请联系管理员");
         }
 
         // 更新缓存中的用户信息
@@ -105,10 +141,6 @@ public class InfoServiceImpl implements InfoService {
 
         AdminOnline ao = ContextHolder.getAO();
         Admin currentAdmin = ao.getAdminInfo();
-
-        if (StringUtils.isAnyBlank(oldPassword, newPassword)) {
-            throw new ServiceException("旧密码和新密码不能为空");
-        }
 
         if (!PasswordUtils.matchesPassword(oldPassword, currentAdmin.getPassword())) {
             throw new ServiceException("修改密码失败，旧密码错误");

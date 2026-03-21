@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sql.admin.dto.AdminPasswordUpdateDTO;
+import com.sql.admin.dto.AdminUpdateEmailDTO;
 import com.sql.admin.dto.AdminInfoUpdateDTO;
 import com.sql.admin.service.InfoService;
 import com.sql.common.auth.annotation.RequiresType;
@@ -42,12 +43,24 @@ public class InfoController {
 
     /**
      * 修改管理员个人信息
+     * 
+     * nickName、phone、sex
      */
     @Log(title = "管理员个人信息", businessType = BusinessType.UPDATE)
     @PutMapping("/updateInfo")
     public R<?> updateInfo(@RequestBody AdminInfoUpdateDTO dto) {
         infoService.updateInfo(dto);
         return R.ok("个人信息修改成功");
+    }
+
+    /**
+     * 修改管理员邮箱
+     */
+    @Log(title = "管理员邮箱", businessType = BusinessType.UPDATE)
+    @PutMapping("/updateEmail")
+    public R<?> updateAdminEmail(@RequestBody AdminUpdateEmailDTO dto) {
+        infoService.updateAdminEmail(dto);
+        return R.ok("邮箱更新成功");
     }
 
     /**

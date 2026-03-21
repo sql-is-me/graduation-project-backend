@@ -30,12 +30,12 @@ public interface AuthService {
     public String generateInviteCode(HttpServletRequest request, Long storeId);
 
     /**
+     * 通过验证码重置密码
+     */
+    public void resetPassword(AdminResetPasswordDTO dto);
+
+    /**
      * 发送邮箱验证码
      */
     public String sendEmailCode(String email);
-
-    /**
-     * 通过短信验证码重置密码
-     */
-    public void resetPassword(AdminResetPasswordDTO dto);
 }

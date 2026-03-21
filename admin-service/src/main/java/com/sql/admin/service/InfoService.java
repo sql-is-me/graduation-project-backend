@@ -4,6 +4,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.sql.admin.dto.AdminInfoUpdateDTO;
 import com.sql.admin.dto.AdminPasswordUpdateDTO;
+import com.sql.admin.dto.AdminUpdateEmailDTO;
 import com.sql.common.vo.AdminInfo;
 
 public interface InfoService {
@@ -16,6 +17,11 @@ public interface InfoService {
      * 更新管理员信息
      */
     public void updateInfo(AdminInfoUpdateDTO dto);
+
+    /**
+     * 更新管理员邮箱
+     */
+    public void updateAdminEmail(AdminUpdateEmailDTO dto);
 
     /**
      * 修改密码

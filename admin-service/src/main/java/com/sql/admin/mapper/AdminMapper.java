@@ -17,7 +17,7 @@ public interface AdminMapper extends BaseMapper<Admin> {
     Admin selectByUsername(@Param("username") String username);
 
     @Select("SELECT * FROM admins WHERE phone = #{phone}")
-    Admin checkPhoneUnique(@Param("phone") String phone);
+    Admin selectByPhone(@Param("phone") String phone);
 
     @Select("SELECT * FROM admins WHERE email = #{email}")
     Admin selectByEmail(@Param("email") String email);
