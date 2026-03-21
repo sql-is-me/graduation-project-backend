@@ -13,7 +13,7 @@ import com.sql.common.entity.result.R;
 /**
  * 课时服务内部调用接口
  */
-@FeignClient(contextId = "remoteClassHourService", value = ServiceNameConstants.ADMIN_SERVICE, fallbackFactory = RemoteClassHourFallbackFactory.class)
+@FeignClient(contextId = "remoteClassHourService", value = ServiceNameConstants.TRANSACTION_SERVICE, fallbackFactory = RemoteClassHourFallbackFactory.class)
 public interface RemoteClassHourService {
 
     /**

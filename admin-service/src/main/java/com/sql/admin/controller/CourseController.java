@@ -20,7 +20,6 @@ import com.sql.admin.dto.CourseCreateDTO;
 import com.sql.admin.service.CourseService;
 import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.TableDataInfo;
-import com.sql.common.entity.db.ClassHour;
 import com.sql.common.entity.db.Course;
 import com.sql.common.entity.result.R;
 import com.sql.common.enums.UserTypes;
@@ -98,15 +97,5 @@ public class CourseController extends BaseController {
     @GetMapping("/{courseId}")
     public R<?> getCourseById(@PathVariable Long courseId) {
         return R.ok(courseService.getCourseById(courseId));
-    }
-
-    /**
-     * 查看当前店铺旗下会员的课时余额
-     */
-    @GetMapping("/classHours")
-    public TableDataInfo listClassHours() {
-        startPage();
-        List<ClassHour> list = courseService.listClassHours();
-        return getDataTable(list);
     }
 }

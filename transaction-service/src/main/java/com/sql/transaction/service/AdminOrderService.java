@@ -1,10 +1,10 @@
-package com.sql.admin.service;
+package com.sql.transaction.service;
 
 import java.util.List;
 
 import com.sql.common.entity.db.Order;
 
-public interface OrderService {
+public interface AdminOrderService {
 
     /**
      * 查询系统全部订单(admin用)

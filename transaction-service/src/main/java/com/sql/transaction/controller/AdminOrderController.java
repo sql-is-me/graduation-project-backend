@@ -1,4 +1,4 @@
-package com.sql.admin.controller;
+package com.sql.transaction.controller;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.TableDataInfo;
 import com.sql.common.entity.db.Order;
 import com.sql.common.enums.UserTypes;
-import com.sql.admin.service.OrderService;
+import com.sql.transaction.service.AdminOrderService;
 import com.sql.utils.BaseController;
 
 /**
@@ -21,11 +21,11 @@ import com.sql.utils.BaseController;
  * manager可以查看当前店铺订单
  */
 @RestController
-@RequestMapping("/admin/order")
-public class OrderController extends BaseController {
+@RequestMapping("/transaction/admin/order")
+public class AdminOrderController extends BaseController {
 
     @Autowired
-    private OrderService orderService;
+    private AdminOrderService adminOrderService;
 
     /**
      * 查询系统全部订单(仅顶级管理员)
@@ -34,7 +34,7 @@ public class OrderController extends BaseController {
     @RequiresType(UserTypes.ADMIN)
     public TableDataInfo listAllOrders(@RequestParam(required = false) String status) {
         startPage();
-        List<Order> list = orderService.listAllOrders(status);
+        List<Order> list = adminOrderService.listAllOrders(status);
         return getDataTable(list);
     }
 
@@ -45,7 +45,7 @@ public class OrderController extends BaseController {
     @RequiresType(UserTypes.MANAGER)
     public TableDataInfo listStoreOrders(@RequestParam(required = false) String status) {
         startPage();
-        List<Order> list = orderService.listStoreOrders(status);
+        List<Order> list = adminOrderService.listStoreOrders(status);
         return getDataTable(list);
     }
 }

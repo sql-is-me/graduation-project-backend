@@ -1,4 +1,4 @@
-package com.sql.admin.controller;
+package com.sql.transaction.controller;
 
 import java.util.List;
 
@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sql.admin.dto.CouponCreateDTO;
-import com.sql.admin.service.CouponService;
 import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.TableDataInfo;
 import com.sql.common.entity.db.Coupon;
@@ -21,18 +19,20 @@ import com.sql.common.entity.result.R;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;
 import com.sql.common.log.enums.BusinessType;
+import com.sql.transaction.dto.CouponCreateDTO;
+import com.sql.transaction.service.AdminCouponService;
 import com.sql.utils.BaseController;
 
 /**
  * 优惠券发放管理
  */
 @RestController
-@RequestMapping("/admin/coupon")
+@RequestMapping("/transaction/admin/coupon")
 @RequiresType(UserTypes.MANAGER)
-public class CouponController extends BaseController {
+public class AdminCouponController extends BaseController {
 
     @Autowired
-    private CouponService couponService;
+    private AdminCouponService adminCouponService;
 
     /**
      * 创建优惠券
@@ -40,7 +40,7 @@ public class CouponController extends BaseController {
     @Log(title = "优惠券管理", businessType = BusinessType.INSERT, operatorType = UserTypes.MANAGER)
     @PostMapping("/create")
     public R<?> createCoupon(@Validated @RequestBody CouponCreateDTO dto) {
-        return R.ok(couponService.createCoupon(dto), "优惠券创建成功");
+        return R.ok(adminCouponService.createCoupon(dto), "优惠券创建成功");
     }
 
     /**
@@ -49,7 +49,7 @@ public class CouponController extends BaseController {
     @Log(title = "优惠券管理", businessType = BusinessType.UPDATE, operatorType = UserTypes.MANAGER)
     @PutMapping("/toggle/{couponId}")
     public R<?> toggleCouponStatus(@PathVariable Long couponId) {
-        return R.ok(couponService.toggleCouponStatus(couponId), "操作成功");
+        return R.ok(adminCouponService.toggleCouponStatus(couponId), "操作成功");
     }
 
     /**
@@ -58,7 +58,7 @@ public class CouponController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo listCoupons() {
         startPage();
-        List<Coupon> list = couponService.listCoupons();
+        List<Coupon> list = adminCouponService.listCoupons();
         return getDataTable(list);
     }
 
@@ -67,6 +67,6 @@ public class CouponController extends BaseController {
      */
     @GetMapping("/{couponId}")
     public R<?> getCouponDetail(@PathVariable Long couponId) {
-        return R.ok(couponService.getCouponDetail(couponId));
+        return R.ok(adminCouponService.getCouponDetail(couponId));
     }
 }

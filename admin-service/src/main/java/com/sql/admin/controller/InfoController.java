@@ -1,6 +1,7 @@
 package com.sql.admin.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -48,7 +49,7 @@ public class InfoController {
      */
     @Log(title = "管理员个人信息", businessType = BusinessType.UPDATE)
     @PutMapping("/updateInfo")
-    public R<?> updateInfo(@RequestBody AdminInfoUpdateDTO dto) {
+    public R<?> updateInfo(@Validated @RequestBody AdminInfoUpdateDTO dto) {
         infoService.updateInfo(dto);
         return R.ok("个人信息修改成功");
     }
@@ -58,7 +59,7 @@ public class InfoController {
      */
     @Log(title = "管理员邮箱", businessType = BusinessType.UPDATE)
     @PutMapping("/updateEmail")
-    public R<?> updateAdminEmail(@RequestBody AdminUpdateEmailDTO dto) {
+    public R<?> updateAdminEmail(@Validated @RequestBody AdminUpdateEmailDTO dto) {
         infoService.updateAdminEmail(dto);
         return R.ok("邮箱更新成功");
     }
@@ -68,7 +69,7 @@ public class InfoController {
      */
     @Log(title = "管理员密码", businessType = BusinessType.UPDATE)
     @PutMapping("/updatePassword")
-    public R<?> updatePassword(@RequestBody AdminPasswordUpdateDTO dto) {
+    public R<?> updatePassword(@Validated @RequestBody AdminPasswordUpdateDTO dto) {
         infoService.updatePassword(dto);
         return R.ok("密码修改成功");
     }

@@ -1,4 +1,4 @@
-package com.sql.admin.dto;
+package com.sql.transaction.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

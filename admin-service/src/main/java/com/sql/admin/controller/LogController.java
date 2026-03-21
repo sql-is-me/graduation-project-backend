@@ -2,6 +2,7 @@ package com.sql.admin.controller;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,7 +39,7 @@ public class LogController extends BaseController {
      * 查询操作日志列表（支持按操作人、模块标题、业务类型、操作状态筛选）
      */
     @GetMapping("/oper/list")
-    public TableDataInfo listOperLog(@RequestBody OperLogSelectDTO dto) {
+    public TableDataInfo listOperLog(@Validated @RequestBody OperLogSelectDTO dto) {
         startPage();
         List<OperLog> list = logService.listOperLog(dto);
         return getDataTable(list);
@@ -75,7 +76,7 @@ public class LogController extends BaseController {
      * 查询登录日志列表（支持按用户名、IP地址、登录状态筛选）
      */
     @GetMapping("/login/list")
-    public TableDataInfo listLogininfor(@RequestBody LoginInfoSelectDTO dto) {
+    public TableDataInfo listLogininfor(@Validated @RequestBody LoginInfoSelectDTO dto) {
         System.out.println("接收到查询登录日志列表的请求，查询条件：" + dto);
         startPage();
         List<LoginInfo> list = logService.listLoginInfo(dto);

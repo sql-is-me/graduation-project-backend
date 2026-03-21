@@ -1,8 +1,8 @@
 package com.sql.admin.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,7 +41,7 @@ public class AuthController {
      * 此接口只需处理用户名密码验证和Token生成
      */
     @PostMapping("/login")
-    public R<?> login(@Valid @RequestBody AdminLoginDTO loginDTO) {
+    public R<?> login(@Validated @RequestBody AdminLoginDTO loginDTO) {
         String accessToken = authService.login(loginDTO.getUsername(), loginDTO.getPassword());
 
         return R.ok(accessToken, "登录成功");
@@ -65,7 +65,7 @@ public class AuthController {
      * 顶级管理员无法通过注册创建，只能预置在数据库中
      */
     @PostMapping("/register")
-    public R<?> register(@RequestBody AdminRegisterDTO registerBody) {
+    public R<?> register(@Validated @RequestBody AdminRegisterDTO registerBody) {
         authService.register(registerBody);
         return R.ok("注册成功");
     }
@@ -93,7 +93,7 @@ public class AuthController {
      */
     @Log(title = "忘记密码", businessType = BusinessType.UPDATE)
     @PutMapping("/resetPassword")
-    public R<?> resetPassword(@Valid @RequestBody AdminResetPasswordDTO dto) {
+    public R<?> resetPassword(@Validated @RequestBody AdminResetPasswordDTO dto) {
         authService.resetPassword(dto);
         return R.ok("密码重置成功，请重新登录");
     }

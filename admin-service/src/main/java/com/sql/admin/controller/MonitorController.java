@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sql.admin.service.MonitorService;
 import com.sql.common.vo.OnlineUserInfo;
 import com.sql.common.auth.annotation.RequiresType;
+import com.sql.common.entity.TableDataInfo;
 import com.sql.common.entity.result.R;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;
@@ -33,18 +34,20 @@ public class MonitorController extends BaseController {
      * 查询在线管理员列表
      */
     @GetMapping("/online/list/admin")
-    public R<?> listOnlineAdmins() {
+    public TableDataInfo listOnlineAdmins() {
+        startPage();
         List<OnlineUserInfo> list = monitorService.getOnlineAdmins();
-        return R.ok(list);
+        return getDataTable(list);
     }
 
     /**
      * 查询在线用户列表
      */
     @GetMapping("/online/list/user")
-    public R<?> listOnlineUsers() {
+    public TableDataInfo listOnlineUsers() {
+        startPage();
         List<OnlineUserInfo> list = monitorService.getOnlineUsers();
-        return R.ok(list);
+        return getDataTable(list);
     }
 
     /**

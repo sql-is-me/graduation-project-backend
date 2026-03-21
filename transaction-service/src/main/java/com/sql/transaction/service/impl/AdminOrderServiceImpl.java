@@ -1,4 +1,4 @@
-package com.sql.admin.service.impl;
+package com.sql.transaction.service.impl;
 
 import java.util.List;
 
@@ -6,14 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.sql.admin.mapper.OrderMapper;
 import com.sql.common.entity.db.Order;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
-import com.sql.admin.service.OrderService;
+import com.sql.transaction.mapper.OrderMapper;
+import com.sql.transaction.service.AdminOrderService;
 
 @Service
-public class OrderServiceImpl implements OrderService {
+public class AdminOrderServiceImpl implements AdminOrderService {
 
     @Autowired
     private OrderMapper orderMapper;

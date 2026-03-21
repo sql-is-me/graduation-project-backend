@@ -1,4 +1,4 @@
-package com.sql.admin.mapper;
+package com.sql.transaction.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
 

@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.sql.admin.dto.CourseCreateDTO;
-import com.sql.common.entity.db.ClassHour;
 import com.sql.common.entity.db.Course;
 
 public interface CourseService {
@@ -42,9 +41,4 @@ public interface CourseService {
      * 查询课程详情
      */
     Course getCourseById(Long courseId);
-
-    /**
-     * 查看当前店铺旗下会员的课时余额
-     */
-    List<ClassHour> listClassHours();
 }

@@ -12,13 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sql.admin.dto.CourseCreateDTO;
 import com.sql.admin.mapper.ChildrenMapper;
-import com.sql.admin.mapper.ClassHourMapper;
 import com.sql.admin.mapper.CourtMapper;
 import com.sql.admin.mapper.CourseMapper;
 import com.sql.admin.mapper.UserMapper;
 import com.sql.admin.service.CourseService;
 import com.sql.common.entity.db.Children;
-import com.sql.common.entity.db.ClassHour;
 import com.sql.common.entity.db.Court;
 import com.sql.common.entity.db.Course;
 import com.sql.common.entity.db.User;
@@ -44,9 +42,6 @@ public class CourseServiceImpl implements CourseService {
 
     @Autowired
     private ChildrenMapper childrenMapper;
-
-    @Autowired
-    private ClassHourMapper classHourMapper;
 
     @Override
     @Transactional
@@ -217,25 +212,6 @@ public class CourseServiceImpl implements CourseService {
     public Course getCourseById(Long courseId) {
         Long storeId = getStoreId();
         return getCourseAndValidate(courseId, storeId);
-    }
-
-    @Override
-    public List<ClassHour> listClassHours() {
-        Long storeId = getStoreId();
-        // 查询当前店铺下的所有会员
-        LambdaQueryWrapper<User> userWrapper = new LambdaQueryWrapper<>();
-        userWrapper.eq(User::getStoreId, storeId)
-                .eq(User::getUserType, "0"); // 会员
-        List<User> members = userMapper.selectList(userWrapper);
-
-        if (members.isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        List<Long> memberIds = members.stream().map(User::getUserId).toList();
-        LambdaQueryWrapper<ClassHour> wrapper = new LambdaQueryWrapper<>();
-        wrapper.in(ClassHour::getUserId, memberIds);
-        return classHourMapper.selectList(wrapper);
     }
 
     // ============ 私有工具方法 ============

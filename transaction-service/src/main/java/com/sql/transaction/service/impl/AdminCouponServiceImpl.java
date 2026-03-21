@@ -1,4 +1,4 @@
-package com.sql.admin.service.impl;
+package com.sql.transaction.service.impl;
 
 import java.util.List;
 
@@ -6,15 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.sql.admin.dto.CouponCreateDTO;
-import com.sql.admin.mapper.CouponMapper;
-import com.sql.admin.service.CouponService;
 import com.sql.common.entity.db.Coupon;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
+import com.sql.transaction.dto.CouponCreateDTO;
+import com.sql.transaction.mapper.CouponMapper;
+import com.sql.transaction.service.AdminCouponService;
 
 @Service
-public class CouponServiceImpl implements CouponService {
+public class AdminCouponServiceImpl implements AdminCouponService {
 
     @Autowired
     private CouponMapper couponMapper;

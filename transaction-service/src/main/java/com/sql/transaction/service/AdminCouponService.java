@@ -1,11 +1,11 @@
-package com.sql.admin.service;
+package com.sql.transaction.service;
 
 import java.util.List;
 
-import com.sql.admin.dto.CouponCreateDTO;
 import com.sql.common.entity.db.Coupon;
+import com.sql.transaction.dto.CouponCreateDTO;
 
-public interface CouponService {
+public interface AdminCouponService {
 
     /**
      * 创建优惠券(manager)
