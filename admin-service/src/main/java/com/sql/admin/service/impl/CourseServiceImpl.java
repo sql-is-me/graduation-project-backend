@@ -1,6 +1,7 @@
 package com.sql.admin.service.impl;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     @Transactional
-    public int createCourse(CourseCreateDTO dto) {
+    public long createCourse(CourseCreateDTO dto) {
         Long storeId = getStoreId();
         Long adminId = ContextHolder.getAO().getAdminInfo().getAdminId();
 
@@ -59,7 +60,7 @@ public class CourseServiceImpl implements CourseService {
         }
 
         // 校验时间合法性
-        LocalTime startTime = dto.getStartTime().toLocalTime();
+        LocalTime startTime = dto.getStartTime();
         LocalTime endTime = startTime.plusHours(dto.getTotalHours());
 
         if (startTime.isBefore(BUSINESS_START)) {
@@ -82,16 +83,21 @@ public class CourseServiceImpl implements CourseService {
         course.setStoreId(storeId);
         course.setCourtId(dto.getCourtId());
         course.setCourseDate(dto.getCourseDate());
-        course.setStartTime(dto.getStartTime());
+        course.setStartTime(LocalDateTime.of(dto.getCourseDate(), dto.getStartTime()));
         course.setTotalHours(dto.getTotalHours());
         course.setCoachId(null);
         course.setChildIds(new ArrayList<>());
 
-        return courseMapper.insert(course);
+        int rows = courseMapper.insert(course);
+        if (rows <= 0) {
+            throw new ServiceException("创建课程失败，请联系工作人员");
+        }
+
+        return course.getCourseId();
     }
 
     @Override
-    public int assignCoach(Long courseId, Long coachId) {
+    public void assignCoach(Long courseId, Long coachId) {
         Long storeId = getStoreId();
         Course course = getCourseAndValidate(courseId, storeId);
 
@@ -107,11 +113,15 @@ public class CourseServiceImpl implements CourseService {
         checkCoachTimeConflict(coachId, course.getCourseDate(), startTime, endTime, courseId);
 
         course.setCoachId(coachId);
-        return courseMapper.updateById(course);
+
+        int rows = courseMapper.updateById(course);
+        if (rows <= 0) {
+            throw new ServiceException("给课程分配教练失败，请联系工作人员");
+        }
     }
 
     @Override
-    public int cancelCourse(Long courseId) {
+    public void cancelCourse(Long courseId) {
         Long storeId = getStoreId();
         Course course = getCourseAndValidate(courseId, storeId);
 
@@ -119,7 +129,10 @@ public class CourseServiceImpl implements CourseService {
             throw new ServiceException("课程已完成，无法取消");
         }
 
-        return courseMapper.deleteById(courseId);
+        int rows = courseMapper.deleteById(courseId);
+        if (rows <= 0) {
+            throw new ServiceException("取消课程失败，请联系工作人员");
+        }
     }
 
     @Override
@@ -196,8 +209,11 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> listCourses(LocalDate courseDate) {
-        Long storeId = getStoreId();
+    public List<Course> listCourses(Long storeId, LocalDate courseDate) {
+        if (storeId == null) {// 店铺管理员需要获取StoreId
+            storeId = getStoreId();
+        }
+
         LambdaQueryWrapper<Course> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Course::getStoreId, storeId);
         if (courseDate != null) {
@@ -237,7 +253,7 @@ public class CourseServiceImpl implements CourseService {
         if (course == null) {
             throw new ServiceException("课程不存在");
         }
-        if (!course.getStoreId().equals(storeId)) {
+        if (!course.getStoreId().equals(storeId) && ContextHolder.getAO().getAdminInfo().getAdminType().equals("1")) {
             throw new ServiceException("无权操作其他店铺的课程");
         }
         return course;

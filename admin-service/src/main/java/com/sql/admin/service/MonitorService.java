@@ -18,7 +18,7 @@ public interface MonitorService {
     /**
      * 强制踢出地区管理员
      */
-    public void forceAdminLogout(String token);
+    public void forceAdminLogout(String adminId);
 
     /**
      * 强制踢出教练或会员

@@ -13,6 +13,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import com.sql.common.config.FeignConfiguration;
 import com.sql.common.config.ApplicationConfig;
 import com.sql.common.handler.GlobalExceptionHandler;
+import com.sql.common.handler.MyMetaObjectHandler;
 
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
@@ -24,7 +25,7 @@ import com.sql.common.handler.GlobalExceptionHandler;
 // 开启线程异步执行
 @EnableAsync
 // 自动加载类
-@Import({ ApplicationConfig.class, FeignConfiguration.class, GlobalExceptionHandler.class })
+@Import({ ApplicationConfig.class, FeignConfiguration.class, GlobalExceptionHandler.class, MyMetaObjectHandler.class })
 public @interface EnableCustomConfig {
 
 }

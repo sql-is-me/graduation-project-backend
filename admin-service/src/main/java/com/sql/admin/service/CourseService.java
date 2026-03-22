@@ -10,17 +10,17 @@ public interface CourseService {
     /**
      * 创建课程
      */
-    int createCourse(CourseCreateDTO dto);
+    long createCourse(CourseCreateDTO dto);
 
     /**
      * 安排/更换教练
      */
-    int assignCoach(Long courseId, Long coachId);
+    void assignCoach(Long courseId, Long coachId);
 
     /**
      * 取消课程
      */
-    int cancelCourse(Long courseId);
+    void cancelCourse(Long courseId);
 
     /**
      * 批量安排孩子上课
@@ -35,7 +35,7 @@ public interface CourseService {
     /**
      * 查询课程列表（按日期筛选）
      */
-    List<Course> listCourses(LocalDate courseDate);
+    List<Course> listCourses(Long StoreId, LocalDate courseDate);
 
     /**
      * 查询课程详情

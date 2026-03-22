@@ -253,7 +253,7 @@ CREATE TABLE courses (
   start_time DATETIME NOT NULL,
   total_hours INT NOT NULL,
   child_ids VARCHAR(255) DEFAULT '[]',
-  coach_id BIGINT NOT NULL,
+  coach_id BIGINT DEFAULT NULL,
   status CHAR(1) DEFAULT '0',
   create_time DATETIME DEFAULT NULL,
   update_time DATETIME DEFAULT NULL,

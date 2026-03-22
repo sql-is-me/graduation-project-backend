@@ -14,6 +14,7 @@ import com.sql.common.entity.AdminOnline;
 import com.sql.common.entity.UserOnline;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.redis.service.RedisService;
+import com.sql.common.tokens.AdminTokenService;
 
 /**
  * 管理员监控服务
@@ -21,6 +22,8 @@ import com.sql.common.redis.service.RedisService;
  */
 @Service
 public class MonitorServiceImpl implements MonitorService {
+    @Autowired
+    private AdminTokenService adminTokenService;
 
     @Autowired
     private RedisService redisService;
@@ -37,7 +40,6 @@ public class MonitorServiceImpl implements MonitorService {
             }
 
             OnlineUserInfo online = new OnlineUserInfo();
-            online.setToken(ao.getToken());
             online.setUserId(ao.getAdminInfo().getAdminId());
             online.setUserName(ao.getAdminInfo().getUsername());
             online.setNickName(ao.getAdminInfo().getNickName());
@@ -65,7 +67,6 @@ public class MonitorServiceImpl implements MonitorService {
             }
 
             OnlineUserInfo online = new OnlineUserInfo();
-            online.setToken(uo.getToken());
             online.setUserId(uo.getUserInfo().getUserId());
             online.setUserName(uo.getUserInfo().getUsername());
             online.setNickName(uo.getUserInfo().getNickName());
@@ -82,12 +83,12 @@ public class MonitorServiceImpl implements MonitorService {
     }
 
     @Override
-    public void forceAdminLogout(String token) {
-        redisService.deleteObject(TokenConstants.ADMIN_TOKENS + token);
+    public void forceAdminLogout(String adminId) {
+        adminTokenService.checkAndDeleteCacheObject(Long.parseLong(adminId));
     }
 
     @Override
-    public void forceUserLogout(String token) {
+    public void forceUserLogout(String token) {// FIXME:需要添加对应token-id映射
         redisService.deleteObject(TokenConstants.USER_TOKENS + token);
     }
 }

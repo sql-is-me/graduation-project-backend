@@ -29,15 +29,14 @@ import com.sql.utils.BaseController;
 
 @RestController
 @RequestMapping("/admin/course")
-@RequiresType(UserTypes.MANAGER)
 public class CourseController extends BaseController {
-
     @Autowired
     private CourseService courseService;
 
     /**
      * 创建课程
      */
+    @RequiresType(UserTypes.MANAGER)
     @Log(title = "课程管理", businessType = BusinessType.INSERT, operatorType = UserTypes.MANAGER)
     @PostMapping("/create")
     public R<?> createCourse(@Validated @RequestBody CourseCreateDTO dto) {
@@ -47,53 +46,62 @@ public class CourseController extends BaseController {
     /**
      * 安排/更换教练
      */
+    @RequiresType(UserTypes.MANAGER)
     @Log(title = "课程管理", businessType = BusinessType.UPDATE, operatorType = UserTypes.MANAGER)
     @PutMapping("/{courseId}/coach/{coachId}")
     public R<?> assignCoach(@PathVariable Long courseId, @PathVariable Long coachId) {
-        return R.ok(courseService.assignCoach(courseId, coachId), "教练安排成功");
+        courseService.assignCoach(courseId, coachId);
+        return R.ok("教练安排成功");
     }
 
     /**
      * 取消课程
      */
+    @RequiresType(UserTypes.MANAGER)
     @Log(title = "课程管理", businessType = BusinessType.DELETE, operatorType = UserTypes.MANAGER)
     @DeleteMapping("/{courseId}")
     public R<?> cancelCourse(@PathVariable Long courseId) {
-        return R.ok(courseService.cancelCourse(courseId), "课程取消成功");
+        courseService.cancelCourse(courseId);
+        return R.ok("课程取消成功");
     }
 
     /**
      * 安排孩子上课（支持批量，1到多个）
      */
+    @RequiresType(UserTypes.MANAGER)
     @Log(title = "课程管理", businessType = BusinessType.UPDATE, operatorType = UserTypes.MANAGER)
     @PutMapping("/{courseId}/children")
-    public R<?> arrangeChildren(@PathVariable Long courseId, @RequestBody List<Long> childIds) {
+    public R<?> arrangeChildren(@PathVariable Long courseId, @RequestBody List<Long> childIds) { // TODO:待审查
         return R.ok(courseService.arrangeChildren(courseId, childIds), "学员安排成功");
     }
 
     /**
      * 取消孩子的上课安排
      */
+    @RequiresType(UserTypes.MANAGER)
     @Log(title = "课程管理", businessType = BusinessType.UPDATE, operatorType = UserTypes.MANAGER)
     @DeleteMapping("/{courseId}/child/{childId}")
-    public R<?> cancelChild(@PathVariable Long courseId, @PathVariable Long childId) {
+    public R<?> cancelChild(@PathVariable Long courseId, @PathVariable Long childId) { // TODO:待审查
         return R.ok(courseService.cancelChild(courseId, childId), "取消安排成功");
     }
 
     /**
      * 查询课程列表（可按日期筛选）
      */
+    @RequiresType({ UserTypes.ADMIN, UserTypes.MANAGER })
     @GetMapping("/list")
     public TableDataInfo listCourses(
-            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate courseDate) {
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate courseDate,
+            @RequestParam(required = false) Long storeId) {
         startPage();
-        List<Course> list = courseService.listCourses(courseDate);
+        List<Course> list = courseService.listCourses(storeId, courseDate);
         return getDataTable(list);
     }
 
     /**
      * 查询课程详情
      */
+    @RequiresType({ UserTypes.ADMIN, UserTypes.MANAGER })
     @GetMapping("/{courseId}")
     public R<?> getCourseById(@PathVariable Long courseId) {
         return R.ok(courseService.getCourseById(courseId));

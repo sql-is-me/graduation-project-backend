@@ -1,8 +1,8 @@
 package com.sql.admin.dto;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-
+import java.time.LocalTime;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
@@ -20,13 +20,15 @@ public class CourseCreateDTO {
      * 课程日期
      */
     @NotNull(message = "课程日期不能为空")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate courseDate;
 
     /**
      * 开始时间（精确到小时）
      */
     @NotNull(message = "开始时间不能为空")
-    private LocalDateTime startTime;
+    @JsonFormat(pattern = "HH:mm:ss")
+    private LocalTime startTime;
 
     /**
      * 总课时数（1-3）

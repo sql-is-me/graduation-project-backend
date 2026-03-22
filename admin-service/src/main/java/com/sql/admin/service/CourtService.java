@@ -10,17 +10,22 @@ public interface CourtService {
     /**
      * 添加场地
      */
-    int addCourt(CourtCreateDTO dto);
+    long addCourt(CourtCreateDTO dto);
 
     /**
      * 更改场地信息
      */
-    int updateCourt(Long courtId, CourtUpdateDTO dto);
+    void updateCourt(Long courtId, CourtUpdateDTO dto);
+
+    /**
+     * 删除场地
+     */
+    void deleteCourt(Long courtId);
 
     /**
      * 查询当前店铺的场地列表
      */
-    List<Court> listCourts();
+    List<Court> listCourts(Long storeId);
 
     /**
      * 根据ID查询场地

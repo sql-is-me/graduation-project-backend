@@ -22,7 +22,7 @@ public class CourtServiceImpl implements CourtService {
     private CourtMapper courtMapper;
 
     @Override
-    public int addCourt(CourtCreateDTO dto) {
+    public long addCourt(CourtCreateDTO dto) {
         Long storeId = getStoreId();
         if (storeId == null) {
             throw new ServiceException("当前管理员未绑定店铺");
@@ -39,11 +39,17 @@ public class CourtServiceImpl implements CourtService {
         Court court = new Court();
         court.setStoreId(storeId);
         court.setCourtName(dto.getCourtName());
-        return courtMapper.insert(court);
+
+        int rows = courtMapper.insert(court);
+        if (rows <= 0) {
+            throw new ServiceException("创建场地失败");
+        }
+
+        return court.getCourtId();
     }
 
     @Override
-    public int updateCourt(Long courtId, CourtUpdateDTO dto) {
+    public void updateCourt(Long courtId, CourtUpdateDTO dto) {
         Long storeId = getStoreId();
         Court court = courtMapper.selectById(courtId);
         if (court == null) {
@@ -71,12 +77,27 @@ public class CourtServiceImpl implements CourtService {
             court.setStatus(dto.getStatus());
         }
 
-        return courtMapper.updateById(court);
+        int rows = courtMapper.updateById(court);
+        if (rows <= 0) {
+            throw new ServiceException("更新场地信息失败");
+        }
     }
 
     @Override
-    public List<Court> listCourts() {
-        Long storeId = getStoreId();
+    public void deleteCourt(Long courtId) {
+        int rows = courtMapper.deleteById(courtId);
+        if (rows <= 0) {
+            throw new ServiceException("删除场地失败");
+        }
+    }
+
+    @Override
+    public List<Court> listCourts(Long storeId) {
+        // 店铺管理员查询的话是null，需要获取
+        if (storeId == null) {
+            storeId = getStoreId();
+        }
+
         LambdaQueryWrapper<Court> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Court::getStoreId, storeId)
                 .orderByAsc(Court::getCourtId);
