@@ -89,8 +89,6 @@ public class InfoServiceImpl implements InfoService {
         adminTokenService.refreshCacheInfo(ao);
     }
 
-    
-
     /**
      * 修改管理员邮箱
      */
@@ -181,16 +179,15 @@ public class InfoServiceImpl implements InfoService {
             throw new ServiceException("文件格式不正确，请上传" + Arrays.toString(MimeTypeUtils.IMAGE_EXTENSION) + "格式");
         }
 
-        R<File> fileResult = remoteFileService.upload(mf);
+        R<File> fileResult = remoteFileService.uploadPicture(mf);
         if (StringUtils.isNull(fileResult) || StringUtils.isNull(fileResult.getData())) {
             throw new ServiceException("文件服务异常，请联系管理员");
         }
 
         String fileUrl = fileResult.getData().getUrl();
         // 删除旧头像
-        String oldAvatarUrl = ao.getAdminInfo().getAvatar();
-        if (StringUtils.isNotEmpty(oldAvatarUrl) && isNotDefaultAdminAvatar(oldAvatarUrl)) {
-            remoteFileService.delete(oldAvatarUrl);
+        if (StringUtils.isNotEmpty(ao.getAdminInfo().getAvatar())) {
+            remoteFileService.deletePicture(ao.getAdminInfo().getAvatar());
         }
 
         int rows = adminMapper.updateAvatar(ao.getAdminInfo().getAdminId(), fileUrl);
@@ -201,9 +198,5 @@ public class InfoServiceImpl implements InfoService {
         // 更新缓存
         ao.getAdminInfo().setAvatar(fileUrl);
         adminTokenService.refreshCacheInfo(ao);
-    }
-
-    private boolean isNotDefaultAdminAvatar(String avatarUrl) {
-        return !StringUtils.equals(avatarUrl, "/default-admin-avatar.jpg");
     }
 }

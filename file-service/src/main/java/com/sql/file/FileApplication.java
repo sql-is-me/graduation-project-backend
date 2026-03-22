@@ -11,6 +11,8 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 public class FileApplication {
     public static void main(String[] args) {
         SpringApplication.run(FileApplication.class, args);
-        System.out.println("loveSport 文件服务启动成功");
+        System.out.println("==================================" + "\n" +
+                "       文件服务模块启动成功" + "\n"
+                + "==================================");
     }
 }

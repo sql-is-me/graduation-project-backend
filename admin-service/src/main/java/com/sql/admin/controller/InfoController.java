@@ -3,10 +3,12 @@ package com.sql.admin.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -78,8 +80,8 @@ public class InfoController {
      * 管理员头像上传
      */
     @Log(title = "管理员头像", businessType = BusinessType.UPDATE)
-    @PutMapping("/updateAvatar")
-    public R<?> updateAvatar(@RequestParam("avatarFile") MultipartFile mf) {
+    @PostMapping(value = "/updateAvatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public R<?> updateAvatar(@RequestPart("avatarFile") MultipartFile mf) {
         infoService.updateAvatar(mf);
 
         return R.ok("头像更新成功");

@@ -22,5 +22,5 @@ public class ServiceNameConstants {
     /**
      * 文件服务的serviceid
      */
-    public static final String FILE_SERVICE = "loveSport-file";
+    public static final String FILE_SERVICE = "file-service";
 }

@@ -27,8 +27,28 @@ public class RemoteFileFallbackFactory implements FallbackFactory<RemoteFileServ
             }
 
             @Override
+            public R<File> uploadPicture(MultipartFile file) {
+                return R.fail("上传图片失败:" + throwable.getMessage());
+            }
+
+            @Override
+            public R<File> uploadDocument(MultipartFile file) {
+                return R.fail("上传文档失败:" + throwable.getMessage());
+            }
+
+            @Override
             public R<Boolean> delete(String fileUrl) {
                 return R.fail("删除文件失败:" + throwable.getMessage());
+            }
+
+            @Override
+            public R<Boolean> deletePicture(String fileUrl) {
+                return R.fail("删除图片失败:" + throwable.getMessage());
+            }
+
+            @Override
+            public R<Boolean> deleteDocument(String fileUrl) {
+                return R.fail("删除文档失败:" + throwable.getMessage());
             }
         };
     }

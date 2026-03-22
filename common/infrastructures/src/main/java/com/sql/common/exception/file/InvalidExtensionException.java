@@ -32,18 +32,26 @@ public class InvalidExtensionException extends FileUploadException {
         return filename;
     }
 
-    public static class InvalidImageExtensionException extends InvalidExtensionException {
+    public static class InvalidAvatarExtensionException extends InvalidExtensionException {
         private static final long serialVersionUID = 1L;
 
-        public InvalidImageExtensionException(String[] allowedExtension, String extension, String filename) {
+        public InvalidAvatarExtensionException(String[] allowedExtension, String extension, String filename) {
             super(allowedExtension, extension, filename);
         }
     }
 
-    public static class InvalidFlashExtensionException extends InvalidExtensionException {
+    public static class InvalidDocumentExtensionException extends InvalidExtensionException {
         private static final long serialVersionUID = 1L;
 
-        public InvalidFlashExtensionException(String[] allowedExtension, String extension, String filename) {
+        public InvalidDocumentExtensionException(String[] allowedExtension, String extension, String filename) {
+            super(allowedExtension, extension, filename);
+        }
+    }
+
+    public static class InvalidImageExtensionException extends InvalidExtensionException {
+        private static final long serialVersionUID = 1L;
+
+        public InvalidImageExtensionException(String[] allowedExtension, String extension, String filename) {
             super(allowedExtension, extension, filename);
         }
     }

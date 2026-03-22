@@ -15,11 +15,14 @@ import com.sql.file.filter.RefererFilter;
  */
 @Configuration
 public class FilterConfig {
-    /**
-     * 资源映射路径 前缀
-     */
     @Value("${file.prefix}")
     public String localFilePrefix;
+
+    @Value("${file.pic-prefix}")
+    public String localPicPrefix;
+
+    @Value("${file.doc-prefix}")
+    public String localDocPrefix;
 
     @Value("${referer.allowed-domains}")
     private String allowedDomains;
@@ -31,7 +34,7 @@ public class FilterConfig {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setDispatcherTypes(DispatcherType.REQUEST);
         registration.setFilter(new RefererFilter());
-        registration.addUrlPatterns(localFilePrefix + "/*");
+        registration.addUrlPatterns(localFilePrefix + "/*", localPicPrefix + "/*", localDocPrefix + "/*");
         registration.setName("refererFilter");
         registration.setOrder(FilterRegistrationBean.HIGHEST_PRECEDENCE);
         Map<String, String> initParameters = new HashMap<String, String>();

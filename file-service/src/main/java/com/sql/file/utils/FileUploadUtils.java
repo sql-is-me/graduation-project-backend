@@ -11,7 +11,6 @@ import com.sql.common.exception.file.FileException;
 import com.sql.common.exception.file.FileNameLengthLimitExceededException;
 import com.sql.common.exception.file.FileSizeLimitExceededException;
 import com.sql.common.exception.file.InvalidExtensionException;
-import com.sql.utils.DateUtils;
 import com.sql.utils.StringUtils;
 import com.sql.utils.file.FileTypeUtils;
 import com.sql.utils.file.MimeTypeUtils;
@@ -22,9 +21,19 @@ import com.sql.utils.uuid.Seq;
  */
 public class FileUploadUtils {
     /**
-     * 默认大小 50M
+     * 默认最大大小 50M
      */
     public static final long DEFAULT_MAX_SIZE = 50 * 1024 * 1024L;
+
+    /**
+     * 图片最大大小 5M
+     */
+    public static final long PICTURE_MAX_SIZE = 5 * 1024 * 1024L;
+
+    /**
+     * 文档最大大小 30M
+     */
+    public static final long DOCUMENT_MAX_SIZE = 30 * 1024 * 1024L;
 
     /**
      * 默认的文件名最大长度 100
@@ -36,12 +45,15 @@ public class FileUploadUtils {
      *
      * @param baseDir 相对应用的基目录
      * @param file    上传的文件
-     * @return 文件名称
-     * @throws IOException
+     * @return 上传成功的文件名
+     * @throws FileSizeLimitExceededException       如果超出最大大小
+     * @throws FileNameLengthLimitExceededException 文件名太长
+     * @throws IOException                          比如读写文件出错时
+     * @throws InvalidExtensionException            文件校验异常
      */
     public static final String upload(String baseDir, MultipartFile file) throws IOException {
         try {
-            return upload(baseDir, file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);
+            return upload(baseDir, file, DEFAULT_MAX_SIZE, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION);
         } catch (FileException fe) {
             throw new IOException(fe.getDefaultMessage(), fe);
         } catch (Exception e) {
@@ -50,18 +62,32 @@ public class FileUploadUtils {
     }
 
     /**
-     * 文件上传
-     *
-     * @param baseDir          相对应用的基目录
-     * @param file             上传的文件
-     * @param allowedExtension 上传文件类型
-     * @return 返回上传成功的文件名
-     * @throws FileSizeLimitExceededException       如果超出最大大小
-     * @throws FileNameLengthLimitExceededException 文件名太长
-     * @throws IOException                          比如读写文件出错时
-     * @throws InvalidExtensionException            文件校验异常
+     * 图像上传（限制5MB，仅允许jpg/jpeg/png）
      */
-    public static final String upload(String baseDir, MultipartFile file, String[] allowedExtension)
+    public static final String uploadPicture(String baseDir, MultipartFile file) throws IOException {
+        try {
+            return upload(baseDir, file, PICTURE_MAX_SIZE, MimeTypeUtils.AVATAR_EXTENSION);
+        } catch (FileException fe) {
+            throw new IOException(fe.getDefaultMessage(), fe);
+        } catch (Exception e) {
+            throw new IOException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 文档上传（限制30MB，仅允许ppt/pptx/pdf/doc/docx）
+     */
+    public static final String uploadDocument(String baseDir, MultipartFile file) throws IOException {
+        try {
+            return upload(baseDir, file, DOCUMENT_MAX_SIZE, MimeTypeUtils.DOCUMENT_EXTENSION);
+        } catch (FileException fe) {
+            throw new IOException(fe.getDefaultMessage(), fe);
+        } catch (Exception e) {
+            throw new IOException(e.getMessage(), e);
+        }
+    }
+
+    public static final String upload(String baseDir, MultipartFile file, long maxSize, String[] allowedExtension)
             throws FileSizeLimitExceededException, IOException, FileNameLengthLimitExceededException,
             InvalidExtensionException {
         int fileNamelength = Objects.requireNonNull(file.getOriginalFilename()).length();
@@ -69,7 +95,7 @@ public class FileUploadUtils {
             throw new FileNameLengthLimitExceededException(FileUploadUtils.DEFAULT_FILE_NAME_LENGTH);
         }
 
-        assertAllowed(file, allowedExtension);
+        assertAllowed(file, maxSize, allowedExtension);
 
         String fileName = extractFilename(file);
 
@@ -82,8 +108,8 @@ public class FileUploadUtils {
      * 编码文件名
      */
     public static final String extractFilename(MultipartFile file) {
-        return StringUtils.format("{}/{}_{}.{}", DateUtils.datePath(),
-                FilenameUtils.getBaseName(file.getOriginalFilename()), Seq.getId(Seq.uploadSeqType),
+        return StringUtils.format("{}_{}.{}", Seq.getId(Seq.uploadSeqType),
+                FilenameUtils.getBaseName(file.getOriginalFilename()),
                 FileTypeUtils.getExtension(file));
     }
 
@@ -104,27 +130,33 @@ public class FileUploadUtils {
     }
 
     /**
-     * 文件大小校验
+     * 文件校验
      *
-     * @param file 上传的文件
+     * @param file             上传的文件
+     * @param maxSize          文件最大限制
+     * @param allowedExtension 文件后缀限制
      * @throws FileSizeLimitExceededException 如果超出最大大小
-     * @throws InvalidExtensionException      文件校验异常
+     * @throws InvalidExtensionException      文件后缀异常
      */
-    public static final void assertAllowed(MultipartFile file, String[] allowedExtension)
+    public static final void assertAllowed(MultipartFile file, long maxSize, String[] allowedExtension)
             throws FileSizeLimitExceededException, InvalidExtensionException {
         long size = file.getSize();
-        if (size > DEFAULT_MAX_SIZE) {
-            throw new FileSizeLimitExceededException(DEFAULT_MAX_SIZE / 1024 / 1024);
+        if (size > maxSize) {
+            throw new FileSizeLimitExceededException(maxSize / 1024 / 1024);
         }
 
         String fileName = file.getOriginalFilename();
         String extension = FileTypeUtils.getExtension(file);
         if (allowedExtension != null && !isAllowedExtension(extension, allowedExtension)) {
-            if (allowedExtension == MimeTypeUtils.IMAGE_EXTENSION) {
-                throw new InvalidExtensionException.InvalidImageExtensionException(allowedExtension, extension,
+
+            if (allowedExtension == MimeTypeUtils.AVATAR_EXTENSION) {
+                throw new InvalidExtensionException.InvalidAvatarExtensionException(allowedExtension, extension,
                         fileName);
-            } else if (allowedExtension == MimeTypeUtils.FLASH_EXTENSION) {
-                throw new InvalidExtensionException.InvalidFlashExtensionException(allowedExtension, extension,
+            } else if (allowedExtension == MimeTypeUtils.DOCUMENT_EXTENSION) {
+                throw new InvalidExtensionException.InvalidDocumentExtensionException(allowedExtension, extension,
+                        fileName);
+            } else if (allowedExtension == MimeTypeUtils.IMAGE_EXTENSION) {
+                throw new InvalidExtensionException.InvalidImageExtensionException(allowedExtension, extension,
                         fileName);
             } else if (allowedExtension == MimeTypeUtils.MEDIA_EXTENSION) {
                 throw new InvalidExtensionException.InvalidMediaExtensionException(allowedExtension, extension,

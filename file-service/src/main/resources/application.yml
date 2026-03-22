@@ -1,0 +1,54 @@
+# Tomcat
+server:
+  port: 9900
+
+# Spring
+spring:
+  application:
+    name: file-service
+  profiles:
+    active: dev
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+      config:
+        server-addr: 127.0.0.1:8848
+        file-extension: yml
+        shared-configs:
+          - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+  config:
+    import:
+      - nacos:file-service-dev.yml
+
+---
+# Windows 开发环境
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+file:
+  domain: http://127.0.0.1:9900
+  path: ./assets/files
+  prefix: /files
+  pic-path: ./assets/pics
+  pic-prefix: /pics
+  doc-path: ./assets/docs
+  doc-prefix: /docs
+
+---
+# Docker/Linux 部署环境
+spring:
+  config:
+    activate:
+      on-profile: prod
+
+file:
+  domain: http://file-service:9900
+  path: /app/files
+  prefix: /files
+  pic-path: /app/pics
+  pic-prefix: /pics
+  doc-path: /app/docs
+  doc-prefix: /docs
