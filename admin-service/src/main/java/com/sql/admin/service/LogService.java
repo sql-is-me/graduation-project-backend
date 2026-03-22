@@ -21,7 +21,7 @@ public interface LogService {
     /**
      * 删除操作日志
      */
-    int deleteOperLog(Long operId);
+    void deleteOperLog(Long operId);
 
     /**
      * 清空操作日志
@@ -46,7 +46,7 @@ public interface LogService {
     /**
      * 删除登录日志
      */
-    int deleteLoginInfo(Long infoId);
+    void deleteLoginInfo(Long infoId);
 
     /**
      * 清空登录日志

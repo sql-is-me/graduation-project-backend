@@ -58,13 +58,15 @@ public class NoticeController extends BaseController {
     @PutMapping("/edit/{noticeId}")
     @RequiresType(UserTypes.ADMIN)
     public R<?> edit(@Validated @RequestBody NoticeUpdateDTO dto, @PathVariable Long noticeId) {
-        return R.ok(noticeService.updateNotice(dto, noticeId), "编辑公告成功");
+        noticeService.updateNotice(dto, noticeId);
+        return R.ok("编辑公告成功");
     }
 
     @Log(title = "通知公告", businessType = BusinessType.DELETE, operatorType = UserTypes.ADMIN)
     @DeleteMapping("/{noticeId}")
     @RequiresType(UserTypes.ADMIN)
     public R<?> remove(@PathVariable Long noticeId) {
-        return R.ok(noticeService.deleteNotice(noticeId), "删除公告成功");
+        noticeService.deleteNotice(noticeId);
+        return R.ok("删除公告成功");
     }
 }

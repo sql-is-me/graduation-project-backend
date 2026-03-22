@@ -31,7 +31,7 @@ public class InnerLogController extends BaseController {
         if (rows > 0) {
             return R.ok(true);
         } else {
-            return R.fail("插入操作日志失败");
+            return R.fail("插入操作日志失败，请联系工作人员");
         }
     }
 
@@ -42,7 +42,7 @@ public class InnerLogController extends BaseController {
         if (rows > 0) {
             return R.ok(true);
         } else {
-            return R.fail("插入登录日志失败");
+            return R.fail("插入登录日志失败，请联系工作人员");
         }
     }
 }

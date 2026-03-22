@@ -59,7 +59,8 @@ public class LogController extends BaseController {
     @Log(title = "操作日志", businessType = BusinessType.DELETE, operatorType = UserTypes.ADMIN)
     @DeleteMapping("/oper/{operId}")
     public R<?> deleteOperLogById(@PathVariable Long operId) {
-        return R.ok(logService.deleteOperLog(operId));
+        logService.deleteOperLog(operId);
+        return R.ok("删除操作日志成功");
     }
 
     /**
@@ -69,7 +70,7 @@ public class LogController extends BaseController {
     @DeleteMapping("/oper/clean")
     public R<?> cleanOperLog() {
         logService.cleanOperLog();
-        return R.ok();
+        return R.ok("清空操作日志成功");
     }
 
     /**
@@ -77,7 +78,6 @@ public class LogController extends BaseController {
      */
     @GetMapping("/login/list")
     public TableDataInfo listLogininfor(@Validated @RequestBody LoginInfoSelectDTO dto) {
-        System.out.println("接收到查询登录日志列表的请求，查询条件：" + dto);
         startPage();
         List<LoginInfo> list = logService.listLoginInfo(dto);
         return getDataTable(list);
@@ -97,7 +97,8 @@ public class LogController extends BaseController {
     @Log(title = "登录日志", businessType = BusinessType.DELETE, operatorType = UserTypes.ADMIN)
     @DeleteMapping("/login/{loginInfoId}")
     public R<?> deleteLoginInfoById(@PathVariable Long loginInfoId) {
-        return R.ok(logService.deleteLoginInfo(loginInfoId));
+        logService.deleteLoginInfo(loginInfoId);
+        return R.ok("删除登录日志成功");
     }
 
     /**
@@ -107,6 +108,6 @@ public class LogController extends BaseController {
     @DeleteMapping("/login/clean")
     public R<?> cleanLoginInfo() {
         logService.cleanLoginInfo();
-        return R.ok();
+        return R.ok("清空登录日志成功");
     }
 }

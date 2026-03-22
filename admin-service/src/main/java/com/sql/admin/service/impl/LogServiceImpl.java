@@ -12,6 +12,7 @@ import com.sql.admin.mapper.OperLogMapper;
 import com.sql.admin.service.LogService;
 import com.sql.common.entity.db.LoginInfo;
 import com.sql.common.entity.db.OperLog;
+import com.sql.common.exception.ServiceException;
 import com.sql.utils.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -47,8 +48,11 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public int deleteOperLog(Long operId) {
-        return operLogMapper.deleteById(operId);
+    public void deleteOperLog(Long operId) {
+        int rows = operLogMapper.deleteById(operId);
+        if (rows <= 0) {
+            throw new ServiceException("删除操作日志失败，请联系工作人员");
+        }
     }
 
     @Override
@@ -88,8 +92,11 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public int deleteLoginInfo(Long infoId) {
-        return loginInfoMapper.deleteById(infoId);
+    public void deleteLoginInfo(Long infoId) {
+        int rows = loginInfoMapper.deleteById(infoId);
+        if (rows <= 0) {
+            throw new ServiceException("删除登录日志失败，请联系工作人员");
+        }
     }
 
     public int insertLoginInfo(LoginInfo loginInfo) {

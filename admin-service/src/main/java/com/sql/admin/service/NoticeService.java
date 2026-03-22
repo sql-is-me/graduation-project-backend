@@ -13,7 +13,7 @@ public interface NoticeService {
 
     void publishNotice(NoticeCreateDTO dto);
 
-    int updateNotice(NoticeUpdateDTO dto, Long noticeId);
+    void updateNotice(NoticeUpdateDTO dto, Long noticeId);
 
-    int deleteNotice(Long noticeId);
+    void deleteNotice(Long noticeId);
 }

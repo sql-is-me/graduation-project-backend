@@ -11,6 +11,7 @@ import com.sql.admin.dto.NoticeUpdateDTO;
 import com.sql.admin.mapper.NoticeMapper;
 import com.sql.admin.service.NoticeService;
 import com.sql.common.entity.db.Notice;
+import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 
 @Service
@@ -39,11 +40,14 @@ public class NoticeServiceImpl implements NoticeService {
         notice.setContent(dto.getContent());
         notice.setCreateBy(ContextHolder.getUsername());
 
-        noticeMapper.insert(notice);
+        int rows = noticeMapper.insert(notice);
+        if (rows <= 0) {
+            throw new ServiceException("发布公告失败，请联系工作人员");
+        }
     }
 
     @Override
-    public int updateNotice(NoticeUpdateDTO dto, Long noticeId) {
+    public void updateNotice(NoticeUpdateDTO dto, Long noticeId) {
         Notice notice = noticeMapper.selectById(noticeId);
         if (notice == null) {
             throw new IllegalArgumentException("公告不存在");
@@ -61,11 +65,18 @@ public class NoticeServiceImpl implements NoticeService {
 
         notice.setUpdateBy(ContextHolder.getUsername());
 
-        return noticeMapper.updateById(notice);
+        int rows = noticeMapper.updateById(notice);
+        if (rows <= 0) {
+            throw new ServiceException("更改公告失败，请联系工作人员");
+        }
     }
 
     @Override
-    public int deleteNotice(Long noticeId) {
-        return noticeMapper.deleteById(noticeId);
+    public void deleteNotice(Long noticeId) {
+        int rows = noticeMapper.deleteById(noticeId);
+        if (rows <= 0) {
+            throw new ServiceException("删除公告失败，请联系工作人员");
+        }
+
     }
 }
