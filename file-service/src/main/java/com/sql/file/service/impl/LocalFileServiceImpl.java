@@ -83,9 +83,8 @@ public class LocalFileServiceImpl implements FileService {
      */
     @Override
     public String uploadPicture(MultipartFile file) throws Exception {
-        String name = FileUploadUtils.uploadPicture(localPicPath, file);
-        String url = domain + localPicPrefix + name;
-        return url;
+        // 只返回相对路径，如 /20260322_xxx.jpg
+        return FileUploadUtils.uploadPicture(localPicPath, file);
     }
 
     /**
@@ -122,13 +121,12 @@ public class LocalFileServiceImpl implements FileService {
      */
     @Override
     public void deletePicture(String fileUrl) throws Exception {
-        // 默认照片需要跳过
+        // 默认照片跳过
         if (fileUrl.endsWith(DEFAULT_ADMIN_AVATAR) || fileUrl.endsWith(DEFAULT_USER_AVATAR)) {
             return;
         }
-
-        String localFile = StringUtils.substringAfter(fileUrl, localPicPrefix);
-        FileUtils.deleteFile(localPicPath + localFile);
+        // fileUrl 是相对路径
+        FileUtils.deleteFile(localPicPath + fileUrl);
     }
 
     /**

@@ -55,7 +55,7 @@ public class Admin {
     /**
      * 头像URL地址
      */
-    private String avatar = "";
+    private String avatar = "/default_admin.jpg";
 
     /**
      * 所属店铺ID（管理员类型为STORE时必填）

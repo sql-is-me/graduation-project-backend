@@ -33,3 +33,7 @@ spring:
   config:
     import:
       - nacos:admin-service-dev.yml
+
+# 文件服务图片访问基础地址
+file:
+  pic-base-url: http://127.0.0.1:9900/pics
