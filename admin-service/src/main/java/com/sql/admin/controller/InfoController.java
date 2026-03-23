@@ -16,6 +16,7 @@ import com.sql.admin.dto.AdminPasswordUpdateDTO;
 import com.sql.admin.dto.AdminUpdateEmailDTO;
 import com.sql.admin.dto.AdminInfoUpdateDTO;
 import com.sql.admin.service.InfoService;
+import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.result.R;
 import com.sql.common.enums.UserTypes;
@@ -29,6 +30,7 @@ import com.sql.common.vo.AdminInfo;
  */
 @RestController
 @RequestMapping("/admin/info")
+@LoginRequired
 @RequiresType({ UserTypes.ADMIN, UserTypes.MANAGER })
 public class InfoController {
 

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sql.admin.dto.StoreCreateDTO;
 import com.sql.admin.dto.StoreUpdateDTO;
 import com.sql.admin.service.StoreService;
+import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.TableDataInfo;
 import com.sql.common.entity.db.Store;
@@ -28,6 +29,7 @@ import com.sql.utils.BaseController;
 
 @RestController
 @RequestMapping("/admin/store")
+@LoginRequired
 public class StoreController extends BaseController {
 
     @Autowired
@@ -50,7 +52,7 @@ public class StoreController extends BaseController {
      * 可修改店铺名和地址
      */
     @RequiresType({ UserTypes.ADMIN, UserTypes.MANAGER })
-    @Log(title = "店铺管理", businessType = BusinessType.UPDATE, operatorType = UserTypes.ADMIN)
+    @Log(title = "店铺管理", businessType = BusinessType.UPDATE)
     @PutMapping("/update/{storeId}")
     public R<?> updateStore(@PathVariable Long storeId, @RequestBody StoreUpdateDTO dto) {
         storeService.updateStore(storeId, dto);

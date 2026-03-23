@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sql.admin.dto.CourtCreateDTO;
 import com.sql.admin.dto.CourtUpdateDTO;
 import com.sql.admin.service.CourtService;
+import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.TableDataInfo;
 import com.sql.common.entity.db.Court;
@@ -28,6 +29,7 @@ import com.sql.utils.BaseController;
 
 @RestController
 @RequestMapping("/admin/court")
+@LoginRequired
 public class CourtController extends BaseController {
     @Autowired
     private CourtService courtService;

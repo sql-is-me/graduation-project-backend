@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sql.admin.dto.LoginInfoSelectDTO;
 import com.sql.admin.dto.OperLogSelectDTO;
 import com.sql.admin.service.LogService;
+import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.TableDataInfo;
 import com.sql.common.entity.db.LoginInfo;
@@ -29,6 +30,7 @@ import com.sql.utils.BaseController;
  */
 @RestController
 @RequestMapping("/admin/log")
+@LoginRequired
 @RequiresType(UserTypes.ADMIN)
 public class LogController extends BaseController {
 

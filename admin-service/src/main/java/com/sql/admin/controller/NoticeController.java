@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sql.admin.dto.NoticeCreateDTO;
 import com.sql.admin.dto.NoticeUpdateDTO;
 import com.sql.admin.service.NoticeService;
+import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.TableDataInfo;
 import com.sql.common.entity.db.Notice;
@@ -26,7 +27,7 @@ import com.sql.utils.BaseController;
 
 @RestController
 @RequestMapping("/admin/notice")
-@RequiresType(UserTypes.ADMIN)
+@LoginRequired
 public class NoticeController extends BaseController {
 
     @Autowired

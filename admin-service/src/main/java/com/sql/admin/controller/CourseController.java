@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sql.admin.dto.CourseCreateDTO;
 import com.sql.admin.service.CourseService;
+import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.TableDataInfo;
 import com.sql.common.entity.db.Course;
@@ -29,6 +30,7 @@ import com.sql.utils.BaseController;
 
 @RestController
 @RequestMapping("/admin/course")
+@LoginRequired
 public class CourseController extends BaseController {
     @Autowired
     private CourseService courseService;
