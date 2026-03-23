@@ -165,7 +165,7 @@ public class AuthServiceImpl implements AuthService {
             retryCounter++;
             redisService.setCacheObject(PasswordUtils.getWrongPWTimesKey(username), retryCounter,
                     PasswordUtils.PASSWORD_LOCK_TIME, java.util.concurrent.TimeUnit.MINUTES);
-            throw new ServiceException("用户不存在/密码错误");
+            throw new ServiceException("用户名或密码错误");
         } else {
             if (redisService.hasKey(PasswordUtils.getWrongPWTimesKey(username))) {
                 redisService.deleteObject(PasswordUtils.getWrongPWTimesKey(username));

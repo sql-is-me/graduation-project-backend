@@ -94,7 +94,8 @@ public class LogAspect {
                 operLog.setStatus("0");
             }
 
-            operLog.setOperName(ContextHolder.getUsername());
+            operLog.setOperatorId(ContextHolder.getId());
+            operLog.setOperatorName(ContextHolder.getUsername());
 
             // 设置方法名称
             String className = joinPoint.getTarget().getClass().getName();

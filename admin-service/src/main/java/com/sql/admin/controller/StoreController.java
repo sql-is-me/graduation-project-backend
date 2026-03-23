@@ -83,11 +83,11 @@ public class StoreController extends BaseController {
 
     /**
      * 查询店铺列表
-     * （默认查询营业中店铺，null可以查看全部店铺）
+     * （默认不传参查询全部店铺）
      */
     @RequiresType(UserTypes.ADMIN)
     @GetMapping("/list")
-    public TableDataInfo listStores(@RequestParam(required = false, defaultValue = "0") String status) {
+    public TableDataInfo listStores(@RequestParam(required = false) String status) {
         startPage();
         List<Store> list = storeService.listStores(status);
         return getDataTable(list);

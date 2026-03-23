@@ -5,6 +5,7 @@ import java.util.List;
 import com.sql.admin.dto.StoreCreateDTO;
 import com.sql.admin.dto.StoreUpdateDTO;
 import com.sql.common.entity.db.Store;
+import com.sql.common.vo.StoreInfo;
 
 public interface StoreService {
     /**
@@ -36,5 +37,5 @@ public interface StoreService {
     /**
      * 根据ID查询店铺
      */
-    Store getStoreById(Long storeId);
+    StoreInfo getStoreById(Long storeId);
 }

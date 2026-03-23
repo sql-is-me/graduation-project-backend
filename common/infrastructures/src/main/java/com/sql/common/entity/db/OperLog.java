@@ -49,10 +49,16 @@ public class OperLog {
     private Integer operatorType;
 
     /**
+     * 操作人员id
+     */
+    @TableField("operator_id")
+    private Long operatorId;
+
+    /**
      * 操作人员名称
      */
-    @TableField("oper_name")
-    private String operName;
+    @TableField("operator_name")
+    private String operatorName;
 
     /**
      * 请求URL

@@ -27,4 +27,7 @@ public interface AdminMapper extends BaseMapper<Admin> {
 
     @Update("UPDATE admins SET avatar = #{avatar} WHERE admin_id = #{adminId}")
     int updateAvatar(@Param("adminId") Long adminId, @Param("avatar") String avatar);
+
+    @Select("SELECT nick_name FROM admins WHERE admin_id = #{adminId}")
+    String selectNameByID(@Param("adminId") Long adminId);
 }

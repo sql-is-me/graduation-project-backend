@@ -15,6 +15,7 @@ import com.sql.common.entity.db.Admin;
 import com.sql.common.entity.db.Store;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
+import com.sql.common.vo.StoreInfo;
 import com.sql.utils.StringUtils;
 
 @Service
@@ -126,11 +127,20 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public Store getStoreById(Long storeId) {
+    public StoreInfo getStoreById(Long storeId) {
         Store store = storeMapper.selectById(storeId);
         if (store == null) {
             throw new ServiceException("店铺不存在");
         }
-        return store;
+        StoreInfo storeInfo = new StoreInfo(store);
+
+        String creatorName = adminMapper.selectNameByID(store.getCreatorId());
+        storeInfo.setCreatorName(creatorName);
+
+        if (store.getOwnerId() != null) {
+            storeInfo.setOwnerName(adminMapper.selectNameByID(store.getOwnerId()));
+        }
+
+        return storeInfo;
     }
 }

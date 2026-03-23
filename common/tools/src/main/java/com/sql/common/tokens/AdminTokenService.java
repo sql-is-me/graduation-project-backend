@@ -70,7 +70,7 @@ public class AdminTokenService {
      * 用于单点登录以及忘记密码
      */
     public void checkAndDeleteCacheObject(Long adminId) {
-        String mappingKey = TokenConstants.ADMIN_TOKEN_MAPPING;
+        String mappingKey = TokenConstants.ADMIN_TOKEN_MAPPING + adminId;
         String uuid = redisService.getCacheObject(mappingKey);
         if (uuid != null) {
             String aoKey = TokenConstants.ADMIN_TOKENS + uuid;

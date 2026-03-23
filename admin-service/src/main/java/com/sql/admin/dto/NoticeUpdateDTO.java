@@ -13,10 +13,4 @@ public class NoticeUpdateDTO {
      * 公告内容
      */
     private String content;
-
-    /**
-     * 公告状态
-     * 0正常 1关闭
-     */
-    private String status;
 }

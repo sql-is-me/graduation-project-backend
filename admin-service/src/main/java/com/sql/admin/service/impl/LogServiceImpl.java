@@ -1,6 +1,7 @@
 package com.sql.admin.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -13,6 +14,7 @@ import com.sql.admin.service.LogService;
 import com.sql.common.entity.db.LoginInfo;
 import com.sql.common.entity.db.OperLog;
 import com.sql.common.exception.ServiceException;
+import com.sql.common.vo.OperLogInfo;
 import com.sql.utils.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -31,15 +33,18 @@ public class LogServiceImpl implements LogService {
      * 查询操作日志列表（支持按操作人、标题、业务类型、操作状态筛选）
      */
     @Override
-    public List<OperLog> listOperLog(OperLogSelectDTO dto) {
+    public List<OperLogInfo> listOperLog(OperLogSelectDTO dto) {
         LambdaQueryWrapper<OperLog> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(dto.getOperatorType() != null, OperLog::getOperatorType, dto.getOperatorType())
-                .like(StringUtils.isNotEmpty(dto.getOperName()), OperLog::getOperName, dto.getOperName())
+                .like(StringUtils.isNotEmpty(dto.getOperatorName()), OperLog::getOperatorName, dto.getOperatorName())
                 .like(StringUtils.isNotEmpty(dto.getOperIp()), OperLog::getOperIp, dto.getOperIp())
                 .eq(StringUtils.isNotEmpty(dto.getStatus()), OperLog::getStatus, dto.getStatus())
                 .orderByDesc(OperLog::getOperId);
 
-        return operLogMapper.selectList(wrapper);
+        return operLogMapper.selectList(wrapper)
+                .stream()
+                .map(OperLogInfo::new)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -73,17 +78,16 @@ public class LogServiceImpl implements LogService {
      * 查询登录日志列表（支持按用户名、IP、状态筛选）
      */
     @Override
-    public List<LoginInfo> listLoginInfo(LoginInfoSelectDTO dto) {
+    public List<com.sql.common.vo.LoginInfo> listLoginInfo(LoginInfoSelectDTO dto) {
         LambdaQueryWrapper<LoginInfo> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(StringUtils.isNotEmpty(dto.getUsername()), LoginInfo::getUsername, dto.getUsername())
                 .like(StringUtils.isNotEmpty(dto.getIpAddr()), LoginInfo::getIpAddr, dto.getIpAddr())
                 .eq(StringUtils.isNotEmpty(dto.getStatus()), LoginInfo::getStatus, dto.getStatus())
                 .orderByDesc(LoginInfo::getInfoId);
-
-        System.out.println("查询登录日志列表，查询条件：" + dto);
-        System.out.println("\n" + wrapper);
-
-        return loginInfoMapper.selectList(wrapper);
+        return loginInfoMapper.selectList(wrapper)
+                .stream()
+                .map(com.sql.common.vo.LoginInfo::new)
+                .collect(Collectors.toList());
     }
 
     @Override

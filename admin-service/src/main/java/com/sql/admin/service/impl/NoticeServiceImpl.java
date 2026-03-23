@@ -59,9 +59,6 @@ public class NoticeServiceImpl implements NoticeService {
         if (dto.getContent() != null) {
             notice.setContent(dto.getContent());
         }
-        if (dto.getStatus() != null) {
-            notice.setStatus(dto.getStatus());
-        }
 
         notice.setUpdateBy(ContextHolder.getUsername());
 

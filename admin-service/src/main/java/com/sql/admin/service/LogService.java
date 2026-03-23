@@ -6,12 +6,13 @@ import com.sql.admin.dto.LoginInfoSelectDTO;
 import com.sql.admin.dto.OperLogSelectDTO;
 import com.sql.common.entity.db.LoginInfo;
 import com.sql.common.entity.db.OperLog;
+import com.sql.common.vo.OperLogInfo;
 
 public interface LogService {
     /**
      * 查询操作日志列表（支持按操作人、标题、业务类型、操作状态筛选）
      */
-    List<OperLog> listOperLog(OperLogSelectDTO operLog);
+    List<OperLogInfo> listOperLog(OperLogSelectDTO operLog);
 
     /**
      * 查询操作日志详情
@@ -36,7 +37,7 @@ public interface LogService {
     /**
      * 查询操作日志列表
      */
-    List<LoginInfo> listLoginInfo(LoginInfoSelectDTO dto);
+    List<com.sql.common.vo.LoginInfo> listLoginInfo(LoginInfoSelectDTO dto);
 
     /**
      * 查询登录日志详情

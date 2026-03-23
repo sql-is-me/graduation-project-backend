@@ -6,6 +6,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,12 +17,11 @@ import com.sql.admin.service.LogService;
 import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.TableDataInfo;
-import com.sql.common.entity.db.LoginInfo;
-import com.sql.common.entity.db.OperLog;
 import com.sql.common.entity.result.R;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;
 import com.sql.common.log.enums.BusinessType;
+import com.sql.common.vo.OperLogInfo;
 import com.sql.utils.BaseController;
 
 /**
@@ -40,10 +40,10 @@ public class LogController extends BaseController {
     /**
      * 查询操作日志列表（支持按操作人、模块标题、业务类型、操作状态筛选）
      */
-    @GetMapping("/oper/list")
+    @PostMapping("/oper/list")
     public TableDataInfo listOperLog(@Validated @RequestBody OperLogSelectDTO dto) {
         startPage();
-        List<OperLog> list = logService.listOperLog(dto);
+        List<OperLogInfo> list = logService.listOperLog(dto);
         return getDataTable(list);
     }
 
@@ -78,10 +78,10 @@ public class LogController extends BaseController {
     /**
      * 查询登录日志列表（支持按用户名、IP地址、登录状态筛选）
      */
-    @GetMapping("/login/list")
+    @PostMapping("/login/list")
     public TableDataInfo listLogininfor(@Validated @RequestBody LoginInfoSelectDTO dto) {
         startPage();
-        List<LoginInfo> list = logService.listLoginInfo(dto);
+        List<com.sql.common.vo.LoginInfo> list = logService.listLoginInfo(dto);
         return getDataTable(list);
     }
 

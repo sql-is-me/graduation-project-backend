@@ -12,7 +12,7 @@ public class OperLogSelectDTO {
     /**
      * 操作人员名称
      */
-    private String operName;
+    private String operatorName;
 
     /**
      * 操作IP地址
