@@ -18,7 +18,7 @@ public interface UserMapper extends BaseMapper<User> {
     User selectByUsername(@Param("username") String username);
 
     @Select("SELECT * FROM users WHERE phone = #{phone}")
-    User checkPhoneUnique(@Param("phone") String phone);
+    User selectByPhone(@Param("phone") String phone);
 
     @Select("SELECT * FROM users WHERE email = #{email}")
     User selectByEmail(@Param("email") String email);

@@ -13,11 +13,6 @@ public class UserInfoUpdateDTO {
     private String nickName;
 
     /**
-     * 用户邮箱
-     */
-    private String email;
-
-    /**
      * 手机号码
      */
     private String phone;

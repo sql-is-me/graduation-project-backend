@@ -1,6 +1,7 @@
 package com.sql.user.service;
 
 import com.sql.user.dto.UserRegisterDTO;
+import com.sql.user.dto.UserResetPasswordDTO;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -25,4 +26,14 @@ public interface AuthService {
      * 用户/教练注册
      */
     void register(UserRegisterDTO dto);
+
+    /**
+     * 通过验证码重置密码
+     */
+    void resetPassword(UserResetPasswordDTO dto);
+
+    /**
+     * 发送邮箱验证码
+     */
+    String sendEmailCode(String email);
 }
