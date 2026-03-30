@@ -1,19 +1,17 @@
 package com.sql.admin.service;
 
-import java.util.List;
-
-import com.sql.common.vo.OnlineUserInfo;
+import com.sql.common.entity.TableDataInfo;
 
 public interface MonitorService {
     /**
-     * 查询在线管理员列表
+     * 查询在线管理员列表（分页+排序）
      */
-    public List<OnlineUserInfo> getOnlineAdmins();
+    public TableDataInfo getOnlineAdmins(int pageNum, int pageSize, String orderByColumn, boolean asc);
 
     /**
-     * 查询在线用户列表
+     * 查询在线用户列表（分页+排序）
      */
-    public List<OnlineUserInfo> getOnlineUsers();
+    public TableDataInfo getOnlineUsers(int pageNum, int pageSize, String orderByColumn, boolean asc);
 
     /**
      * 强制踢出地区管理员

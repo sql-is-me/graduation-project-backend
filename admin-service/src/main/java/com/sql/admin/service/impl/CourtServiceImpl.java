@@ -1,6 +1,7 @@
 package com.sql.admin.service.impl;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,7 @@ import com.sql.admin.service.CourtService;
 import com.sql.common.entity.db.Court;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
+import com.sql.common.vo.CourtInfo;
 import com.sql.utils.StringUtils;
 
 @Service
@@ -92,16 +94,27 @@ public class CourtServiceImpl implements CourtService {
     }
 
     @Override
-    public List<Court> listCourts(Long storeId) {
-        // 店铺管理员查询的话是null，需要获取
-        if (storeId == null) {
-            storeId = getStoreId();
+    public List<CourtInfo> listCourts(Long storeId) {
+        Long storeId_admin = ContextHolder.getAO().getAdminInfo().getStoreId();
+        LambdaQueryWrapper<Court> wrapper = new LambdaQueryWrapper<>();
+
+        if (storeId_admin != null && storeId_admin != storeId) {
+            throw new ServiceException("无权查看其他店铺的场地");
         }
 
-        LambdaQueryWrapper<Court> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Court::getStoreId, storeId)
-                .orderByAsc(Court::getCourtId);
-        return courtMapper.selectList(wrapper);
+        // 店铺管理员查询的话是null，直接全查，或者也可以根据需要查
+        if (storeId == null) {
+            wrapper.orderByAsc(Court::getCourtId)
+                    .orderByAsc(Court::getStoreId);
+        } else {
+            wrapper.eq(Court::getStoreId, storeId)
+                    .orderByAsc(Court::getCourtId);
+        }
+
+        return courtMapper.selectList(wrapper)
+                .stream()
+                .map(CourtInfo::new)
+                .collect(Collectors.toList());
     }
 
     @Override

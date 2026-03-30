@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sql.admin.dto.LoginInfoSelectDTO;
@@ -56,12 +57,12 @@ public class LogController extends BaseController {
     }
 
     /**
-     * 删除操作日志
+     * 批量删除操作日志
      */
     @Log(title = "操作日志", businessType = BusinessType.DELETE, operatorType = UserTypes.ADMIN)
-    @DeleteMapping("/oper/{operId}")
-    public R<?> deleteOperLogById(@PathVariable Long operId) {
-        logService.deleteOperLog(operId);
+    @DeleteMapping("/oper")
+    public R<?> deleteOperLog(@RequestParam List<Long> operIds) {
+        logService.deleteOperLog(operIds);
         return R.ok("删除操作日志成功");
     }
 
@@ -94,12 +95,12 @@ public class LogController extends BaseController {
     }
 
     /**
-     * 删除登录日志
+     * 批量删除登录日志
      */
     @Log(title = "登录日志", businessType = BusinessType.DELETE, operatorType = UserTypes.ADMIN)
-    @DeleteMapping("/login/{loginInfoId}")
-    public R<?> deleteLoginInfoById(@PathVariable Long loginInfoId) {
-        logService.deleteLoginInfo(loginInfoId);
+    @DeleteMapping("/login")
+    public R<?> deleteLoginInfo(@RequestParam List<Long> infoIds) {
+        logService.deleteLoginInfo(infoIds);
         return R.ok("删除登录日志成功");
     }
 

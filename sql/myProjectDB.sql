@@ -26,9 +26,9 @@ CREATE TABLE stores (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO stores (store_id, creator_id, store_name, address, owner_id, status, create_time, update_time) VALUES
-(1, 1, '阳光羽毛球馆', '中心路1号', 2, '0', '2026-03-18 07:00:00', '2026-03-18 07:00:00'),
-(2, 1, '河畔球场', '滨河大道88号', 3, '0', '2026-03-18 07:05:00', '2026-03-18 07:05:00'),
-(3, 1, '城市运动馆', '东大街66号', 2, '1', '2026-03-18 07:10:00', '2026-03-18 07:10:00');
+(1, 1, '1号排球训练馆', '中心路1号', 2, '0', '2026-03-18 07:00:00', '2026-03-18 07:00:00'),
+(2, 1, '2号排球训练馆', '滨河大道88号', 3, '0', '2026-03-18 07:05:00', '2026-03-18 07:05:00'),
+(3, 1, '3号排球训练馆', '东大街66号', 2, '1', '2026-03-18 07:10:00', '2026-03-18 07:10:00');
 
 -- ----------------------------
 -- 2. 管理员表
@@ -42,7 +42,7 @@ CREATE TABLE admins (
   email VARCHAR(50) DEFAULT '',
   phone VARCHAR(11) DEFAULT '',
   sex CHAR(1) DEFAULT '2',
-  avatar VARCHAR(255) DEFAULT '',
+  avatar VARCHAR(255) DEFAULT '/default_admin.jpg',
   store_id BIGINT DEFAULT NULL,
   admin_type CHAR(1) DEFAULT '1',
   referrer_id BIGINT DEFAULT NULL,

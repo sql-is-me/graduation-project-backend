@@ -2,12 +2,15 @@ package com.sql.admin.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sql.admin.service.MonitorService;
+import com.sql.common.constants.HttpStatusConstants;
+import com.sql.common.entity.TableDataInfo;
 import com.sql.common.constants.TokenConstants;
 import com.sql.common.vo.OnlineUserInfo;
 import com.sql.common.entity.AdminOnline;
@@ -29,7 +32,7 @@ public class MonitorServiceImpl implements MonitorService {
     private RedisService redisService;
 
     @Override
-    public List<OnlineUserInfo> getOnlineAdmins() {
+    public TableDataInfo getOnlineAdmins(int pageNum, int pageSize, String orderByColumn, boolean asc) {
         List<OnlineUserInfo> onlineList = new ArrayList<>();
 
         Collection<String> keys = redisService.keys(TokenConstants.ADMIN_TOKENS + "*");
@@ -51,12 +54,12 @@ public class MonitorServiceImpl implements MonitorService {
 
             onlineList.add(online);
         }
-        onlineList.sort(Comparator.comparing(OnlineUserInfo::getLoginTime).reversed());
-        return onlineList;
+        onlineList.sort(buildComparator(orderByColumn, asc));
+        return buildPage(onlineList, pageNum, pageSize);
     }
 
     @Override
-    public List<OnlineUserInfo> getOnlineUsers() {
+    public TableDataInfo getOnlineUsers(int pageNum, int pageSize, String orderByColumn, boolean asc) {
         List<OnlineUserInfo> onlineList = new ArrayList<>();
 
         Collection<String> keys = redisService.keys(TokenConstants.USER_TOKENS + "*");
@@ -78,8 +81,29 @@ public class MonitorServiceImpl implements MonitorService {
 
             onlineList.add(online);
         }
-        onlineList.sort(Comparator.comparing(OnlineUserInfo::getLoginTime).reversed());
-        return onlineList;
+        onlineList.sort(buildComparator(orderByColumn, asc));
+        return buildPage(onlineList, pageNum, pageSize);
+    }
+
+    private Comparator<OnlineUserInfo> buildComparator(String orderByColumn, boolean asc) {
+        Comparator<OnlineUserInfo> comparator = "loginTime".equalsIgnoreCase(orderByColumn)
+                ? Comparator.comparing(OnlineUserInfo::getLoginTime)
+                : Comparator.comparing(OnlineUserInfo::getUserId);
+        return asc ? comparator : comparator.reversed();
+    }
+
+    private TableDataInfo buildPage(List<?> all, int pageNum, int pageSize) {
+        int total = all.size();
+        int fromIndex = (pageNum - 1) * pageSize;
+        List<?> page = fromIndex >= total
+                ? Collections.emptyList()
+                : all.subList(fromIndex, Math.min(fromIndex + pageSize, total));
+        TableDataInfo result = new TableDataInfo();
+        result.setCode(HttpStatusConstants.SUCCESS);
+        result.setMsg("查询成功");
+        result.setRows(page);
+        result.setTotal(total);
+        return result;
     }
 
     @Override

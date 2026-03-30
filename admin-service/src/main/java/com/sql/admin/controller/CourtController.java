@@ -20,11 +20,11 @@ import com.sql.admin.service.CourtService;
 import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.TableDataInfo;
-import com.sql.common.entity.db.Court;
 import com.sql.common.entity.result.R;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;
 import com.sql.common.log.enums.BusinessType;
+import com.sql.common.vo.CourtInfo;
 import com.sql.utils.BaseController;
 
 @RestController
@@ -78,7 +78,7 @@ public class CourtController extends BaseController {
     @GetMapping("/list")
     public TableDataInfo listCourts(@RequestParam(required = false) Long storeId) {
         startPage();
-        List<Court> list = courtService.listCourts(storeId);
+        List<CourtInfo> list = courtService.listCourts(storeId);
         return getDataTable(list);
     }
 

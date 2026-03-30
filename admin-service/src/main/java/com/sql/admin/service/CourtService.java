@@ -5,6 +5,7 @@ import java.util.List;
 import com.sql.admin.dto.CourtCreateDTO;
 import com.sql.admin.dto.CourtUpdateDTO;
 import com.sql.common.entity.db.Court;
+import com.sql.common.vo.CourtInfo;
 
 public interface CourtService {
     /**
@@ -25,7 +26,7 @@ public interface CourtService {
     /**
      * 查询当前店铺的场地列表
      */
-    List<Court> listCourts(Long storeId);
+    List<CourtInfo> listCourts(Long storeId);
 
     /**
      * 根据ID查询场地

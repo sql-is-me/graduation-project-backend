@@ -189,10 +189,10 @@
         <module>admin-service</module>
         <module>user-service</module>
         <module>transaction-service</module>
+        <module>gateway-service</module>
+        <module>file-service</module>
         <module>api-inner</module>
         <module>common</module>
-        <module>ruoyi-gateway</module>
-        <module>file-service</module>
     </modules>
     <packaging>pom</packaging>
 

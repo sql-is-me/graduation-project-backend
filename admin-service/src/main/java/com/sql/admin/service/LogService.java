@@ -20,9 +20,9 @@ public interface LogService {
     OperLog getOperLog(Long operId);
 
     /**
-     * 删除操作日志
+     * 批量删除操作日志
      */
-    void deleteOperLog(Long operId);
+    void deleteOperLog(List<Long> operIds);
 
     /**
      * 清空操作日志
@@ -45,9 +45,9 @@ public interface LogService {
     LoginInfo getLoginInfo(Long infoId);
 
     /**
-     * 删除登录日志
+     * 批量删除登录日志
      */
-    void deleteLoginInfo(Long infoId);
+    void deleteLoginInfo(List<Long> infoIds);
 
     /**
      * 清空登录日志

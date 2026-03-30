@@ -53,8 +53,8 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public void deleteOperLog(Long operId) {
-        int rows = operLogMapper.deleteById(operId);
+    public void deleteOperLog(List<Long> operIds) {
+        int rows = operLogMapper.deleteByIds(operIds);
         if (rows <= 0) {
             throw new ServiceException("删除操作日志失败，请联系工作人员");
         }
@@ -96,8 +96,8 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public void deleteLoginInfo(Long infoId) {
-        int rows = loginInfoMapper.deleteById(infoId);
+    public void deleteLoginInfo(List<Long> infoIds) {
+        int rows = loginInfoMapper.deleteByIds(infoIds);
         if (rows <= 0) {
             throw new ServiceException("删除登录日志失败，请联系工作人员");
         }
