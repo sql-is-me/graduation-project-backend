@@ -44,8 +44,18 @@ public class JWTService {
      * @param claims
      * @return UUIDtoken
      */
-    public static String getKey(Claims claims) {
+    public static String getToken(Claims claims) {
         return getValue(claims, JWTConstants.DETAILS_TOKEN);
+    }
+
+    /**
+     * 根据claims获取SessionKey
+     * 
+     * @param claims
+     * @return SessionKey
+     */
+    public static String getSessionKey(Claims claims) {
+        return getValue(claims, JWTConstants.DETAILS_SESSION_KEY);
     }
 
     /**

@@ -10,9 +10,9 @@ public class CacheConstants {
     public final static Long TOKEN_EXPIRE_TIME = 360L;
 
     /**
-     * 缓存刷新时间，默认120（分钟）
+     * 缓存刷新时间，默认60（分钟）
      */
-    public final static Long REFRESH_TIME = 120L;
+    public final static Long REFRESH_TIME = 60L;
 
     /**
      * 分钟转毫秒

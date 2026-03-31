@@ -2,12 +2,14 @@ package com.sql.user;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import com.sql.common.annotation.EnableCustomConfig;
 import com.sql.common.annotation.EnableCustomFeignClients;
 
 /**
  * 用户/教练服务模块
  */
+@EnableScheduling
 @EnableCustomConfig
 @EnableCustomFeignClients
 @SpringBootApplication

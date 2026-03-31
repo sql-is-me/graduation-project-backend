@@ -92,7 +92,7 @@ public class AdminTokenService {
     }
 
     /**
-     * 验证令牌有效期，相差不足120分钟，自动刷新缓存
+     * 验证令牌有效期，相差不足60分钟，自动刷新缓存
      */
     public void verifyToken(AdminOnline ao) {
         LocalDateTime expireTime = ao.getExpireTime();
@@ -140,7 +140,7 @@ public class AdminTokenService {
      * @return aoKey
      */
     public String getAOKey(String token) {
-        return TokenConstants.ADMIN_TOKENS + JWTService.getKey(JWTService.parseToken(token));
+        return TokenConstants.ADMIN_TOKENS + JWTService.getToken(JWTService.parseToken(token));
     }
 
     /**

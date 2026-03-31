@@ -80,12 +80,8 @@ public class AuthServiceImpl implements AuthService {
                 throw new ServiceException("微信登录失败：" + errmsg);
             }
 
-            if (StringUtils.isEmpty(openId)) {
-                throw new ServiceException("获取微信openId失败");
-            }
-
-            if (StringUtils.isEmpty(session_key)) {
-                throw new ServiceException("获取微信session_key失败");
+            if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(session_key)) {
+                throw new ServiceException("获取微信校验返回字段失败");
             }
 
             // 根据 openId 查询或创建用户
@@ -113,6 +109,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         String accessToken = userTokenService.createToken(user, session_key);
+
         recordLoginInfo(openId, AuthConstants.LOGIN_SUCCESS, "登录成功");
 
         return accessToken;

@@ -66,7 +66,7 @@ public class UserTokenService {
         String uoKey = TokenConstants.USER_SESSION_KEYS + uo.getSession_key();
         redisService.setCacheObject(uoKey, uo, CacheConstants.TOKEN_EXPIRE_TIME, TimeUnit.MINUTES);
 
-        // 维护 adminId -> uuid 反向映射，用于强制下线
+        // 维护 userId -> session_key 反向映射，用于强制下线
         String mappingKey = TokenConstants.USER_SESSION_KEY_MAPPING + uo.getUserInfo().getUserId();
         redisService.setCacheObject(mappingKey, uo.getSession_key(), CacheConstants.TOKEN_EXPIRE_TIME,
                 TimeUnit.MINUTES);
@@ -88,7 +88,7 @@ public class UserTokenService {
     }
 
     /**
-     * 验证令牌有效期，相差不足120分钟，自动刷新缓存
+     * 验证令牌有效期，相差不足阈值时间，自动刷新缓存
      */
     public void verifyToken(UserOnline uo) {
         LocalDateTime expireTime = uo.getExpireTime();
@@ -102,7 +102,7 @@ public class UserTokenService {
     }
 
     /**
-     * 刷新用户session_key过期时间并重设个人信息
+     * 刷新用户缓存过期时间
      */
     public void resetExpireTime(UserOnline uo) {
         uo.setExpireTime(LocalDateTime.now().withNano(0).plusMinutes(CacheConstants.TOKEN_EXPIRE_TIME));
@@ -132,7 +132,7 @@ public class UserTokenService {
      * @return uoKey
      */
     public String getUOKey(String token) {
-        return TokenConstants.USER_SESSION_KEYS + JWTService.getKey(JWTService.parseToken(token));
+        return TokenConstants.USER_SESSION_KEYS + JWTService.getSessionKey(JWTService.parseToken(token));
     }
 
     /**

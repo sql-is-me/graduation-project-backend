@@ -33,4 +33,10 @@ public class TokenConstants {
      * 用户ID到session_key的反向映射前缀
      */
     public final static String USER_SESSION_KEY_MAPPING = "user_session_key_mapping:";
+
+    /**
+     * 微信 access_token 缓存 key
+     */
+    public final static String WX_ACCESS_TOKEN = "wx:access_token";
+
 }

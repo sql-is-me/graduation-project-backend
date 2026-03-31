@@ -69,11 +69,11 @@ public class AuthFilter implements GlobalFilter, Ordered {
         String uuidToken = null;
         String session_key = null;
         if (type.equals("0")) {
-            uuidToken = JWTService.getKey(claims);
+            uuidToken = JWTService.getToken(claims);
             String aoKey = TokenConstants.ADMIN_TOKENS + uuidToken;
             isOnline = redisService.hasKey(aoKey);
         } else if (type.equals("1")) {
-            session_key = JWTService.getKey(claims);
+            session_key = JWTService.getSessionKey(claims);
             String uoKey = TokenConstants.USER_SESSION_KEYS + session_key;
             isOnline = redisService.hasKey(uoKey);
         } else {
@@ -122,7 +122,7 @@ public class AuthFilter implements GlobalFilter, Ordered {
 
     /**
      * 获取请求token
-     * 
+     *
      * @param request 请求
      */
     private String getToken(ServerHttpRequest request) {
