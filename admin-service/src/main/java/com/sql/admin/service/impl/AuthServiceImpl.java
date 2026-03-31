@@ -167,7 +167,7 @@ public class AuthServiceImpl implements AuthService {
         }
 
         Admin referrer = ao.getAdminInfo();
-        if (referrer.isTopAdmin()) {
+        if (referrer.isSysAdmin()) {
             // 系统管理员需指定门店ID
             if (storeId == null) {
                 throw new ServiceException("系统管理员生成邀请码需指定门店ID");

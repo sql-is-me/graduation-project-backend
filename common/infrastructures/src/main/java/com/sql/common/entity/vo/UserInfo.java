@@ -9,7 +9,7 @@ public class UserInfo {
     /**
      * 用户账号
      */
-    private String username;
+    private String openId;
 
     /**
      * 用户昵称
@@ -47,7 +47,7 @@ public class UserInfo {
     private Long storeId;
 
     public UserInfo(User user) {
-        this.username = user.getUsername();
+        this.openId = user.getOpenId();
         this.nickName = user.getNickName();
         this.userType = user.getUserType();
         this.email = user.getEmail();

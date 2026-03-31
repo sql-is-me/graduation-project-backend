@@ -26,12 +26,12 @@ public class User {
     /**
      * 用户唯一标识
      */
-    private String openid;
+    private String openId;
 
     /**
      * 用户在开放平台的唯一标识符
      */
-    private String unionid;
+    private String unionId;
 
     /**
      * 用户昵称

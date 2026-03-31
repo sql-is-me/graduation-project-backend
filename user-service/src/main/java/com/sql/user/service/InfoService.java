@@ -4,7 +4,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.sql.common.entity.vo.UserInfo;
 import com.sql.user.dto.UserInfoUpdateDTO;
-import com.sql.user.dto.UserPasswordUpdateDTO;
 import com.sql.user.dto.UserUpdateEmailDTO;
 
 /**
@@ -25,11 +24,6 @@ public interface InfoService {
      * 修改邮箱
      */
     void updateEmail(UserUpdateEmailDTO dto);
-
-    /**
-     * 修改密码
-     */
-    void updatePassword(UserPasswordUpdateDTO dto);
 
     /**
      * 更换头像

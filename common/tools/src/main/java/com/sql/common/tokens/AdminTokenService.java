@@ -42,9 +42,9 @@ public class AdminTokenService {
         String token = IdUtils.fastUUID();
 
         AdminOnline ao = new AdminOnline();
+        ao.setToken(token);
         ao.setAdminInfo(admin);
         ao.setIpaddr(IpUtils.getIpAddr());
-        ao.setToken(token);
         ao.setLoginTime(LocalDateTime.now().withNano(0));
         ao.setExpireTime(ao.getLoginTime().plusMinutes(CacheConstants.TOKEN_EXPIRE_TIME));
 
@@ -56,7 +56,7 @@ public class AdminTokenService {
         claimsMap.put(JWTConstants.DETAILS_TOKEN, token);
         claimsMap.put(JWTConstants.DETAILS_ID, admin.getAdminId());
         claimsMap.put(JWTConstants.DETAILS_USERNAME, admin.getUsername());
-        claimsMap.put(JWTConstants.DETAILS_TYPE, "0");
+        claimsMap.put(JWTConstants.DETAILS_TYPE, "0"); // 0表示管理员端
 
         // 接口返回信息
         String accessToken = JWTService.createToken(claimsMap);
@@ -111,7 +111,7 @@ public class AdminTokenService {
      * @param ao adminOnline
      */
     public void resetExpireTime(AdminOnline ao) {
-        ao.setExpireTime(ao.getLoginTime().plusMinutes(CacheConstants.TOKEN_EXPIRE_TIME));
+        ao.setExpireTime(LocalDateTime.now().withNano(0).plusMinutes(CacheConstants.TOKEN_EXPIRE_TIME));
         refreshCacheInfo(ao);
     }
 
@@ -136,7 +136,7 @@ public class AdminTokenService {
     /**
      * 获取当前登录管理员存储在redis中的key
      *
-     * @param token
+     * @param access_token
      * @return aoKey
      */
     public String getAOKey(String token) {

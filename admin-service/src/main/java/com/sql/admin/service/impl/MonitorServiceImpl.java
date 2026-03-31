@@ -18,6 +18,7 @@ import com.sql.common.entity.vo.TableDataInfo;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.redis.service.RedisService;
 import com.sql.common.tokens.AdminTokenService;
+import com.sql.common.tokens.UserTokenService;
 
 /**
  * 管理员监控服务
@@ -27,6 +28,9 @@ import com.sql.common.tokens.AdminTokenService;
 public class MonitorServiceImpl implements MonitorService {
     @Autowired
     private AdminTokenService adminTokenService;
+
+    @Autowired
+    private UserTokenService userTokenService;
 
     @Autowired
     private RedisService redisService;
@@ -62,7 +66,7 @@ public class MonitorServiceImpl implements MonitorService {
     public TableDataInfo getOnlineUsers(int pageNum, int pageSize, String orderByColumn, boolean asc) {
         List<OnlineUserInfo> onlineList = new ArrayList<>();
 
-        Collection<String> keys = redisService.keys(TokenConstants.USER_TOKENS + "*");
+        Collection<String> keys = redisService.keys(TokenConstants.USER_SESSION_KEYS + "*");
         for (String key : keys) {
             UserOnline uo = redisService.getCacheObject(key);
             if (uo == null || uo.getUserInfo() == null) {
@@ -71,7 +75,7 @@ public class MonitorServiceImpl implements MonitorService {
 
             OnlineUserInfo online = new OnlineUserInfo();
             online.setUserId(uo.getUserInfo().getUserId());
-            online.setUserName(uo.getUserInfo().getUsername());
+            online.setUserName(uo.getUserInfo().getOpenId());
             online.setNickName(uo.getUserInfo().getNickName());
             online.setIpaddr(uo.getIpaddr());
             online.setLoginTime(uo.getLoginTime());
@@ -112,7 +116,7 @@ public class MonitorServiceImpl implements MonitorService {
     }
 
     @Override
-    public void forceUserLogout(String token) {// FIXME:需要添加对应token-id映射
-        redisService.deleteObject(TokenConstants.USER_TOKENS + token);
+    public void forceUserLogout(String userId) {
+        userTokenService.checkAndDeleteCacheObject(Long.parseLong(userId));
     }
 }

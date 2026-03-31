@@ -20,7 +20,6 @@ import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;
 import com.sql.common.log.enums.BusinessType;
 import com.sql.user.dto.UserInfoUpdateDTO;
-import com.sql.user.dto.UserPasswordUpdateDTO;
 import com.sql.user.dto.UserUpdateEmailDTO;
 import com.sql.user.service.InfoService;
 
@@ -66,16 +65,6 @@ public class InfoController {
     public R<?> updateEmail(@Validated @RequestBody UserUpdateEmailDTO dto) {
         infoService.updateEmail(dto);
         return R.ok("邮箱更新成功");
-    }
-
-    /**
-     * 修改密码
-     */
-    @Log(title = "用户密码", businessType = BusinessType.UPDATE)
-    @PutMapping("/updatePassword")
-    public R<?> updatePassword(@Validated @RequestBody UserPasswordUpdateDTO dto) {
-        infoService.updatePassword(dto);
-        return R.ok("密码修改成功");
     }
 
     /**

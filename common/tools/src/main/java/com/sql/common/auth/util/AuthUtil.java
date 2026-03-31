@@ -41,7 +41,7 @@ public class AuthUtil {
                 return null;
             }
             Admin admin = ao.getAdminInfo();
-            if (admin.isTopAdmin()) {
+            if (admin.isSysAdmin()) {
                 return UserTypes.ADMIN;
             } else {
                 return UserTypes.MANAGER;
@@ -115,7 +115,7 @@ public class AuthUtil {
      *
      * @return true=系统管理员
      */
-    public static boolean isTopAdmin() {
+    public static boolean isSysAdmin() {
         return isType(UserTypes.ADMIN);
     }
 

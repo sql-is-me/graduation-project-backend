@@ -43,8 +43,6 @@ public class HeaderInterceptor implements AsyncHandlerInterceptor {
         }
 
         ContextHolder.setId(ServletUtils.getHeader(request, ContextHolderConstants.CH_ID));
-        ContextHolder.setUsername(ServletUtils.getHeader(request, ContextHolderConstants.CH_USERNAME));
-        ContextHolder.setToken(ServletUtils.getHeader(request, ContextHolderConstants.CH_TOKEN));
 
         String type = ServletUtils.getHeader(request, ContextHolderConstants.CH_TYPE);
         ContextHolder.setType(type);
@@ -55,11 +53,15 @@ public class HeaderInterceptor implements AsyncHandlerInterceptor {
             adminTokenService.verifyToken(ao);
 
             ContextHolder.set(ContextHolderConstants.CH_ADMIN_ONLINE, ao);
+            ContextHolder.setUsername(ServletUtils.getHeader(request, ContextHolderConstants.CH_USERNAME));
+            ContextHolder.setToken(ServletUtils.getHeader(request, ContextHolderConstants.CH_TOKEN));
         } else {
             UserOnline uo = userTokenService.getUO(token);
             userTokenService.verifyToken(uo);
 
             ContextHolder.set(ContextHolderConstants.CH_USER_ONLINE, uo);
+            ContextHolder.setSessionKey(ServletUtils.getHeader(request, ContextHolderConstants.CH_SESSION_KEY));
+            ContextHolder.setOpenId(ServletUtils.getHeader(request, ContextHolderConstants.CH_OPENID));
         }
 
         return true;

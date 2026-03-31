@@ -65,25 +65,36 @@ public class AuthFilter implements GlobalFilter, Ordered {
             return unauthorizedResponse(exchange, "令牌验证失败");
         }
 
-        String UUIDtoken = JWTService.getKey(claims);
-        String UUIDKey;
+        boolean isOnline = false;
+        String uuidToken = null;
+        String session_key = null;
         if (type.equals("0")) {
-            UUIDKey = TokenConstants.ADMIN_TOKENS + UUIDtoken;
+            uuidToken = JWTService.getKey(claims);
+            String aoKey = TokenConstants.ADMIN_TOKENS + uuidToken;
+            isOnline = redisService.hasKey(aoKey);
         } else if (type.equals("1")) {
-            UUIDKey = TokenConstants.USER_TOKENS + UUIDtoken;
+            session_key = JWTService.getKey(claims);
+            String uoKey = TokenConstants.USER_SESSION_KEYS + session_key;
+            isOnline = redisService.hasKey(uoKey);
         } else {
             return unauthorizedResponse(exchange, "令牌用户类型异常");
         }
-        boolean isOnline = redisService.hasKey(UUIDKey);
+
         if (!isOnline) {
             return unauthorizedResponse(exchange, "登录状态已过期");
         }
 
         // 设置用户信息到请求
-        addHeader(mutate, ContextHolderConstants.CH_TOKEN, UUIDtoken);
-        addHeader(mutate, ContextHolderConstants.CH_ID, id);
-        addHeader(mutate, ContextHolderConstants.CH_USERNAME, username);
         addHeader(mutate, ContextHolderConstants.CH_TYPE, type);
+        addHeader(mutate, ContextHolderConstants.CH_ID, id);
+
+        if (type.equals("0")) {
+            addHeader(mutate, ContextHolderConstants.CH_TOKEN, uuidToken);
+            addHeader(mutate, ContextHolderConstants.CH_USERNAME, username);
+        } else {
+            addHeader(mutate, ContextHolderConstants.CH_SESSION_KEY, session_key);
+            addHeader(mutate, ContextHolderConstants.CH_OPENID, username);
+        }
 
         // 内部请求来源参数清除
         removeHeader(mutate, AuthConstants.FROM_SOURCE);

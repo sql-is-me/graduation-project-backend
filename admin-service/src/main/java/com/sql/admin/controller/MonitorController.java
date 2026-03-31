@@ -70,9 +70,9 @@ public class MonitorController extends BaseController {
      * 强退在线用户
      */
     @Log(title = "在线用户", businessType = BusinessType.DELETE, operatorType = UserTypes.ADMIN)
-    @DeleteMapping("/forceUserLogout/{token}") // FIXME：修改对应url
-    public R<?> forceUserLogout(@PathVariable String token) {// FIXME：添加对应映射
-        monitorService.forceUserLogout(token);
+    @DeleteMapping("/forceUserLogout/{userId}")
+    public R<?> forceUserLogout(@PathVariable String userId) {
+        monitorService.forceUserLogout(userId);
         return R.ok("强退成功");
     }
 }

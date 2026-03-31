@@ -68,6 +68,22 @@ public class ContextHolder {
         set(ContextHolderConstants.CH_TOKEN, token);
     }
 
+    public static String getOpenId() {
+        return get(ContextHolderConstants.CH_OPENID);
+    }
+
+    public static void setOpenId(String openId) {
+        set(ContextHolderConstants.CH_OPENID, openId);
+    }
+
+    public static String getSessionKey() {
+        return get(ContextHolderConstants.CH_SESSION_KEY);
+    }
+
+    public static void setSessionKey(String sessionKey) {
+        set(ContextHolderConstants.CH_SESSION_KEY, sessionKey);
+    }
+
     public static String getType() {
         return get(ContextHolderConstants.CH_TYPE);
     }

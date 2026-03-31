@@ -43,7 +43,7 @@ public class AdminInfo {
 
     /**
      * 管理员类型
-     * 0:TOP 超级管理员 / 1:STORE 店铺管理员
+     * 0:TOP 系统管理员 / 1:STORE 店铺管理员
      */
     private String adminType; // 默认店铺管理员
 

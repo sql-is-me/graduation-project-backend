@@ -1,29 +1,26 @@
 package com.sql.user.service.impl;
 
-import java.time.LocalDateTime;
-import java.util.concurrent.TimeUnit;
-
-import jakarta.servlet.http.HttpServletRequest;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import lombok.extern.slf4j.Slf4j;
 
 import com.sql.api.RemoteLoginLogService;
 import com.sql.common.constants.AuthConstants;
-import com.sql.common.entity.bo.UserOnline;
 import com.sql.common.entity.po.LoginInfo;
 import com.sql.common.entity.po.User;
 import com.sql.common.enums.AccountStatus;
 import com.sql.common.exception.ServiceException;
-import com.sql.common.mail.service.MailService;
-import com.sql.common.redis.service.RedisService;
 import com.sql.common.tokens.UserTokenService;
-import com.sql.user.dto.UserRegisterDTO;
-import com.sql.user.dto.UserResetPasswordDTO;
+import com.sql.user.dto.UserLoginDTO;
 import com.sql.user.mapper.UserMapper;
 import com.sql.user.service.AuthService;
 import com.sql.utils.IpUtils;
-import com.sql.utils.PasswordUtils;
 import com.sql.utils.StringUtils;
 
 /**
@@ -40,218 +37,110 @@ public class AuthServiceImpl implements AuthService {
     private UserTokenService userTokenService;
 
     @Autowired
-    private RedisService redisService;
-
-    @Autowired
-    private MailService mailService;
-
-    @Autowired
     private RemoteLoginLogService remoteLoginLogService;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
     /**
-     * 用户/教练登录
+     * 小程序id
+     */
+    @Value("${weChat.app-id}")
+    private String appId;
+
+    /**
+     * 小程序密钥
+     */
+    @Value("${weChat.app-secret}")
+    private String appSecret;
+
+    /**
+     * 微信登录凭证校验接口地址
+     */
+    private static final String WECHAT_LOGIN_URL = "https://api.weixin.qq.com/sns/jscode2session";
+
+    /**
+     * 用户/教练登录（微信小程序）
      */
     @Override
-    public String login(String username, String password) {
+    public String login(UserLoginDTO dto) {
         User user;
+        String openId = "unknown";
+        String session_key;
         try {
-            if (password.length() < AuthConstants.PASSWORD_MIN_LENGTH
-                    || password.length() > AuthConstants.PASSWORD_MAX_LENGTH) {
-                throw new ServiceException("密码长度不符合要求");
-            }
-            if (username.length() < AuthConstants.USERNAME_MIN_LENGTH
-                    || username.length() > AuthConstants.USERNAME_MAX_LENGTH) {
-                throw new ServiceException("用户名长度不符合要求");
+            // 请求微信接口获取 openId 和 session_key
+            Map<String, String> wxResult = getWxSession(dto.getCode());
+            openId = wxResult.get("openid");
+            session_key = wxResult.get("session_key");
+
+            String errcode = wxResult.get("errcode");
+
+            if (StringUtils.isNotEmpty(errcode) && !"0".equals(errcode)) {
+                String errmsg = wxResult.getOrDefault("errmsg", "微信登录失败");
+                throw new ServiceException("微信登录失败：" + errmsg);
             }
 
-            user = userMapper.selectByUsername(username);
+            if (StringUtils.isEmpty(openId)) {
+                throw new ServiceException("获取微信openId失败");
+            }
 
+            if (StringUtils.isEmpty(session_key)) {
+                throw new ServiceException("获取微信session_key失败");
+            }
+
+            // 根据 openId 查询或创建用户
+            user = userMapper.selectByOpenId(openId);
             if (user == null) {
-                throw new ServiceException("用户名或密码错误");
-            }
-            if (AccountStatus.DISABLE.getCode().equals(user.getStatus())) {
-                throw new ServiceException("账号已停用，请联系管理员");
-            }
+                user = new User();
+                user.setOpenId(openId);
+                user.setUnionId(wxResult.get("unionid"));
 
-            validatePassword(user, password);
-        } catch (ServiceException e) {
-            recordLoginInfo(username, AuthConstants.LOGIN_FAIL, e.getMessage());
-            throw new ServiceException(e.getMessage());
+                user.setUserType("0"); // 默认普通会员，后续申请成为教练
+
+                int rows = userMapper.insert(user);
+                if (rows <= 0) {
+                    throw new ServiceException("创建用户失败，请联系管理员");
+                }
+            } else {
+                if (AccountStatus.DISABLE.getCode().equals(user.getStatus())) {
+                    throw new ServiceException("账号已停用，请联系管理员");
+                }
+            }
+        } catch (Exception e) {
+            log.error("登录失败", e);
+            recordLoginInfo(openId, AuthConstants.LOGIN_FAIL, "登录失败: " + e.getMessage());
+            throw new ServiceException("登录失败: " + e.getMessage());
         }
 
-        userMapper.updateById(user);
-
-        String accessToken = userTokenService.createToken(user);
-        recordLoginInfo(user.getUsername(), AuthConstants.LOGIN_SUCCESS, "登录成功");
+        String accessToken = userTokenService.createToken(user, session_key);
+        recordLoginInfo(openId, AuthConstants.LOGIN_SUCCESS, "登录成功");
 
         return accessToken;
     }
 
     /**
-     * 退出登录
+     * 登录凭证校验。通过 wx.login 接口获得临时登录凭证 code 后传到开发者服务器调用此接口完成登录流程
+     * 请求微信 jscode2session 接口，返回包含 openId、session_key、unionid 等字段的 Map
      */
-    @Override
-    public void logout(HttpServletRequest request) {
-        UserOnline uo = userTokenService.getUO(userTokenService.getUOToken(request));
-        String username = uo.getUserInfo().getUsername();
-
-        // 删除用户缓存记录
-        userTokenService.delUserOnline(userTokenService.getUOToken(request));
-
-        recordLoginInfo(username, AuthConstants.LOGOUT, "退出成功");
-    }
-
-    /**
-     * 用户/教练注册
-     */
-    @Override
-    public void register(UserRegisterDTO registerDTO) {
-        if (registerDTO == null) {
-            throw new ServiceException("请求参数不能为空");
-        }
-
-        String username = registerDTO.getUsername();
-        String password = registerDTO.getPassword();
-        String type = registerDTO.getType();
-
-        if (StringUtils.isAnyBlank(username, password, type)) {
-            throw new ServiceException("用户名/密码/类型必须填写");
-        }
-        if (username.length() < AuthConstants.USERNAME_MIN_LENGTH
-                || username.length() > AuthConstants.USERNAME_MAX_LENGTH) {
-            throw new ServiceException("账户长度必须在2到20个字符之间");
-        }
-        if (password.length() < AuthConstants.PASSWORD_MIN_LENGTH
-                || password.length() > AuthConstants.PASSWORD_MAX_LENGTH) {
-            throw new ServiceException("密码长度必须在5到20个字符之间");
-        }
-
-        // 校验用户名唯一性（同一张表）
-        User existUser = userMapper.selectByUsername(username);
-        if (existUser != null) {
-            throw new ServiceException("账号'" + username + "'已存在");
-        }
-
-        // 教练注册需要店铺ID
-        if ("1".equals(type) && registerDTO.getStoreId() == null) {
-            throw new ServiceException("教练注册需要指定所属店铺");
-        }
-
-        // 创建用户
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(PasswordUtils.encryptPassword(password));
-        user.setUserType(type);
-        if ("1".equals(type)) {
-            user.setStoreId(registerDTO.getStoreId());
-        }
-
-        int rows = userMapper.insert(user);
-        if (rows <= 0) {
-            throw new ServiceException("注册失败，请联系管理员");
-        }
-
-        recordLoginInfo(username, AuthConstants.REGISTER, ("1".equals(type) ? "教练" : "会员") + "注册成功");
-    }
-
-    /**
-     * 通过邮箱验证码重置密码
-     */
-    @Override
-    public void resetPassword(UserResetPasswordDTO dto) {
-        String email = dto.getEmail();
-        String emailCode = dto.getEmailCode();
-        String newPassword = dto.getNewPassword();
-
-        // 校验邮箱验证码
-        try {
-            mailService.verifyEmailCode(email, emailCode);
-        } catch (Exception e) {
-            throw new ServiceException(e.getMessage());
-        }
-
-        // 密码长度校验
-        if (newPassword.length() < AuthConstants.PASSWORD_MIN_LENGTH
-                || newPassword.length() > AuthConstants.PASSWORD_MAX_LENGTH) {
-            throw new ServiceException("密码长度必须在5到20个字符之间");
-        }
-
-        // 查询用户
-        User user = userMapper.selectByEmail(email);
-        if (user == null) {
-            throw new ServiceException("该邮箱未绑定任何账号");
-        }
-
-        // 更新密码
-        int rows = userMapper.updatePassword(user.getUserId(), PasswordUtils.encryptPassword(newPassword));
-        if (rows <= 0) {
-            throw new ServiceException("密码重置失败，请联系管理员");
-        }
-
-        // 清除密码错误次数缓存
-        delWrongPWTimesCache(user.getUsername());
-    }
-
-    /**
-     * 发送邮箱验证码
-     */
-    @Override
-    public String sendEmailCode(String email) {
-        if (StringUtils.isEmpty(email)) {
-            throw new ServiceException("邮箱不能为空");
-        }
-
-        String emailCode = mailService.setEmailCode2Cache(email);
-
-        mailService.sendEmailCode(email, emailCode);
-
-        return emailCode;// FIXME:自动化测试使用，正式环境不应返回验证码
-    }
-
-    /**
-     * 密码校验
-     */
-    public void validatePassword(User user, String password) {
-        String username = user.getUsername();
-
-        Integer retryCounter = redisService.getCacheObject(PasswordUtils.getWrongPWTimesKey(username));
-        if (retryCounter == null) {
-            retryCounter = 0;
-        }
-
-        if (retryCounter >= PasswordUtils.PASSWORD_MAX_RETRY_COUNT) {
-            String errMsg = String.format("密码输入错误%s次，帐户锁定%s分钟",
-                    PasswordUtils.PASSWORD_MAX_RETRY_COUNT, PasswordUtils.PASSWORD_LOCK_TIME);
-            throw new ServiceException(errMsg);
-        }
-
-        if (!PasswordUtils.matchesPassword(password, user.getPassword())) {
-            retryCounter++;
-            redisService.setCacheObject(PasswordUtils.getWrongPWTimesKey(username), retryCounter,
-                    PasswordUtils.PASSWORD_LOCK_TIME, TimeUnit.MINUTES);
-            throw new ServiceException("用户名或密码错误");
-        } else {
-            delWrongPWTimesCache(username);
-        }
-    }
-
-    /**
-     * 删除登录密码错误次数缓存
-     */
-    private void delWrongPWTimesCache(String username) {
-        String key = PasswordUtils.getWrongPWTimesKey(username);
-        if (redisService.hasKey(key)) {
-            redisService.deleteObject(key);
-        }
+    @SuppressWarnings("unchecked")
+    private Map<String, String> getWxSession(String code) {
+        String url = UriComponentsBuilder.fromUri(java.net.URI.create(WECHAT_LOGIN_URL))
+                .queryParam("appid", appId)
+                .queryParam("secret", appSecret)
+                .queryParam("js_code", code)
+                .queryParam("grant_type", "authorization_code")
+                .toUriString();
+        Map<String, String> result = restTemplate.getForObject(url, Map.class);
+        return result != null ? result : new HashMap<>();
     }
 
     /**
      * 记录登录信息
      */
-    public void recordLoginInfo(String username, String status, String message) {
+    public void recordLoginInfo(String openId, String status, String message) {
         LoginInfo loginInfo = new LoginInfo();
         loginInfo.setAccessTime(LocalDateTime.now());
-        loginInfo.setUsername(username);
+        loginInfo.setUsername(openId);
         loginInfo.setIpAddr(IpUtils.getIpAddr());
         loginInfo.setMsg(message);
 

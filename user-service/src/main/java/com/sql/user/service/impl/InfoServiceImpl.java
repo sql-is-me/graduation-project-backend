@@ -19,7 +19,6 @@ import com.sql.common.header.ContextHolder;
 import com.sql.common.mail.service.MailService;
 import com.sql.common.tokens.UserTokenService;
 import com.sql.user.dto.UserInfoUpdateDTO;
-import com.sql.user.dto.UserPasswordUpdateDTO;
 import com.sql.user.dto.UserUpdateEmailDTO;
 import com.sql.user.mapper.UserMapper;
 import com.sql.user.service.InfoService;
@@ -136,41 +135,6 @@ public class InfoServiceImpl implements InfoService {
 
         // 更新缓存中的用户信息
         userTokenService.refreshCacheInfo(uo);
-    }
-
-    /**
-     * 修改密码
-     */
-    @Override
-    public void updatePassword(UserPasswordUpdateDTO dto) {
-        String oldPassword = dto.getOldPassword();
-        String newPassword = dto.getNewPassword();
-
-        UserOnline uo = ContextHolder.getUO();
-        User currentUser = uo.getUserInfo();
-
-        if (!PasswordUtils.matchesPassword(oldPassword, currentUser.getPassword())) {
-            throw new ServiceException("修改密码失败，旧密码错误");
-        }
-
-        if (PasswordUtils.isEqualPassword(oldPassword, newPassword)) {
-            throw new ServiceException("新密码不能与旧密码相同");
-        }
-
-        // 密码长度校验
-        if (newPassword.length() < AuthConstants.PASSWORD_MIN_LENGTH
-                || newPassword.length() > AuthConstants.PASSWORD_MAX_LENGTH) {
-            throw new ServiceException("新密码长度必须在5到20个字符之间");
-        }
-
-        String encryptedPW = PasswordUtils.encryptPassword(newPassword);
-        int rows = userMapper.updatePassword(currentUser.getUserId(), encryptedPW);
-        if (rows <= 0) {
-            throw new ServiceException("更换密码失败，请联系管理员");
-        }
-
-        // 更新完用户密码后删除用户缓存记录
-        userTokenService.delUserOnline(uo.getToken());
     }
 
     /**

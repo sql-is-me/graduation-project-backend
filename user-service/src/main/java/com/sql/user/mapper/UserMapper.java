@@ -13,9 +13,8 @@ import com.sql.common.entity.po.User;
  */
 @Mapper
 public interface UserMapper extends BaseMapper<User> {
-
-    @Select("SELECT * FROM users WHERE username = #{username}")
-    User selectByUsername(@Param("username") String username);
+    @Select("SELECT * FROM users WHERE openId = #{openId}")
+    User selectByOpenId(@Param("openId") String openId);
 
     @Select("SELECT * FROM users WHERE phone = #{phone}")
     User selectByPhone(@Param("phone") String phone);

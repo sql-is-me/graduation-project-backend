@@ -65,7 +65,7 @@ public class Admin {
 
     /**
      * 管理员类型
-     * 0:TOP 超级管理员 / 1:STORE 店铺管理员
+     * 0:TOP 系统管理员 / 1:STORE 店铺管理员
      */
     @TableField("admin_type")
     private String adminType = "1"; // 默认店铺管理员
@@ -95,7 +95,7 @@ public class Admin {
     private LocalDateTime updateTime;
 
     @com.fasterxml.jackson.annotation.JsonIgnore
-    public boolean isTopAdmin() {
+    public boolean isSysAdmin() {
         return Integer.parseInt(getAdminType()) == 0;
     }
 }

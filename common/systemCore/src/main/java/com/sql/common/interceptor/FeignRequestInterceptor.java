@@ -31,14 +31,25 @@ public class FeignRequestInterceptor implements RequestInterceptor {
                 requestTemplate.header(ContextHolderConstants.CH_ID, id);
             }
 
-            String token = headers.get(ContextHolderConstants.CH_TOKEN);
-            if (StringUtils.isNotEmpty(token)) {
-                requestTemplate.header(ContextHolderConstants.CH_TOKEN, token);
-            }
-
-            String username = headers.get(ContextHolderConstants.CH_USERNAME);
-            if (StringUtils.isNotEmpty(username)) {
-                requestTemplate.header(ContextHolderConstants.CH_USERNAME, username);
+            String type = headers.get(ContextHolderConstants.CH_TYPE);
+            if (type.equals("0")) {
+                String token = headers.get(ContextHolderConstants.CH_TOKEN);
+                if (StringUtils.isNotEmpty(token)) {
+                    requestTemplate.header(ContextHolderConstants.CH_TOKEN, token);
+                }
+                String username = headers.get(ContextHolderConstants.CH_USERNAME);
+                if (StringUtils.isNotEmpty(username)) {
+                    requestTemplate.header(ContextHolderConstants.CH_USERNAME, username);
+                }
+            } else {
+                String session_key = headers.get(ContextHolderConstants.CH_SESSION_KEY);
+                if (StringUtils.isNotEmpty(session_key)) {
+                    requestTemplate.header(ContextHolderConstants.CH_SESSION_KEY, session_key);
+                }
+                String username = headers.get(ContextHolderConstants.CH_OPENID);
+                if (StringUtils.isNotEmpty(username)) {
+                    requestTemplate.header(ContextHolderConstants.CH_OPENID, username);
+                }
             }
 
             String authentication = headers.get(AuthConstants.AUTHORIZATION_HEADER);

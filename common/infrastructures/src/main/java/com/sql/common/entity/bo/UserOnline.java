@@ -12,10 +12,9 @@ import lombok.Data;
 @Data
 public class UserOnline {
     /**
-     * token
-     * 随机UUID
+     * 会话密钥
      */
-    private String token;
+    private String session_key;
 
     /**
      * 登录时间
