@@ -1,14 +1,12 @@
 package com.sql.user.service.impl;
 
 import java.util.Arrays;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sql.api.RemoteFileService;
-import com.sql.common.constants.AuthConstants;
 import com.sql.common.entity.bo.File;
 import com.sql.common.entity.bo.UserOnline;
 import com.sql.common.entity.po.User;
@@ -22,7 +20,6 @@ import com.sql.user.dto.UserInfoUpdateDTO;
 import com.sql.user.dto.UserUpdateEmailDTO;
 import com.sql.user.mapper.UserMapper;
 import com.sql.user.service.InfoService;
-import com.sql.utils.PasswordUtils;
 import com.sql.utils.StringUtils;
 import com.sql.utils.file.FileTypeUtils;
 import com.sql.utils.file.MimeTypeUtils;
@@ -63,7 +60,7 @@ public class InfoServiceImpl implements InfoService {
     }
 
     /**
-     * 修改个人信息
+     * 修改用户个人信息
      */
     @Override
     public void updateInfo(UserInfoUpdateDTO dto) {
@@ -84,7 +81,7 @@ public class InfoServiceImpl implements InfoService {
         if (StringUtils.isNotEmpty(dto.getPhone())) {
             User phoneOwner = userMapper.selectByPhone(dto.getPhone());
             if (phoneOwner != null && !phoneOwner.getUserId().equals(currentUser.getUserId())) {
-                throw new ServiceException("修改用户'" + currentUser.getUsername() + "'失败，手机号码已存在");
+                throw new ServiceException("修改用户'" + currentUser.getOpenId() + "'失败，手机号码已存在");
             }
         }
 
@@ -117,7 +114,7 @@ public class InfoServiceImpl implements InfoService {
         // 校验邮箱唯一
         User emailOwner = userMapper.selectByEmail(email);
         if (emailOwner != null && !emailOwner.getUserId().equals(currentUser.getUserId())) {
-            throw new ServiceException("修改用户'" + currentUser.getUsername() + "'失败，邮箱账号已存在");
+            throw new ServiceException("修改用户'" + currentUser.getOpenId() + "'失败，邮箱账号已存在");
         }
 
         // 验证验证码是否有效
@@ -138,7 +135,7 @@ public class InfoServiceImpl implements InfoService {
     }
 
     /**
-     * 更换头像
+     * 更换用户头像
      */
     @Override
     public void updateAvatar(MultipartFile mf) {

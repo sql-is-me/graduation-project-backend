@@ -13,6 +13,7 @@ import com.sql.common.constants.HttpStatusConstants;
 import com.sql.common.entity.bo.AdminOnline;
 import com.sql.common.entity.bo.UserOnline;
 import com.sql.common.constants.TokenConstants;
+import com.sql.common.entity.vo.OnlineAdminInfo;
 import com.sql.common.entity.vo.OnlineUserInfo;
 import com.sql.common.entity.vo.TableDataInfo;
 import com.sql.common.enums.UserTypes;
@@ -37,7 +38,7 @@ public class MonitorServiceImpl implements MonitorService {
 
     @Override
     public TableDataInfo getOnlineAdmins(int pageNum, int pageSize, String orderByColumn, boolean asc) {
-        List<OnlineUserInfo> onlineList = new ArrayList<>();
+        List<OnlineAdminInfo> onlineList = new ArrayList<>();
 
         Collection<String> keys = redisService.keys(TokenConstants.ADMIN_TOKENS + "*");
         for (String key : keys) {
@@ -46,7 +47,7 @@ public class MonitorServiceImpl implements MonitorService {
                 continue;
             }
 
-            OnlineUserInfo online = new OnlineUserInfo();
+            OnlineAdminInfo online = new OnlineAdminInfo();
             online.setUserId(ao.getAdminInfo().getAdminId());
             online.setUserName(ao.getAdminInfo().getUsername());
             online.setNickName(ao.getAdminInfo().getNickName());
@@ -58,7 +59,7 @@ public class MonitorServiceImpl implements MonitorService {
 
             onlineList.add(online);
         }
-        onlineList.sort(buildComparator(orderByColumn, asc));
+        onlineList.sort(buildAOComparator(orderByColumn, asc));
         return buildPage(onlineList, pageNum, pageSize);
     }
 
@@ -75,7 +76,7 @@ public class MonitorServiceImpl implements MonitorService {
 
             OnlineUserInfo online = new OnlineUserInfo();
             online.setUserId(uo.getUserInfo().getUserId());
-            online.setUserName(uo.getUserInfo().getOpenId());
+            online.setOpenId(uo.getUserInfo().getOpenId());
             online.setNickName(uo.getUserInfo().getNickName());
             online.setIpaddr(uo.getIpaddr());
             online.setLoginTime(uo.getLoginTime());
@@ -85,11 +86,18 @@ public class MonitorServiceImpl implements MonitorService {
 
             onlineList.add(online);
         }
-        onlineList.sort(buildComparator(orderByColumn, asc));
+        onlineList.sort(buildUOComparator(orderByColumn, asc));
         return buildPage(onlineList, pageNum, pageSize);
     }
 
-    private Comparator<OnlineUserInfo> buildComparator(String orderByColumn, boolean asc) {
+    private Comparator<OnlineAdminInfo> buildAOComparator(String orderByColumn, boolean asc) {
+        Comparator<OnlineAdminInfo> comparator = "loginTime".equalsIgnoreCase(orderByColumn)
+                ? Comparator.comparing(OnlineAdminInfo::getLoginTime)
+                : Comparator.comparing(OnlineAdminInfo::getUserId);
+        return asc ? comparator : comparator.reversed();
+    }
+
+    private Comparator<OnlineUserInfo> buildUOComparator(String orderByColumn, boolean asc) {
         Comparator<OnlineUserInfo> comparator = "loginTime".equalsIgnoreCase(orderByColumn)
                 ? Comparator.comparing(OnlineUserInfo::getLoginTime)
                 : Comparator.comparing(OnlineUserInfo::getUserId);

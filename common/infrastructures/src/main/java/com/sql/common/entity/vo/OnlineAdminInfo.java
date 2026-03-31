@@ -5,13 +5,13 @@ import java.time.LocalDateTime;
 import lombok.Data;
 
 /**
- * 在线用户信息VO
+ * 在线管理员信息VO
  */
 @Data
-public class OnlineUserInfo {
+public class OnlineAdminInfo {
     private Long userId;
 
-    private String openId;
+    private String userName;
 
     private String nickName;
 
