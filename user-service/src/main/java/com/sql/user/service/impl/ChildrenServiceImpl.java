@@ -6,8 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.sql.common.entity.UserOnline;
-import com.sql.common.entity.db.Children;
+import com.sql.common.entity.bo.UserOnline;
+import com.sql.common.entity.po.Children;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 import com.sql.user.dto.ChildrenDTO;

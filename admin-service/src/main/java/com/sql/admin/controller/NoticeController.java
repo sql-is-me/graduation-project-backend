@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sql.admin.dto.NoticeCreateDTO;
-import com.sql.admin.dto.NoticeUpdateDTO;
 import com.sql.admin.service.NoticeService;
 import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
-import com.sql.common.entity.TableDataInfo;
-import com.sql.common.entity.db.Notice;
+import com.sql.common.entity.dto.NoticeCreateDTO;
+import com.sql.common.entity.dto.NoticeUpdateDTO;
+import com.sql.common.entity.po.Notice;
 import com.sql.common.entity.result.R;
+import com.sql.common.entity.vo.TableDataInfo;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;
 import com.sql.common.log.enums.BusinessType;

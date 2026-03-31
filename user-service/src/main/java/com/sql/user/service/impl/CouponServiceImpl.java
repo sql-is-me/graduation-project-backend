@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.sql.common.entity.UserOnline;
-import com.sql.common.entity.db.Coupon;
-import com.sql.common.entity.db.UserCoupon;
+import com.sql.common.entity.bo.UserOnline;
+import com.sql.common.entity.po.Coupon;
+import com.sql.common.entity.po.UserCoupon;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 import com.sql.user.mapper.CouponMapper;

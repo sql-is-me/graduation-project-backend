@@ -9,9 +9,9 @@ import org.springframework.web.servlet.AsyncHandlerInterceptor;
 
 import com.sql.common.constants.AuthConstants;
 import com.sql.common.constants.ContextHolderConstants;
+import com.sql.common.entity.bo.AdminOnline;
+import com.sql.common.entity.bo.UserOnline;
 import com.sql.common.jwt.utils.TokenUtils;
-import com.sql.common.entity.AdminOnline;
-import com.sql.common.entity.UserOnline;
 import com.sql.common.header.ContextHolder;
 import com.sql.common.tokens.AdminTokenService;
 import com.sql.common.tokens.UserTokenService;

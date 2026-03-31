@@ -1,7 +1,7 @@
 package com.sql.admin.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.sql.common.entity.db.OperLog;
+import com.sql.common.entity.po.OperLog;
 
 import org.apache.ibatis.annotations.Mapper;
 

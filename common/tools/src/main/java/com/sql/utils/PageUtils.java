@@ -2,7 +2,7 @@ package com.sql.utils;
 
 import com.github.pagehelper.PageHelper;
 import com.sql.common.constants.PageConstants;
-import com.sql.common.entity.Page;
+import com.sql.common.entity.vo.Page;
 
 /**
  * 分页工具类

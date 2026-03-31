@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.sql.api.RemoteLoginLogService;
 import com.sql.common.constants.AuthConstants;
-import com.sql.common.entity.UserOnline;
-import com.sql.common.entity.db.LoginInfo;
-import com.sql.common.entity.db.User;
+import com.sql.common.entity.bo.UserOnline;
+import com.sql.common.entity.po.LoginInfo;
+import com.sql.common.entity.po.User;
 import com.sql.common.enums.AccountStatus;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.mail.service.MailService;

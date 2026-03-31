@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sql.api.RemoteFileService;
-import com.sql.common.entity.File;
+import com.sql.common.entity.bo.File;
 import com.sql.common.entity.result.R;
 
 /**

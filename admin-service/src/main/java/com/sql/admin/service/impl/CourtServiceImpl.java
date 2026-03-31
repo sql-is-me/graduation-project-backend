@@ -7,14 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.sql.admin.dto.CourtCreateDTO;
-import com.sql.admin.dto.CourtUpdateDTO;
 import com.sql.admin.mapper.CourtMapper;
 import com.sql.admin.service.CourtService;
-import com.sql.common.entity.db.Court;
+import com.sql.common.entity.dto.CourtCreateDTO;
+import com.sql.common.entity.dto.CourtUpdateDTO;
+import com.sql.common.entity.po.Court;
+import com.sql.common.entity.vo.CourtInfo;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
-import com.sql.common.vo.CourtInfo;
 import com.sql.utils.StringUtils;
 
 @Service

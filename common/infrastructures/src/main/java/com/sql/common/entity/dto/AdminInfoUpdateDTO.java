@@ -1,0 +1,24 @@
+package com.sql.common.entity.dto;
+
+import lombok.Data;
+
+/**
+ * 管理员修改个人信息请求体
+ */
+@Data
+public class AdminInfoUpdateDTO {
+    /**
+     * 用户昵称
+     */
+    private String nickName;
+
+    /**
+     * 手机号码
+     */
+    private String phone;
+
+    /**
+     * 性别（0男 1女 2未知）
+     */
+    private String sex;
+}

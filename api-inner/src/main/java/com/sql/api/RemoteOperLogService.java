@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import com.sql.common.constants.ServiceNameConstants;
 import com.sql.api.factory.RemoteOperLogFallbackFactory;
 import com.sql.common.constants.AuthConstants;
-import com.sql.common.entity.db.OperLog;
+import com.sql.common.entity.po.OperLog;
 import com.sql.common.entity.result.R;
 
 /**

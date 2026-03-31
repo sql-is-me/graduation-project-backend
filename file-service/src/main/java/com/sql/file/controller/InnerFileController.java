@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sql.common.auth.annotation.InnerAuth;
-import com.sql.common.entity.File;
+import com.sql.common.entity.bo.File;
 import com.sql.common.entity.result.R;
 import com.sql.file.service.FileService;
 import com.sql.utils.StringUtils;

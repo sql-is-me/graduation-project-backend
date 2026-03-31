@@ -2,7 +2,7 @@ package com.sql.transaction.service;
 
 import java.util.List;
 
-import com.sql.common.entity.db.Order;
+import com.sql.common.entity.po.Order;
 
 public interface AdminOrderService {
 

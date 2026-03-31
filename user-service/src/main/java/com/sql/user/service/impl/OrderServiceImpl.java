@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.sql.common.entity.UserOnline;
-import com.sql.common.entity.db.Order;
+import com.sql.common.entity.bo.UserOnline;
+import com.sql.common.entity.po.Order;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 import com.sql.user.mapper.OrderMapper;

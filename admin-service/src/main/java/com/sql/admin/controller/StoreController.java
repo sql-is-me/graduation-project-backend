@@ -14,14 +14,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sql.admin.dto.StoreCreateDTO;
-import com.sql.admin.dto.StoreUpdateDTO;
 import com.sql.admin.service.StoreService;
 import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
-import com.sql.common.entity.TableDataInfo;
-import com.sql.common.entity.db.Store;
+import com.sql.common.entity.dto.StoreCreateDTO;
+import com.sql.common.entity.dto.StoreUpdateDTO;
+import com.sql.common.entity.po.Store;
 import com.sql.common.entity.result.R;
+import com.sql.common.entity.vo.TableDataInfo;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;
 import com.sql.common.log.enums.BusinessType;

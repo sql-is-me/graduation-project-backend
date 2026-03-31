@@ -4,8 +4,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import com.alibaba.ttl.TransmittableThreadLocal;
 import com.sql.common.constants.ContextHolderConstants;
-import com.sql.common.entity.AdminOnline;
-import com.sql.common.entity.UserOnline;
+import com.sql.common.entity.bo.AdminOnline;
+import com.sql.common.entity.bo.UserOnline;
 import com.sql.utils.Convert;
 import com.sql.utils.StringUtils;
 

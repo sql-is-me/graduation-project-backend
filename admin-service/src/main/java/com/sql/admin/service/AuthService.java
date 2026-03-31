@@ -1,7 +1,7 @@
 package com.sql.admin.service;
 
-import com.sql.admin.dto.AdminRegisterDTO;
-import com.sql.admin.dto.AdminResetPasswordDTO;
+import com.sql.common.entity.dto.AdminRegisterDTO;
+import com.sql.common.entity.dto.AdminResetPasswordDTO;
 
 import jakarta.servlet.http.HttpServletRequest;
 

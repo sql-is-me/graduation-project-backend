@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sql.common.auth.annotation.RequiresType;
-import com.sql.common.entity.TableDataInfo;
-import com.sql.common.entity.db.Coupon;
-import com.sql.common.entity.db.UserCoupon;
+import com.sql.common.entity.po.Coupon;
+import com.sql.common.entity.po.UserCoupon;
 import com.sql.common.entity.result.R;
+import com.sql.common.entity.vo.TableDataInfo;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;
 import com.sql.common.log.enums.BusinessType;

@@ -1,6 +1,6 @@
 package com.sql.admin.service;
 
-import com.sql.common.entity.TableDataInfo;
+import com.sql.common.entity.vo.TableDataInfo;
 
 public interface MonitorService {
     /**

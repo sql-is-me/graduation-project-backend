@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.sql.api.factory.RemoteFileFallbackFactory;
 import com.sql.common.constants.ServiceNameConstants;
-import com.sql.common.entity.File;
+import com.sql.common.entity.bo.File;
 import com.sql.common.entity.result.R;
 
 /**

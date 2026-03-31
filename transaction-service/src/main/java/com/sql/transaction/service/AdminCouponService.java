@@ -2,7 +2,7 @@ package com.sql.transaction.service;
 
 import java.util.List;
 
-import com.sql.common.entity.db.Coupon;
+import com.sql.common.entity.po.Coupon;
 import com.sql.transaction.dto.CouponCreateDTO;
 
 public interface AdminCouponService {

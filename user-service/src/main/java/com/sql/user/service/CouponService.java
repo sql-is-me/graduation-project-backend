@@ -2,8 +2,8 @@ package com.sql.user.service;
 
 import java.util.List;
 
-import com.sql.common.entity.db.Coupon;
-import com.sql.common.entity.db.UserCoupon;
+import com.sql.common.entity.po.Coupon;
+import com.sql.common.entity.po.UserCoupon;
 
 public interface CouponService {
 

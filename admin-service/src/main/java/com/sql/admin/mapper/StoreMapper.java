@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.sql.common.entity.db.Store;
+import com.sql.common.entity.po.Store;
 
 @Mapper
 public interface StoreMapper extends BaseMapper<Store> {

@@ -5,7 +5,7 @@ import org.springframework.scheduling.annotation.Async;
 
 import com.sql.api.RemoteOperLogService;
 import com.sql.common.constants.AuthConstants;
-import com.sql.common.entity.db.OperLog;
+import com.sql.common.entity.po.OperLog;
 
 /**
  * 异步调用日志服务

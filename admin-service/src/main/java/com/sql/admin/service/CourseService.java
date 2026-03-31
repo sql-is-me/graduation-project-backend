@@ -3,8 +3,8 @@ package com.sql.admin.service;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.sql.admin.dto.CourseCreateDTO;
-import com.sql.common.entity.db.Course;
+import com.sql.common.entity.dto.CourseCreateDTO;
+import com.sql.common.entity.po.Course;
 
 public interface CourseService {
     /**

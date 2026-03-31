@@ -1,6 +1,6 @@
 package com.sql.transaction.service;
 
-import com.sql.common.entity.db.Order;
+import com.sql.common.entity.po.Order;
 import com.sql.transaction.dto.OrderCancelDTO;
 import com.sql.transaction.dto.OrderCreateDTO;
 import com.sql.transaction.dto.WechatPayCallbackDTO;

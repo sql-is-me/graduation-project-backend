@@ -2,7 +2,7 @@ package com.sql.transaction.service;
 
 import java.util.List;
 
-import com.sql.common.entity.db.ClassHour;
+import com.sql.common.entity.po.ClassHour;
 
 public interface ClassHourService {
 

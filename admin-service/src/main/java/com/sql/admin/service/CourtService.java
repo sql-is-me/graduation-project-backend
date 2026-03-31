@@ -2,10 +2,10 @@ package com.sql.admin.service;
 
 import java.util.List;
 
-import com.sql.admin.dto.CourtCreateDTO;
-import com.sql.admin.dto.CourtUpdateDTO;
-import com.sql.common.entity.db.Court;
-import com.sql.common.vo.CourtInfo;
+import com.sql.common.entity.dto.CourtCreateDTO;
+import com.sql.common.entity.dto.CourtUpdateDTO;
+import com.sql.common.entity.po.Court;
+import com.sql.common.entity.vo.CourtInfo;
 
 public interface CourtService {
     /**

@@ -10,11 +10,11 @@ import org.springframework.stereotype.Service;
 
 import com.sql.admin.service.MonitorService;
 import com.sql.common.constants.HttpStatusConstants;
-import com.sql.common.entity.TableDataInfo;
+import com.sql.common.entity.bo.AdminOnline;
+import com.sql.common.entity.bo.UserOnline;
 import com.sql.common.constants.TokenConstants;
-import com.sql.common.vo.OnlineUserInfo;
-import com.sql.common.entity.AdminOnline;
-import com.sql.common.entity.UserOnline;
+import com.sql.common.entity.vo.OnlineUserInfo;
+import com.sql.common.entity.vo.TableDataInfo;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.redis.service.RedisService;
 import com.sql.common.tokens.AdminTokenService;

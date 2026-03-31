@@ -2,7 +2,7 @@ package com.sql.user.service;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.sql.common.vo.UserInfo;
+import com.sql.common.entity.vo.UserInfo;
 import com.sql.user.dto.UserInfoUpdateDTO;
 import com.sql.user.dto.UserPasswordUpdateDTO;
 import com.sql.user.dto.UserUpdateEmailDTO;

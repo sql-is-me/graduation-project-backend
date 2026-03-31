@@ -9,8 +9,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import com.github.pagehelper.PageInfo;
 import com.sql.common.constants.HttpStatusConstants;
-import com.sql.common.entity.TableDataInfo;
 import com.sql.common.entity.result.AjaxResult;
+import com.sql.common.entity.vo.TableDataInfo;
 
 /**
  * web层通用数据处理

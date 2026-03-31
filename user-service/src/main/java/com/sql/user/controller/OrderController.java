@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sql.common.auth.annotation.RequiresType;
-import com.sql.common.entity.TableDataInfo;
-import com.sql.common.entity.db.Order;
+import com.sql.common.entity.po.Order;
 import com.sql.common.entity.result.R;
+import com.sql.common.entity.vo.TableDataInfo;
 import com.sql.common.enums.UserTypes;
 import com.sql.user.service.OrderService;
 import com.sql.utils.BaseController;

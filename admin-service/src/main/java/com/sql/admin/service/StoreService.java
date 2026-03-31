@@ -2,10 +2,10 @@ package com.sql.admin.service;
 
 import java.util.List;
 
-import com.sql.admin.dto.StoreCreateDTO;
-import com.sql.admin.dto.StoreUpdateDTO;
-import com.sql.common.entity.db.Store;
-import com.sql.common.vo.StoreInfo;
+import com.sql.common.entity.dto.StoreCreateDTO;
+import com.sql.common.entity.dto.StoreUpdateDTO;
+import com.sql.common.entity.po.Store;
+import com.sql.common.entity.vo.StoreInfo;
 
 public interface StoreService {
     /**

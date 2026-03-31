@@ -1,7 +1,8 @@
 package com.sql.transaction.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.sql.common.entity.db.Order;
+import com.sql.common.entity.po.Order;
+
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

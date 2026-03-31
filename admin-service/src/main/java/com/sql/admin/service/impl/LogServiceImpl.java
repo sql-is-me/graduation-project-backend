@@ -6,15 +6,15 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.sql.admin.dto.LoginInfoSelectDTO;
-import com.sql.admin.dto.OperLogSelectDTO;
 import com.sql.admin.mapper.LoginInfoMapper;
 import com.sql.admin.mapper.OperLogMapper;
 import com.sql.admin.service.LogService;
-import com.sql.common.entity.db.LoginInfo;
-import com.sql.common.entity.db.OperLog;
+import com.sql.common.entity.dto.LoginInfoSelectDTO;
+import com.sql.common.entity.dto.OperLogSelectDTO;
+import com.sql.common.entity.po.LoginInfo;
+import com.sql.common.entity.po.OperLog;
+import com.sql.common.entity.vo.OperLogInfo;
 import com.sql.common.exception.ServiceException;
-import com.sql.common.vo.OperLogInfo;
 import com.sql.utils.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -78,7 +78,7 @@ public class LogServiceImpl implements LogService {
      * 查询登录日志列表（支持按用户名、IP、状态筛选）
      */
     @Override
-    public List<com.sql.common.vo.LoginInfo> listLoginInfo(LoginInfoSelectDTO dto) {
+    public List<com.sql.common.entity.vo.LoginInfo> listLoginInfo(LoginInfoSelectDTO dto) {
         LambdaQueryWrapper<LoginInfo> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(StringUtils.isNotEmpty(dto.getUsername()), LoginInfo::getUsername, dto.getUsername())
                 .like(StringUtils.isNotEmpty(dto.getIpAddr()), LoginInfo::getIpAddr, dto.getIpAddr())
@@ -86,7 +86,7 @@ public class LogServiceImpl implements LogService {
                 .orderByDesc(LoginInfo::getInfoId);
         return loginInfoMapper.selectList(wrapper)
                 .stream()
-                .map(com.sql.common.vo.LoginInfo::new)
+                .map(com.sql.common.entity.vo.LoginInfo::new)
                 .collect(Collectors.toList());
     }
 

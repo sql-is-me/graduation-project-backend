@@ -16,13 +16,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sql.admin.dto.CourseCreateDTO;
 import com.sql.admin.service.CourseService;
 import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
-import com.sql.common.entity.TableDataInfo;
-import com.sql.common.entity.db.Course;
+import com.sql.common.entity.dto.CourseCreateDTO;
+import com.sql.common.entity.po.Course;
 import com.sql.common.entity.result.R;
+import com.sql.common.entity.vo.TableDataInfo;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;
 import com.sql.common.log.enums.BusinessType;

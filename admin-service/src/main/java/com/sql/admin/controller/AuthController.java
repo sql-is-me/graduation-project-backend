@@ -12,12 +12,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sql.admin.dto.AdminLoginDTO;
-import com.sql.admin.dto.AdminRegisterDTO;
-import com.sql.admin.dto.AdminResetPasswordDTO;
 import com.sql.admin.service.AuthService;
 import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
+import com.sql.common.entity.dto.AdminLoginDTO;
+import com.sql.common.entity.dto.AdminRegisterDTO;
+import com.sql.common.entity.dto.AdminResetPasswordDTO;
 import com.sql.common.entity.result.R;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;

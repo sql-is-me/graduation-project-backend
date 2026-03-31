@@ -12,17 +12,17 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.sql.admin.dto.AdminPasswordUpdateDTO;
-import com.sql.admin.dto.AdminUpdateEmailDTO;
-import com.sql.admin.dto.AdminInfoUpdateDTO;
 import com.sql.admin.service.InfoService;
 import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
+import com.sql.common.entity.dto.AdminInfoUpdateDTO;
+import com.sql.common.entity.dto.AdminPasswordUpdateDTO;
+import com.sql.common.entity.dto.AdminUpdateEmailDTO;
 import com.sql.common.entity.result.R;
+import com.sql.common.entity.vo.AdminInfo;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;
 import com.sql.common.log.enums.BusinessType;
-import com.sql.common.vo.AdminInfo;
 
 /**
  * 管理员个人信息控制器

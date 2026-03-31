@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.sql.common.entity.db.ClassHour;
-import com.sql.common.entity.db.User;
+import com.sql.common.entity.po.ClassHour;
+import com.sql.common.entity.po.User;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 import com.sql.transaction.mapper.ClassHourMapper;

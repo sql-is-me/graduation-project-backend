@@ -28,7 +28,7 @@ import com.sql.utils.IpUtils;
 import com.sql.utils.ServletUtils;
 import com.sql.utils.StringUtils;
 import com.sql.common.auth.util.AuthUtil;
-import com.sql.common.entity.db.OperLog;
+import com.sql.common.entity.po.OperLog;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.header.ContextHolder;
 

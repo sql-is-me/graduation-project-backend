@@ -6,16 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.sql.admin.dto.StoreCreateDTO;
-import com.sql.admin.dto.StoreUpdateDTO;
 import com.sql.admin.mapper.AdminMapper;
 import com.sql.admin.mapper.StoreMapper;
 import com.sql.admin.service.StoreService;
-import com.sql.common.entity.db.Admin;
-import com.sql.common.entity.db.Store;
+import com.sql.common.entity.dto.StoreCreateDTO;
+import com.sql.common.entity.dto.StoreUpdateDTO;
+import com.sql.common.entity.po.Admin;
+import com.sql.common.entity.po.Store;
+import com.sql.common.entity.vo.StoreInfo;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
-import com.sql.common.vo.StoreInfo;
 import com.sql.utils.StringUtils;
 
 @Service

@@ -6,11 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.sql.admin.dto.NoticeCreateDTO;
-import com.sql.admin.dto.NoticeUpdateDTO;
 import com.sql.admin.mapper.NoticeMapper;
 import com.sql.admin.service.NoticeService;
-import com.sql.common.entity.db.Notice;
+import com.sql.common.entity.dto.NoticeCreateDTO;
+import com.sql.common.entity.dto.NoticeUpdateDTO;
+import com.sql.common.entity.po.Notice;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 

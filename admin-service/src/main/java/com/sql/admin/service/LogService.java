@@ -2,11 +2,11 @@ package com.sql.admin.service;
 
 import java.util.List;
 
-import com.sql.admin.dto.LoginInfoSelectDTO;
-import com.sql.admin.dto.OperLogSelectDTO;
-import com.sql.common.entity.db.LoginInfo;
-import com.sql.common.entity.db.OperLog;
-import com.sql.common.vo.OperLogInfo;
+import com.sql.common.entity.dto.LoginInfoSelectDTO;
+import com.sql.common.entity.dto.OperLogSelectDTO;
+import com.sql.common.entity.po.LoginInfo;
+import com.sql.common.entity.po.OperLog;
+import com.sql.common.entity.vo.OperLogInfo;
 
 public interface LogService {
     /**
@@ -37,7 +37,7 @@ public interface LogService {
     /**
      * 查询操作日志列表
      */
-    List<com.sql.common.vo.LoginInfo> listLoginInfo(LoginInfoSelectDTO dto);
+    List<com.sql.common.entity.vo.LoginInfo> listLoginInfo(LoginInfoSelectDTO dto);
 
     /**
      * 查询登录日志详情

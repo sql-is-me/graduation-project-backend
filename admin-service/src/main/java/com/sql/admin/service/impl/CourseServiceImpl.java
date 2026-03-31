@@ -11,16 +11,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.sql.admin.dto.CourseCreateDTO;
 import com.sql.admin.mapper.ChildrenMapper;
 import com.sql.admin.mapper.CourtMapper;
 import com.sql.admin.mapper.CourseMapper;
 import com.sql.admin.mapper.UserMapper;
 import com.sql.admin.service.CourseService;
-import com.sql.common.entity.db.Children;
-import com.sql.common.entity.db.Court;
-import com.sql.common.entity.db.Course;
-import com.sql.common.entity.db.User;
+import com.sql.common.entity.dto.CourseCreateDTO;
+import com.sql.common.entity.po.Children;
+import com.sql.common.entity.po.Course;
+import com.sql.common.entity.po.Court;
+import com.sql.common.entity.po.User;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 
