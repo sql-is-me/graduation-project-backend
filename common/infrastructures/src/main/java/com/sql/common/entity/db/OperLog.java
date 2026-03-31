@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 /**
  * 操作日志记录实体类
- * 供顶级管理员查阅系统所有操作日志
+ * 供系统管理员查阅系统所有操作日志
  */
 @Data
 @TableName("operLog")
@@ -43,7 +43,7 @@ public class OperLog {
     private String requestMethod;
 
     /**
-     * 操作人类别（0=顶级管理员 1=店铺管理员 2=教练 3=会员）
+     * 操作人类别（0=系统管理员 1=店铺管理员 2=教练 3=会员）
      */
     @TableField("operator_type")
     private Integer operatorType;

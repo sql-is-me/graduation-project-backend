@@ -26,8 +26,8 @@ import com.sql.common.vo.OperLogInfo;
 import com.sql.utils.BaseController;
 
 /**
- * 顶级管理员日志控制器（操作日志 + 登录日志）
- * 仅顶级管理员可访问
+ * 系统管理员日志控制器（操作日志 + 登录日志）
+ * 仅系统管理员可访问
  */
 @RestController
 @RequestMapping("/admin/log")

@@ -14,8 +14,8 @@ import com.sql.utils.StringUtils;
  *
  * 类型映射关系:
  * ContextHolder.type = "0" → 管理员端
- * AdminOnline.adminInfo.adminType = "0" → ADMIN（顶级管理员）
- * AdminOnline.adminInfo.adminType = "1" → MANAGER（地区管理员）
+ * AdminOnline.adminInfo.adminType = "0" → ADMIN（系统管理员）
+ * AdminOnline.adminInfo.adminType = "1" → MANAGER（店铺管理员）
  * ContextHolder.type = "1" → 用户端
  * UserOnline.userInfo.userType = "0" → VIP（普通会员）
  * UserOnline.userInfo.userType = "1" → COACH（教练）
@@ -102,7 +102,7 @@ public class AuthUtil {
     }
 
     /**
-     * 判断当前用户是否为管理员（顶级或地区）
+     * 判断当前用户是否为管理员（系统或店铺）
      *
      * @return true=管理员
      */
@@ -111,9 +111,9 @@ public class AuthUtil {
     }
 
     /**
-     * 判断当前用户是否为顶级管理员
+     * 判断当前用户是否为系统管理员
      *
-     * @return true=顶级管理员
+     * @return true=系统管理员
      */
     public static boolean isTopAdmin() {
         return isType(UserTypes.ADMIN);

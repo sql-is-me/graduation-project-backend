@@ -168,9 +168,9 @@ public class AuthServiceImpl implements AuthService {
 
         Admin referrer = ao.getAdminInfo();
         if (referrer.isTopAdmin()) {
-            // 顶级管理员需指定门店ID
+            // 系统管理员需指定门店ID
             if (storeId == null) {
-                throw new ServiceException("顶级管理员生成邀请码需指定门店ID");
+                throw new ServiceException("系统管理员生成邀请码需指定门店ID");
             }
         } else {
             storeId = referrer.getStoreId();

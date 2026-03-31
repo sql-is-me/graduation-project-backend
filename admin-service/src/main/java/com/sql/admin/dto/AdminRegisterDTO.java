@@ -27,7 +27,7 @@ public class AdminRegisterDTO {
     private String inviteCode;
 
     /**
-     * 门店ID（仅顶级管理员推荐时需要传）
+     * 门店ID（仅系统管理员推荐时需要传）
      */
     private Long storeId;
 }

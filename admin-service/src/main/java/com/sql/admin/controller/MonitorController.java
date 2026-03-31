@@ -19,7 +19,7 @@ import com.sql.utils.BaseController;
 
 /**
  * 管理员用户监控控制器（在线用户监控 + 管理员用户管理）
- * 仅顶级管理员可访问（查看在线用户、强退用户）
+ * 仅系统管理员可访问（查看在线用户、强退用户）
  */
 @RestController
 @RequestMapping("/admin/monitor")

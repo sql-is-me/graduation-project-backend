@@ -26,7 +26,7 @@ import com.sql.common.vo.AdminInfo;
 
 /**
  * 管理员个人信息控制器
- * 顶级管理员和地区管理员均可访问
+ * 系统管理员和店铺管理员均可访问
  */
 @RestController
 @RequestMapping("/admin/info")

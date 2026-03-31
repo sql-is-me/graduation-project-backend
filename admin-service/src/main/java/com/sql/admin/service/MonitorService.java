@@ -14,7 +14,7 @@ public interface MonitorService {
     public TableDataInfo getOnlineUsers(int pageNum, int pageSize, String orderByColumn, boolean asc);
 
     /**
-     * 强制踢出地区管理员
+     * 强制踢出店铺管理员
      */
     public void forceAdminLogout(String adminId);
 

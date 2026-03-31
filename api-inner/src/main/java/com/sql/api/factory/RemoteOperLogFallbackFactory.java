@@ -12,7 +12,7 @@ import com.sql.common.entity.result.R;
 /**
  * 日志服务降级处理
  * 当日志微服务不可用时，提供降级返回，避免影响主流程
- * 操作日志记录各类用户（顶级管理员/店铺管理员/教练/会员）的操作行为
+ * 操作日志记录各类用户（系统管理员/店铺管理员/教练/会员）的操作行为
  */
 @Component
 public class RemoteOperLogFallbackFactory implements FallbackFactory<RemoteOperLogService> {

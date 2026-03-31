@@ -21,7 +21,7 @@ import com.sql.common.tokens.AdminTokenService;
 
 /**
  * 管理员监控服务
- * 供顶级管理员使用，可查看/删除操作日志与登录日志并强制用户下线
+ * 供系统管理员使用，可查看/删除操作日志与登录日志并强制用户下线
  */
 @Service
 public class MonitorServiceImpl implements MonitorService {

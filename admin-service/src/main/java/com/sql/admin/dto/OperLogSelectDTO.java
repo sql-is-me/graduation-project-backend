@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class OperLogSelectDTO {
     /**
-     * 操作人类别（0=顶级管理员 1=店铺管理员 2=教练 3=会员）
+     * 操作人类别（0=系统管理员 1=店铺管理员 2=教练 3=会员）
      */
     private Integer operatorType;
 

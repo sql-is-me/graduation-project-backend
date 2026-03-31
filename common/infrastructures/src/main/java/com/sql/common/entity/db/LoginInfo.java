@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 /**
  * 登录日志记录实体类
- * 供顶级管理员查阅所有用户的登录/登出记录
+ * 供系统管理员查阅所有用户的登录/登出记录
  */
 @Data
 @TableName("loginInfo")

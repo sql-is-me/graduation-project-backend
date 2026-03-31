@@ -59,10 +59,10 @@ public class AuthController {
     }
 
     /**
-     * 地区管理员注册（需邀请码）
+     * 店铺管理员注册（需邀请码）
      * 
-     * 注册成为地区管理员需要另一位顶级管理员或地区管理员的邀请码
-     * 顶级管理员无法通过注册创建，只能预置在数据库中
+     * 注册成为店铺管理员需要另一位系统管理员或店铺管理员的邀请码
+     * 系统管理员无法通过注册创建，只能预置在数据库中
      */
     @PostMapping("/register")
     public R<?> register(@Validated @RequestBody AdminRegisterDTO registerBody) {
@@ -73,9 +73,9 @@ public class AuthController {
     /**
      * 生成邀请码
      *
-     * 仅已登录的顶级管理员或地区管理员可调用
-     * 顶级管理员生成时需指定storeId
-     * 地区管理员生成时自动使用自身storeId
+     * 仅已登录的系统管理员或店铺管理员可调用
+     * 系统管理员生成时需指定storeId
+     * 店铺管理员生成时自动使用自身storeId
      */
     @Log(title = "生成邀请码", businessType = BusinessType.OTHER)
     @PostMapping("/invite")

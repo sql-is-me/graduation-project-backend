@@ -28,7 +28,7 @@ public class AdminOrderController extends BaseController {
     private AdminOrderService adminOrderService;
 
     /**
-     * 查询系统全部订单(仅顶级管理员)
+     * 查询系统全部订单(仅系统管理员)
      */
     @GetMapping("/all")
     @RequiresType(UserTypes.ADMIN)
