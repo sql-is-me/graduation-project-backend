@@ -10,15 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sql.admin.mapper.AdminMapper;
+import com.sql.admin.mapper.StoreMapper;
 import com.sql.admin.service.AuthService;
 import com.sql.api.RemoteLoginLogService;
 import com.sql.common.constants.AuthConstants;
+import com.sql.common.entity.bo.AdminInviteBody;
 import com.sql.common.entity.bo.AdminOnline;
-import com.sql.common.entity.dto.AdminInviteDTO;
 import com.sql.common.entity.dto.AdminRegisterDTO;
 import com.sql.common.entity.dto.AdminResetPasswordDTO;
 import com.sql.common.entity.po.Admin;
 import com.sql.common.entity.po.LoginInfo;
+import com.sql.common.entity.po.Store;
 import com.sql.common.enums.AccountStatus;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.mail.service.MailService;
@@ -37,6 +39,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private AdminMapper adminMapper;
+
+    @Autowired
+    private StoreMapper storeMapper;
 
     @Autowired
     private AdminTokenService adminTokenService;
@@ -131,8 +136,8 @@ public class AuthServiceImpl implements AuthService {
         String inviteCode = registerDTO.getInviteCode();
         String inviteKey = AuthConstants.INVITE_CODE + inviteCode;
 
-        AdminInviteDTO inviteDTO = redisService.getCacheObject(inviteKey);
-        if (inviteDTO == null) {
+        AdminInviteBody inviteBody = redisService.getCacheObject(inviteKey);
+        if (inviteBody == null) {
             throw new ServiceException("邀请码无效或已过期");
         }
 
@@ -141,8 +146,8 @@ public class AuthServiceImpl implements AuthService {
         admin.setUsername(username);
         admin.setNickName(username);
         admin.setPassword(PasswordUtils.encryptPassword(password));
-        admin.setStoreId(inviteDTO.getStoreId());
-        admin.setReferrerId(inviteDTO.getReferrerId());
+        admin.setStoreId(inviteBody.getStoreId());
+        admin.setReferrerId(inviteBody.getReferrerId());
 
         int rows = adminMapper.insert(admin);
         if (rows <= 0) {
@@ -150,7 +155,10 @@ public class AuthServiceImpl implements AuthService {
         }
 
         // 注册成功后删除邀请码（一次性使用）
+        String adminInviteKey = AuthConstants.INVITE_ADMIN + inviteBody.getReferrerId() + ":" + inviteBody.getStoreId();
+        redisService.deleteObject(adminInviteKey);
         redisService.deleteObject(inviteKey);
+
         recordLoginInfo(username, AuthConstants.REGISTER, "管理员注册成功");
     }
 
@@ -161,29 +169,46 @@ public class AuthServiceImpl implements AuthService {
     public String generateInviteCode(HttpServletRequest request, Long storeId) {
 
         AdminOnline ao = adminTokenService.getAO(adminTokenService.getAOToken(request));
-
-        if (ao == null || ao.getAdminInfo() == null) {
-            throw new ServiceException("未登录或登录态失效");
-        }
-
         Admin referrer = ao.getAdminInfo();
         if (referrer.isSysAdmin()) {
             // 系统管理员需指定门店ID
             if (storeId == null) {
                 throw new ServiceException("系统管理员生成邀请码需指定门店ID");
             }
+
+            // 校验门店ID合法性和营业状态
+            Store store = storeMapper.selectById(storeId);
+            if (store == null) {
+                throw new ServiceException("指定门店不存在");
+            }
+            if ("1".equals(store.getStatus())) {
+                throw new ServiceException("指定门店已停业，无法生成邀请码");
+            }
         } else {
             storeId = referrer.getStoreId();
             if (storeId == null) {
                 throw new ServiceException("推荐人门店信息缺失");
             }
+
+            Store store = storeMapper.selectById(storeId);
+            if ("1".equals(store.getStatus())) {
+                throw new ServiceException("指定门店已停业，无法生成邀请码");
+            }
+        }
+
+        // 防重复生成：同一用户+门店若已有有效邀请码则直接复用
+        String adminInviteKey = AuthConstants.INVITE_ADMIN + referrer.getReferrerId() + ":" + storeId;
+        String existingCode = redisService.getCacheObject(adminInviteKey);
+        if (existingCode != null) {
+            return existingCode;
         }
 
         String inviteCode = UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase();
         String inviteKey = AuthConstants.INVITE_CODE + inviteCode;
-        AdminInviteDTO inviteDTO = new AdminInviteDTO(referrer.getReferrerId(), storeId);
+        AdminInviteBody inviteBody = new AdminInviteBody(referrer.getReferrerId(), storeId);
 
-        redisService.setCacheObject(inviteKey, inviteDTO, AuthConstants.ADMIN_INVITE_EXPIRE, TimeUnit.MINUTES);
+        redisService.setCacheObject(inviteKey, inviteBody, AuthConstants.ADMIN_INVITE_EXPIRE, TimeUnit.MINUTES);
+        redisService.setCacheObject(adminInviteKey, inviteCode, AuthConstants.ADMIN_INVITE_EXPIRE, TimeUnit.MINUTES);
 
         return inviteCode;
     }

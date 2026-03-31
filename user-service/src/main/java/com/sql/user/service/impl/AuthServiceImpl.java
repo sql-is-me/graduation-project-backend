@@ -45,13 +45,13 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 小程序id
      */
-    @Value("${weChat.app-id}")
+    @Value("${wechat.app-id}")
     private String appId;
 
     /**
      * 小程序密钥
      */
-    @Value("${weChat.app-secret}")
+    @Value("${wechat.app-secret}")
     private String appSecret;
 
     /**

@@ -52,6 +52,12 @@ public class AuthConstants {
     public static final String INVITE_CODE = "inviteCode:";
 
     /**
+     * 管理员邀请码反查前缀（防重复生成）
+     * key: inviteAdmin:{referrerId}:{storeId}
+     */
+    public static final String INVITE_ADMIN = "inviteAdmin:";
+
+    /**
      * 邀请码过期时间 30min
      */
     public static final Long ADMIN_INVITE_EXPIRE = 30L;

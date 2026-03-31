@@ -25,6 +25,6 @@ spring:
 file:
   pic-base-url: http://127.0.0.1:9900/pics
 
-weChat:
+wechat:
   app-id: wx1234567890abcdef
   app-secret: abcdef123
