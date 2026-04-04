@@ -31,6 +31,16 @@ public class FileUploadUtils {
     public static final long PICTURE_MAX_SIZE = 5 * 1024 * 1024L;
 
     /**
+     * 签到/签退图片最大大小 20M
+     */
+    public static final long SIGN_PICTURE_MAX_SIZE = 20 * 1024 * 1024L;
+
+    /**
+     * 教案最大大小 30M
+     */
+    public static final long TEACHING_PLAN_MAX_SIZE = 30 * 1024 * 1024L;
+
+    /**
      * 文档最大大小 30M
      */
     public static final long DOCUMENT_MAX_SIZE = 30 * 1024 * 1024L;
@@ -62,9 +72,9 @@ public class FileUploadUtils {
     }
 
     /**
-     * 图像上传（限制5MB，仅允许jpg/jpeg/png）
+     * 头像上传（限制5MB，仅允许jpg/jpeg/png）
      */
-    public static final String uploadPicture(String baseDir, MultipartFile file) throws IOException {
+    public static final String uploadAvatar(String baseDir, MultipartFile file) throws IOException {
         try {
             return upload(baseDir, file, PICTURE_MAX_SIZE, MimeTypeUtils.AVATAR_EXTENSION);
         } catch (FileException fe) {
@@ -75,11 +85,37 @@ public class FileUploadUtils {
     }
 
     /**
-     * 文档上传（限制30MB，仅允许ppt/pptx/pdf/doc/docx）
+     * 签到/签退图片上传（限制20MB，仅允许jpg/jpeg/png）
      */
-    public static final String uploadDocument(String baseDir, MultipartFile file) throws IOException {
+    public static final String uploadSignPicture(String baseDir, MultipartFile file) throws IOException {
         try {
-            return upload(baseDir, file, DOCUMENT_MAX_SIZE, MimeTypeUtils.DOCUMENT_EXTENSION);
+            return upload(baseDir, file, SIGN_PICTURE_MAX_SIZE, MimeTypeUtils.SIGN_EXTENSION);
+        } catch (FileException fe) {
+            throw new IOException(fe.getDefaultMessage(), fe);
+        } catch (Exception e) {
+            throw new IOException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 教案上传（限制30MB，仅允许pdf/doc/docx）
+     */
+    public static final String uploadTeachingPlan(String baseDir, MultipartFile file) throws IOException {
+        try {
+            return upload(baseDir, file, TEACHING_PLAN_MAX_SIZE, MimeTypeUtils.TEACHING_PLAN_EXTENSION);
+        } catch (FileException fe) {
+            throw new IOException(fe.getDefaultMessage(), fe);
+        } catch (Exception e) {
+            throw new IOException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 训练方法上传（限制30MB，仅允许ppt/pptx/pdf/doc/docx）
+     */
+    public static final String uploadTrainingMethod(String baseDir, MultipartFile file) throws IOException {
+        try {
+            return upload(baseDir, file, TEACHING_PLAN_MAX_SIZE, MimeTypeUtils.TRAINING_METHOD_EXTENSION);
         } catch (FileException fe) {
             throw new IOException(fe.getDefaultMessage(), fe);
         } catch (Exception e) {

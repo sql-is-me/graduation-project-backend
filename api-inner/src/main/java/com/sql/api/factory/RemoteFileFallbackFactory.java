@@ -27,28 +27,48 @@ public class RemoteFileFallbackFactory implements FallbackFactory<RemoteFileServ
             }
 
             @Override
-            public R<File> uploadPicture(MultipartFile file) {
-                return R.fail("上传图片失败:" + throwable.getMessage());
-            }
-
-            @Override
-            public R<File> uploadDocument(MultipartFile file) {
-                return R.fail("上传文档失败:" + throwable.getMessage());
-            }
-
-            @Override
             public R<Boolean> delete(String fileUrl) {
                 return R.fail("删除文件失败:" + throwable.getMessage());
             }
 
             @Override
-            public R<Boolean> deletePicture(String fileUrl) {
-                return R.fail("删除图片失败:" + throwable.getMessage());
+            public R<File> uploadAvatar(MultipartFile file) {
+                return R.fail("上传头像失败:" + throwable.getMessage());
             }
 
             @Override
-            public R<Boolean> deleteDocument(String fileUrl) {
-                return R.fail("删除文档失败:" + throwable.getMessage());
+            public R<Boolean> deleteAvatar(String fileUrl) {
+                return R.fail("删除头像失败:" + throwable.getMessage());
+            }
+
+            @Override
+            public R<File> uploadSignPicture(MultipartFile file) {
+                return R.fail("上传签到图片失败:" + throwable.getMessage());
+            }
+
+            @Override
+            public R<Boolean> deleteSignPicture(String fileUrl) {
+                return R.fail("删除签到图片失败:" + throwable.getMessage());
+            }
+
+            @Override
+            public R<File> uploadTeachingPlan(MultipartFile file) {
+                return R.fail("上传教案失败:" + throwable.getMessage());
+            }
+
+            @Override
+            public R<Boolean> deleteTeachingPlan(String fileUrl) {
+                return R.fail("删除教案失败:" + throwable.getMessage());
+            }
+
+            @Override
+            public R<File> uploadTrainingMethod(MultipartFile file) {
+                return R.fail("上传训练方法失败:" + throwable.getMessage());
+            }
+
+            @Override
+            public R<Boolean> deleteTrainingMethod(String fileUrl) {
+                return R.fail("删除训练方法失败:" + throwable.getMessage());
             }
         };
     }

@@ -25,6 +25,12 @@ public class MimeTypeUtils {
 
     public static final String[] AVATAR_EXTENSION = { "jpg", "jpeg", "png" };
 
+    public static final String[] SIGN_EXTENSION = { "jpg", "jpeg", "png" };
+
+    public static final String[] TEACHING_PLAN_EXTENSION = { "doc", "docx", "pdf" };
+
+    public static final String[] TRAINING_METHOD_EXTENSION = { "ppt", "pptx", "doc", "docx", "pdf" };
+
     public static final String[] DEFAULT_ALLOWED_EXTENSION = {
             // 图片
             "bmp", "gif", "jpg", "jpeg", "png",

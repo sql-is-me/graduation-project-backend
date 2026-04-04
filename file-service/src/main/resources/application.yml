@@ -31,11 +31,10 @@ spring:
 file:
   domain: http://127.0.0.1:9900
   path: ./assets/files
-  prefix: /files
-  pic-path: ./assets/pics
-  pic-prefix: /pics
-  doc-path: ./assets/docs
-  doc-prefix: /docs
+  avatar-path: ./assets/pics/avatars
+  sign-path: ./assets/pics/signs
+  tp-path: ./assets/tps
+  tm-path: ./assets/tms
 
 ---
 # Docker/Linux 部署环境
@@ -47,8 +46,7 @@ spring:
 file:
   domain: http://file-service:9900
   path: /app/files
-  prefix: /files
-  pic-path: /app/pics
-  pic-prefix: /pics
-  doc-path: /app/docs
-  doc-prefix: /docs
+  avatar-path: /app/pics/avatars
+  sign-path: /app/pics/signs
+  tp-path: /app/tps
+  tm-path: /app/tms

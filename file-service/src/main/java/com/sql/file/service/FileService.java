@@ -16,24 +16,6 @@ public interface FileService {
     public String uploadFile(MultipartFile file) throws Exception;
 
     /**
-     * 图片上传接口（jpg/jpeg/png，限5MB）
-     *
-     * @param file 上传的图片
-     * @return 访问地址
-     * @throws Exception
-     */
-    public String uploadPicture(MultipartFile file) throws Exception;
-
-    /**
-     * 文档上传接口（ppt/pdf/doc，限30MB）
-     *
-     * @param file 上传的文档
-     * @return 访问地址
-     * @throws Exception
-     */
-    public String uploadDocument(MultipartFile file) throws Exception;
-
-    /**
      * 文件删除接口
      *
      * @param fileUrl 文件访问URL
@@ -42,18 +24,71 @@ public interface FileService {
     public void deleteFile(String fileUrl) throws Exception;
 
     /**
-     * 文件删除接口
+     * 头像上传接口（jpg/jpeg/png，限5MB）
      *
-     * @param fileUrl 文件访问URL
+     * @param file 上传的头像
+     * @return 相对路径
      * @throws Exception
      */
-    public void deletePicture(String fileUrl) throws Exception;
+    public String uploadAvatar(MultipartFile file) throws Exception;
 
     /**
-     * 文件删除接口
+     * 头像删除接口
      *
-     * @param fileUrl 文件访问URL
+     * @param fileUrl 头像相对路径
      * @throws Exception
      */
-    public void deleteDocument(String fileUrl) throws Exception;
+    public void deleteAvatar(String fileUrl) throws Exception;
+
+    /**
+     * 签到/签退图片上传接口（jpg/jpeg/png，限20MB）
+     *
+     * @param file 上传的图片
+     * @return 相对路径
+     * @throws Exception
+     */
+    public String uploadSignPicture(MultipartFile file) throws Exception;
+
+    /**
+     * 签到/签退图片删除接口
+     *
+     * @param fileUrl 图片相对路径
+     * @throws Exception
+     */
+    public void deleteSignPicture(String fileUrl) throws Exception;
+
+    /**
+     * 教案上传接口（pdf/doc/docx，限30MB）
+     *
+     * @param file 上传的教案
+     * @return 访问地址
+     * @throws Exception
+     */
+    public String uploadTeachingPlan(MultipartFile file) throws Exception;
+
+    /**
+     * 教案删除接口
+     *
+     * @param fileUrl 教案访问URL
+     * @throws Exception
+     */
+    public void deleteTeachingPlan(String fileUrl) throws Exception;
+
+    /**
+     * 训练方法上传接口（pdf/doc/docx/ppt/pptx，限30MB）
+     *
+     * @param file 上传的训练方法
+     * @return 访问地址
+     * @throws Exception
+     */
+    public String uploadTrainingMethod(MultipartFile file) throws Exception;
+
+    /**
+     * 训练方法删除接口
+     *
+     * @param fileUrl 训练方法访问URL
+     * @throws Exception
+     */
+    public void deleteTrainingMethod(String fileUrl) throws Exception;
+
 }

@@ -7,22 +7,17 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.sql.file.service.FileService;
 import com.sql.file.utils.FileUploadUtils;
-import com.sql.utils.StringUtils;
 import com.sql.utils.file.FileUtils;
 
 /**
  * 本地文件存储
+ * 所有上传方法均返回相对路径（如 /20260322_xxx.jpg），删除时直接拼接本地根路径
  */
 @Primary
 @Service
 public class LocalFileServiceImpl implements FileService {
     private static final String DEFAULT_ADMIN_AVATAR = "/default_admin.jpg";
     private static final String DEFAULT_USER_AVATAR = "/default_user.jpg";
-    /**
-     * 域名或本机访问地址
-     */
-    @Value("${file.domain}")
-    public String domain;
 
     /**
      * 通用文件存储在本地的根路径
@@ -31,113 +26,109 @@ public class LocalFileServiceImpl implements FileService {
     private String localFilePath;
 
     /**
-     * 通用文件资源映射路径前缀
+     * 头像存储在本地的根路径
      */
-    @Value("${file.prefix}")
-    public String localFilePrefix;
+    @Value("${file.avatar-path}")
+    private String localAvatarPath;
 
     /**
-     * 图片资源映射路径前缀
+     * 签到/签退图片存储在本地的根路径
      */
-    @Value("${file.pic-prefix}")
-    public String localPicPrefix;
+    @Value("${file.sign-path}")
+    private String localSignPath;
 
     /**
-     * 图片存储在本地的根路径
+     * 教案存储在本地的根路径
      */
-    @Value("${file.pic-path}")
-    private String localPicPath;
+    @Value("${file.tp-path}")
+    private String localTeachingPlanPath;
 
     /**
-     * 文档存储在本地的根路径
+     * 训练方法存储在本地的根路径
      */
-    @Value("${file.doc-path}")
-    private String localDocPath;
+    @Value("${file.tm-path}")
+    private String localTrainingMethodPath;
 
     /**
-     * 文档资源映射路径前缀
-     */
-    @Value("${file.doc-prefix}")
-    public String localDocPrefix;
-
-    /**
-     * 本地文件上传接口
-     * 
-     * @param file 上传的文件
-     * @return 访问地址
-     * @throws Exception
+     * 本地文件上传
      */
     @Override
     public String uploadFile(MultipartFile file) throws Exception {
-        String name = FileUploadUtils.upload(localFilePath, file);
-        String url = domain + localFilePrefix + name;
-        return url;
+        return FileUploadUtils.upload(localFilePath, file);
     }
 
     /**
-     * 本地图片上传接口
-     * 
-     * @param file 上传的图片
-     * @return 访问地址
-     * @throws Exception
-     */
-    @Override
-    public String uploadPicture(MultipartFile file) throws Exception {
-        // 只返回相对路径，如 /20260322_xxx.jpg
-        return FileUploadUtils.uploadPicture(localPicPath, file);
-    }
-
-    /**
-     * 本地文档上传接口
-     * 
-     * @param file 上传的文档
-     * @return 访问地址
-     * @throws Exception
-     */
-    @Override
-    public String uploadDocument(MultipartFile file) throws Exception {
-        String name = FileUploadUtils.uploadDocument(localDocPath, file);
-        String url = domain + localDocPrefix + name;
-        return url;
-    }
-
-    /**
-     * 本地文件删除接口
-     * 
-     * @param fileUrl 文件访问URL
-     * @throws Exception
+     * 本地文件删除
      */
     @Override
     public void deleteFile(String fileUrl) throws Exception {
-        String localFile = StringUtils.substringAfter(fileUrl, localFilePrefix);
-        FileUtils.deleteFile(localFilePath + localFile);
+        FileUtils.deleteFile(localFilePath + fileUrl);
     }
 
     /**
-     * 本地图片删除接口
-     * 
-     * @param fileUrl 文件访问URL
-     * @throws Exception
+     * 头像上传
      */
     @Override
-    public void deletePicture(String fileUrl) throws Exception {
-        // 默认照片跳过
+    public String uploadAvatar(MultipartFile file) throws Exception {
+        return FileUploadUtils.uploadAvatar(localAvatarPath, file);
+    }
+
+    /**
+     * 头像删除
+     */
+    @Override
+    public void deleteAvatar(String fileUrl) throws Exception {
         if (fileUrl.endsWith(DEFAULT_ADMIN_AVATAR) || fileUrl.endsWith(DEFAULT_USER_AVATAR)) {
             return;
         }
-        // fileUrl 是相对路径
-        FileUtils.deleteFile(localPicPath + fileUrl);
+        FileUtils.deleteFile(localAvatarPath + fileUrl);
     }
 
     /**
-     * 本地文档删除接口
-     * 
-     * @param fileUrl 文件访问URL
-     * @throws Exception
+     * 签到/签退图片上传
      */
     @Override
-    public void deleteDocument(String fileUrl) throws Exception {
-        String localFile = StringUtils.substringAfter(fileUrl, localDocPrefix);
-        FileUtils.deleteFile(localDocPath + localFile);
+    public String uploadSignPicture(MultipartFile file) throws Exception {
+        return FileUploadUtils.uploadSignPicture(localSignPath, file);
+    }
+
+    /**
+     * 签到/签退图片删除
+     */
+    @Override
+    public void deleteSignPicture(String fileUrl) throws Exception {
+        FileUtils.deleteFile(localSignPath + fileUrl);
+    }
+
+    /**
+     * 教案上传
+     */
+    @Override
+    public String uploadTeachingPlan(MultipartFile file) throws Exception {
+        return FileUploadUtils.uploadTeachingPlan(localTeachingPlanPath, file);
+    }
+
+    /**
+     * 教案删除
+     */
+    @Override
+    public void deleteTeachingPlan(String fileUrl) throws Exception {
+        FileUtils.deleteFile(localTeachingPlanPath + fileUrl);
+    }
+
+    /**
+     * 训练方法上传，返回相对路径
+     */
+    @Override
+    public String uploadTrainingMethod(MultipartFile file) throws Exception {
+        return FileUploadUtils.uploadTrainingMethod(localTrainingMethodPath, file);
+    }
+
+    /**
+     * 训练方法删除
+     */
+    @Override
+    public void deleteTrainingMethod(String fileUrl) throws Exception {
+        FileUtils.deleteFile(localTrainingMethodPath + fileUrl);
     }
 }

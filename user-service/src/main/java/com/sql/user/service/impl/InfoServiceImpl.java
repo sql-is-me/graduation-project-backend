@@ -149,7 +149,7 @@ public class InfoServiceImpl implements InfoService {
             throw new ServiceException("文件格式不正确，请上传" + Arrays.toString(MimeTypeUtils.IMAGE_EXTENSION) + "格式");
         }
 
-        R<File> fileResult = remoteFileService.uploadPicture(mf);
+        R<File> fileResult = remoteFileService.uploadAvatar(mf);
         if (StringUtils.isNull(fileResult) || StringUtils.isNull(fileResult.getData())) {
             throw new ServiceException("文件服务异常，请联系管理员");
         }
@@ -157,7 +157,7 @@ public class InfoServiceImpl implements InfoService {
         String fileUrl = fileResult.getData().getUrl();
         // 删除旧头像
         if (StringUtils.isNotEmpty(uo.getUserInfo().getAvatar())) {
-            remoteFileService.deletePicture(uo.getUserInfo().getAvatar());
+            remoteFileService.deleteAvatar(uo.getUserInfo().getAvatar());
         }
 
         int rows = userMapper.updateAvatar(uo.getUserInfo().getUserId(), fileUrl);

@@ -18,57 +18,64 @@ import com.sql.common.entity.result.R;
  */
 @FeignClient(contextId = "remoteFileService", value = ServiceNameConstants.FILE_SERVICE, fallbackFactory = RemoteFileFallbackFactory.class)
 public interface RemoteFileService {
+
     /**
-     * 上传文件
-     *
-     * @param file 文件信息
-     * @return 结果
+     * 上传通用文件
      */
     @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public R<File> upload(@RequestPart(value = "file") MultipartFile file);
+    R<File> upload(@RequestPart(value = "file") MultipartFile file);
 
     /**
-     * 上传图片（jpg/jpeg/png，限5MB）
-     *
-     * @param file 头像图片
-     * @return 结果
+     * 删除通用文件
+     */
+    @DeleteMapping(value = "/delete")
+    R<Boolean> delete(@RequestParam String fileUrl);
+
+    /**
+     * 上传头像（jpg/jpeg/png，限5MB）
      */
     @PostMapping(value = "/upload/pic", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public R<File> uploadPicture(@RequestPart(value = "file") MultipartFile file);
+    R<File> uploadAvatar(@RequestPart(value = "file") MultipartFile file);
 
     /**
-     * 上传文档（ppt/pdf/doc，限30MB）
-     *
-     * @param file 文档信息
-     * @return 结果
+     * 删除头像
      */
-    @PostMapping(value = "/upload/doc", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public R<File> uploadDocument(@RequestPart(value = "file") MultipartFile file);
+    @DeleteMapping(value = "/delete/pic")
+    R<Boolean> deleteAvatar(@RequestParam String fileUrl);
 
     /**
-     * 删除文件
-     *
-     * @param fileUrl 文件地址
-     * @return 结果
+     * 上传签到/签退图片（jpg/jpeg/png，限20MB）
      */
-    @DeleteMapping(value = "/delete", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public R<Boolean> delete(@RequestParam("fileUrl") String fileUrl);
+    @PostMapping(value = "/upload/sign", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    R<File> uploadSignPicture(@RequestPart(value = "file") MultipartFile file);
 
     /**
-     * 删除图片
-     *
-     * @param fileUrl 图片地址
-     * @return 结果
+     * 删除签到/签退图片
      */
-    @DeleteMapping(value = "/delete/pic", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public R<Boolean> deletePicture(@RequestParam("fileUrl") String fileUrl);
+    @DeleteMapping(value = "/delete/sign")
+    R<Boolean> deleteSignPicture(@RequestParam String fileUrl);
 
     /**
-     * 删除文档
-     *
-     * @param fileUrl 文档地址
-     * @return 结果
+     * 上传教案（doc/docx/pdf，限30MB）
      */
-    @DeleteMapping(value = "/delete/doc", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-    public R<Boolean> deleteDocument(@RequestParam("fileUrl") String fileUrl);
+    @PostMapping(value = "/upload/teachingPlan", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    R<File> uploadTeachingPlan(@RequestPart(value = "file") MultipartFile file);
+
+    /**
+     * 删除教案
+     */
+    @DeleteMapping(value = "/delete/tp")
+    R<Boolean> deleteTeachingPlan(@RequestParam String fileUrl);
+
+    /**
+     * 上传训练方法（ppt/pptx/doc/docx/pdf，限30MB）
+     */
+    @PostMapping(value = "/upload/trainingMethod", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    R<File> uploadTrainingMethod(@RequestPart(value = "file") MultipartFile file);
+
+    /**
+     * 删除训练方法
+     */
+    @DeleteMapping(value = "/delete/tm")
+    R<Boolean> deleteTrainingMethod(@RequestParam String fileUrl);
 }
