@@ -71,13 +71,13 @@ public class AuthController {
     }
 
     /**
-     * 生成邀请码
+     * 生成管理员邀请码
      *
      * 仅已登录的系统管理员或店铺管理员可调用
      * 系统管理员生成时需指定storeId
      * 店铺管理员生成时自动使用自身storeId
      */
-    @Log(title = "生成邀请码", businessType = BusinessType.OTHER)
+    @Log(title = "生成管理员邀请码", businessType = BusinessType.OTHER)
     @PostMapping("/invite")
     @LoginRequired
     @RequiresType({ UserTypes.ADMIN, UserTypes.MANAGER })
@@ -86,6 +86,22 @@ public class AuthController {
         String code = authService.generateInviteCode(request, storeId);
 
         return R.ok(code, "邀请码生成成功");
+    }
+
+    /**
+     * 生成教练邀请码
+     *
+     * 仅店铺管理员可调用，自动使用自身storeId
+     * 用户（微信小程序端）凭此邀请码注册为教练并绑定到对应门店
+     */
+    @Log(title = "生成教练邀请码", businessType = BusinessType.OTHER)
+    @PostMapping("/coachInvite")
+    @LoginRequired
+    @RequiresType({ UserTypes.MANAGER })
+    public R<?> generateCoachInviteCode(HttpServletRequest request) {
+        String code = authService.generateCoachInviteCode(request);
+
+        return R.ok(code, "教练邀请码生成成功");
     }
 
     /**

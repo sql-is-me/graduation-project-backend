@@ -47,7 +47,7 @@ public class AuthConstants {
     public static final String REGISTER = "Register";
 
     /**
-     * 邀请码缓存前缀
+     * 管理员邀请码缓存前缀
      */
     public static final String INVITE_CODE = "inviteCode:";
 
@@ -58,9 +58,25 @@ public class AuthConstants {
     public static final String INVITE_ADMIN = "inviteAdmin:";
 
     /**
-     * 邀请码过期时间 30min
+     * 管理员邀请码过期时间 30min
      */
     public static final Long ADMIN_INVITE_EXPIRE = 30L;
+
+    /**
+     * 教练邀请码缓存前缀
+     */
+    public static final String INVITE_COACH_CODE = "inviteCoachCode:";
+
+    /**
+     * 教练邀请码反查前缀（防重复生成）
+     * key: inviteCoach:{adminId}:{storeId}
+     */
+    public static final String INVITE_COACH = "inviteCoach:";
+
+    /**
+     * 教练邀请码过期时间 30min
+     */
+    public static final Long COACH_INVITE_EXPIRE = 30L;
 
     /**
      * 用户名长度限制

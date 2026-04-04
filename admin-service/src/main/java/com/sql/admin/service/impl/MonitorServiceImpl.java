@@ -8,15 +8,19 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sql.admin.mapper.UserMapper;
 import com.sql.admin.service.MonitorService;
 import com.sql.common.constants.HttpStatusConstants;
 import com.sql.common.entity.bo.AdminOnline;
 import com.sql.common.entity.bo.UserOnline;
+import com.sql.common.entity.po.User;
 import com.sql.common.constants.TokenConstants;
 import com.sql.common.entity.vo.OnlineAdminInfo;
 import com.sql.common.entity.vo.OnlineUserInfo;
 import com.sql.common.entity.vo.TableDataInfo;
+import com.sql.common.enums.AccountStatus;
 import com.sql.common.enums.UserTypes;
+import com.sql.common.exception.ServiceException;
 import com.sql.common.redis.service.RedisService;
 import com.sql.common.tokens.AdminTokenService;
 import com.sql.common.tokens.UserTokenService;
@@ -32,6 +36,9 @@ public class MonitorServiceImpl implements MonitorService {
 
     @Autowired
     private UserTokenService userTokenService;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Autowired
     private RedisService redisService;
@@ -126,5 +133,34 @@ public class MonitorServiceImpl implements MonitorService {
     @Override
     public void forceUserLogout(String userId) {
         userTokenService.checkAndDeleteCacheObject(Long.parseLong(userId));
+    }
+
+    @Override
+    public void banUser(Long userId) {
+        User user = userMapper.selectById(userId);
+        if (user == null) {
+            throw new ServiceException("用户不存在");
+        }
+        if (AccountStatus.DISABLE.getCode().equals(user.getStatus())) {
+            throw new ServiceException("该用户已处于封禁状态");
+        }
+
+        userMapper.updateStatus(userId, AccountStatus.DISABLE.getCode());
+
+        // 强制已登录的用户下线
+        userTokenService.checkAndDeleteCacheObject(userId);
+    }
+
+    @Override
+    public void unbanUser(Long userId) {
+        User user = userMapper.selectById(userId);
+        if (user == null) {
+            throw new ServiceException("用户不存在");
+        }
+        if (AccountStatus.OK.getCode().equals(user.getStatus())) {
+            throw new ServiceException("该用户未被封禁");
+        }
+
+        userMapper.updateStatus(userId, AccountStatus.OK.getCode());
     }
 }

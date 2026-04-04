@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,7 +31,7 @@ import com.sql.user.service.InfoService;
 @RestController
 @RequestMapping("/user/info")
 @LoginRequired
-@RequiresType({UserTypes.COACH, UserTypes.VIP})
+@RequiresType({ UserTypes.COACH, UserTypes.VIP })
 public class InfoController {
 
     @Autowired
@@ -65,6 +66,16 @@ public class InfoController {
     public R<?> updateEmail(@Validated @RequestBody UserUpdateEmailDTO dto) {
         infoService.updateEmail(dto);
         return R.ok("邮箱更新成功");
+    }
+
+    /**
+     * 发送邮箱验证码
+     */
+    @Log(title = "邮箱验证码", businessType = BusinessType.UPDATE)
+    @GetMapping("/emailCode")
+    public R<?> sendEmailCode(@RequestParam String email) {
+        String code = infoService.sendEmailCode(email);
+        return R.ok(code, "验证码已发送");
     }
 
     /**

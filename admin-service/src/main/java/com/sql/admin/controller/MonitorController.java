@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -74,5 +75,26 @@ public class MonitorController extends BaseController {
     public R<?> forceUserLogout(@PathVariable String userId) {
         monitorService.forceUserLogout(userId);
         return R.ok("强退成功");
+    }
+
+    /**
+     * 封禁用户（会员或教练）
+     * 封禁后该用户会被强制下线，且无法再次登录
+     */
+    @Log(title = "封禁用户", businessType = BusinessType.UPDATE, operatorType = UserTypes.ADMIN)
+    @PutMapping("/ban/{userId}")
+    public R<?> banUser(@PathVariable Long userId) {
+        monitorService.banUser(userId);
+        return R.ok("封禁成功");
+    }
+
+    /**
+     * 解禁用户（会员或教练）
+     */
+    @Log(title = "解禁用户", businessType = BusinessType.UPDATE, operatorType = UserTypes.ADMIN)
+    @PutMapping("/unban/{userId}")
+    public R<?> unbanUser(@PathVariable Long userId) {
+        monitorService.unbanUser(userId);
+        return R.ok("解禁成功");
     }
 }

@@ -44,7 +44,7 @@ public class Children {
     /**
      * 孩子照片URL地址
      */
-    private String photo = "";
+    private String photo = "./default_child";
 
     /**
      * 孩子性别（0男孩 1女孩 2未知）

@@ -15,6 +15,7 @@ import com.sql.admin.service.AuthService;
 import com.sql.api.RemoteLoginLogService;
 import com.sql.common.constants.AuthConstants;
 import com.sql.common.entity.bo.AdminInviteBody;
+import com.sql.common.entity.bo.CoachInviteBody;
 import com.sql.common.entity.bo.AdminOnline;
 import com.sql.common.entity.dto.AdminRegisterDTO;
 import com.sql.common.entity.dto.AdminResetPasswordDTO;
@@ -144,7 +145,7 @@ public class AuthServiceImpl implements AuthService {
         // 创建用户
         Admin admin = new Admin();
         admin.setUsername(username);
-        admin.setNickName(username);
+        admin.setNickName("管理员:" + username);
         admin.setPassword(PasswordUtils.encryptPassword(password));
         admin.setStoreId(inviteBody.getStoreId());
         admin.setReferrerId(inviteBody.getReferrerId());
@@ -175,25 +176,20 @@ public class AuthServiceImpl implements AuthService {
             if (storeId == null) {
                 throw new ServiceException("系统管理员生成邀请码需指定门店ID");
             }
-
-            // 校验门店ID合法性和营业状态
-            Store store = storeMapper.selectById(storeId);
-            if (store == null) {
-                throw new ServiceException("指定门店不存在");
-            }
-            if ("1".equals(store.getStatus())) {
-                throw new ServiceException("指定门店已停业，无法生成邀请码");
-            }
         } else {
             storeId = referrer.getStoreId();
             if (storeId == null) {
                 throw new ServiceException("推荐人门店信息缺失");
             }
+        }
 
-            Store store = storeMapper.selectById(storeId);
-            if ("1".equals(store.getStatus())) {
-                throw new ServiceException("指定门店已停业，无法生成邀请码");
-            }
+        // 校验门店ID合法性和营业状态
+        Store store = storeMapper.selectById(storeId);
+        if (store == null) {
+            throw new ServiceException("指定门店不存在");
+        }
+        if ("1".equals(store.getStatus())) {
+            throw new ServiceException("指定门店已停业，无法生成邀请码");
         }
 
         // 防重复生成：同一用户+门店若已有有效邀请码则直接复用
@@ -209,6 +205,47 @@ public class AuthServiceImpl implements AuthService {
 
         redisService.setCacheObject(inviteKey, inviteBody, AuthConstants.ADMIN_INVITE_EXPIRE, TimeUnit.MINUTES);
         redisService.setCacheObject(adminInviteKey, inviteCode, AuthConstants.ADMIN_INVITE_EXPIRE, TimeUnit.MINUTES);
+
+        return inviteCode;
+    }
+
+    /**
+     * 生成教练邀请码（仅店铺管理员可用）
+     */
+    @Override
+    public String generateCoachInviteCode(HttpServletRequest request) {
+
+        AdminOnline ao = adminTokenService.getAO(adminTokenService.getAOToken(request));
+        Admin admin = ao.getAdminInfo();
+
+        Long storeId = admin.getStoreId();
+        if (storeId == null) {
+            throw new ServiceException("当前管理员未绑定门店，无法生成教练邀请码");
+        }
+
+        // 校验门店营业状态
+        Store store = storeMapper.selectById(storeId);
+        if (store == null) {
+            throw new ServiceException("所属门店不存在");
+        }
+        if ("1".equals(store.getStatus())) {
+            throw new ServiceException("所属门店已停业，无法生成教练邀请码");
+        }
+
+        // 防重复生成：同一管理员+门店若已有有效邀请码则直接复用
+        String coachInviteKey = AuthConstants.INVITE_COACH + admin.getAdminId() + ":" + storeId;
+        String existingCode = redisService.getCacheObject(coachInviteKey);
+        if (existingCode != null) {
+            return existingCode;
+        }
+
+        // 生成8位大写邀请码
+        String inviteCode = UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase();
+        String inviteKey = AuthConstants.INVITE_COACH_CODE + inviteCode;
+        CoachInviteBody inviteBody = new CoachInviteBody(admin.getAdminId(), storeId);
+
+        redisService.setCacheObject(inviteKey, inviteBody, AuthConstants.COACH_INVITE_EXPIRE, TimeUnit.MINUTES);
+        redisService.setCacheObject(coachInviteKey, inviteCode, AuthConstants.COACH_INVITE_EXPIRE, TimeUnit.MINUTES);
 
         return inviteCode;
     }

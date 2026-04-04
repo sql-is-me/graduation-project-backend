@@ -29,4 +29,9 @@ public interface InfoService {
      * 更换头像
      */
     void updateAvatar(MultipartFile mf);
+
+    /**
+     * 发送邮箱验证码
+     */
+    String sendEmailCode(String email);
 }

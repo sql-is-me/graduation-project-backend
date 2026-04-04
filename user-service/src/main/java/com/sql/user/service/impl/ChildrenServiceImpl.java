@@ -24,7 +24,7 @@ public class ChildrenServiceImpl implements ChildrenService {
     private ChildrenMapper childrenMapper;
 
     /**
-     * 查询当前用户的孩子列表
+     * 查询当前会员的孩子列表
      */
     @Override
     public List<Children> listByCurrentUser() {

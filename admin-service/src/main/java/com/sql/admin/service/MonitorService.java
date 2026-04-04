@@ -22,4 +22,14 @@ public interface MonitorService {
      * 强制踢出教练或会员
      */
     public void forceUserLogout(String token);
+
+    /**
+     * 封禁用户（会员或教练）
+     */
+    public void banUser(Long userId);
+
+    /**
+     * 解禁用户（会员或教练）
+     */
+    public void unbanUser(Long userId);
 }

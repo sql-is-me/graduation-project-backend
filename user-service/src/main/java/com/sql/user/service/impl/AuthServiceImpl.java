@@ -12,12 +12,15 @@ import lombok.extern.slf4j.Slf4j;
 
 import com.sql.api.RemoteLoginLogService;
 import com.sql.common.constants.AuthConstants;
+import com.sql.common.entity.bo.CoachInviteBody;
 import com.sql.common.entity.po.LoginInfo;
 import com.sql.common.entity.po.User;
 import com.sql.common.enums.AccountStatus;
 import com.sql.common.exception.ServiceException;
+import com.sql.common.redis.service.RedisService;
 import com.sql.common.tokens.UserTokenService;
 import com.sql.user.dto.UserLoginDTO;
+import com.sql.user.dto.UserRegisterDTO;
 import com.sql.user.mapper.UserMapper;
 import com.sql.user.service.AuthService;
 import com.sql.utils.IpUtils;
@@ -38,6 +41,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private RemoteLoginLogService remoteLoginLogService;
+
+    @Autowired
+    private RedisService redisService;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -61,6 +67,7 @@ public class AuthServiceImpl implements AuthService {
 
     /**
      * 用户/教练登录（微信小程序）
+     * 若用户不存在，返回null，由控制层引导前端进入注册流程
      */
     @Override
     public String login(UserLoginDTO dto) {
@@ -84,23 +91,15 @@ public class AuthServiceImpl implements AuthService {
                 throw new ServiceException("获取微信校验返回字段失败");
             }
 
-            // 根据 openId 查询或创建用户
+            // 根据 openId 查询用户
             user = userMapper.selectByOpenId(openId);
             if (user == null) {
-                user = new User();
-                user.setOpenId(openId);
-                user.setUnionId(wxResult.get("unionid"));
+                // 用户不存在，返回null，引导前端进入注册流程
+                return null;
+            }
 
-                user.setUserType("0"); // 默认普通会员，后续申请成为教练
-
-                int rows = userMapper.insert(user);
-                if (rows <= 0) {
-                    throw new ServiceException("创建用户失败，请联系管理员");
-                }
-            } else {
-                if (AccountStatus.DISABLE.getCode().equals(user.getStatus())) {
-                    throw new ServiceException("账号已停用，请联系管理员");
-                }
+            if (AccountStatus.DISABLE.getCode().equals(user.getStatus())) {
+                throw new ServiceException("账号已停用，请联系管理员");
             }
         } catch (Exception e) {
             log.error("登录失败", e);
@@ -109,8 +108,89 @@ public class AuthServiceImpl implements AuthService {
         }
 
         String accessToken = userTokenService.createToken(user, session_key);
-
         recordLoginInfo(openId, AuthConstants.LOGIN_SUCCESS, "登录成功");
+
+        return accessToken;
+    }
+
+    /**
+     * 用户注册
+     * 选择成为普通会员（userType=0）或教练（userType=1）
+     * 教练注册需提供店铺管理员生成的邀请码，注册后直接绑定对应店铺
+     */
+    @Override
+    public String register(UserRegisterDTO dto) {
+        User user;
+        String openId = "unknown";
+        String session_key;
+        try {
+            // 请求微信接口获取 openId 和 session_key
+            Map<String, String> wxResult = getWxSession(dto.getCode());
+            openId = wxResult.get("openid");
+            session_key = wxResult.get("session_key");
+
+            String errcode = wxResult.get("errcode");
+            if (StringUtils.isNotEmpty(errcode) && !"0".equals(errcode)) {
+                String errmsg = wxResult.getOrDefault("errmsg", "微信登录失败");
+                throw new ServiceException("微信认证失败：" + errmsg);
+            }
+            if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(session_key)) {
+                throw new ServiceException("获取微信校验返回字段失败");
+            }
+
+            // 校验用户是否已存在
+            User existUser = userMapper.selectByOpenId(openId);
+            if (existUser != null) {
+                throw new ServiceException("该用户已注册，请直接登录");
+            }
+
+            // 校验用户类型
+            String userType = dto.getUserType();
+            if (!"0".equals(userType) && !"1".equals(userType)) {
+                throw new ServiceException("用户类型不合法");
+            }
+
+            user = new User();
+            user.setOpenId(openId);
+            user.setUserType(userType);
+            user.setNickName("用户" + openId.substring(0, 6));
+
+            // 教练注册：校验邀请码并绑定店铺
+            if ("1".equals(userType)) {
+                String inviteCode = dto.getInviteCode();
+                if (StringUtils.isEmpty(inviteCode)) {
+                    throw new ServiceException("成为教练需要提供邀请码");
+                }
+
+                String inviteKey = AuthConstants.INVITE_COACH_CODE + inviteCode;
+                CoachInviteBody inviteBody = redisService.getCacheObject(inviteKey);
+                if (inviteBody == null) {
+                    throw new ServiceException("邀请码无效或已过期");
+                }
+
+                // 绑定店铺
+                user.setStoreId(inviteBody.getStoreId());
+
+                // 注册成功后删除邀请码（一次性使用）
+                String coachInviteKey = AuthConstants.INVITE_COACH + inviteBody.getReferrerIdId() + ":"
+                        + inviteBody.getStoreId();
+                redisService.deleteObject(coachInviteKey);
+                redisService.deleteObject(inviteKey);
+            }
+
+            int rows = userMapper.insert(user);
+            if (rows <= 0) {
+                throw new ServiceException("注册失败，请联系管理员");
+            }
+        } catch (Exception e) {
+            log.error("注册失败", e);
+            recordLoginInfo(openId, AuthConstants.LOGIN_FAIL, "注册失败: " + e.getMessage());
+            throw new ServiceException("注册失败: " + e.getMessage());
+        }
+
+        // 创建token，直接完成登录
+        String accessToken = userTokenService.createToken(user, session_key);
+        recordLoginInfo(openId, AuthConstants.REGISTER, "注册成功");
 
         return accessToken;
     }

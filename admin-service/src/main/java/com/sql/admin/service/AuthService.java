@@ -30,6 +30,11 @@ public interface AuthService {
     public String generateInviteCode(HttpServletRequest request, Long storeId);
 
     /**
+     * 生成教练邀请码
+     */
+    public String generateCoachInviteCode(HttpServletRequest request);
+
+    /**
      * 通过验证码重置密码
      */
     public void resetPassword(AdminResetPasswordDTO dto);
