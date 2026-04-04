@@ -139,7 +139,7 @@ public class StoreServiceImpl implements StoreService {
 
         if (store.getOwnerId() != null) {
             storeInfo.setOwnerName(adminMapper.selectNameByID(store.getOwnerId()));
-        }
+        } // FIXME:改为join
 
         return storeInfo;
     }

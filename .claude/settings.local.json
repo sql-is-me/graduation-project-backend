@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find \"c:\\\\Users\\\\22445\\\\Desktop\\\\graduation-project\\\\sql\" -name \"*.sql\" -exec grep -l \"teaching_plans\\\\|training_methods\" {} \\\\;)",
+      "Bash(xargs grep:*)"
+    ]
+  }
+}

@@ -334,3 +334,73 @@ INSERT INTO operLog (oper_id, title, business_type, method, request_method, oper
 (1, '店铺管理', 1, 'StoreController.add', 'POST', 1, 2, 'store_admin_1', '/admin/store/add', '10.0.0.2', '{"storeName":"阳光羽毛球馆"}', '{"code":200}', 0, NULL, '2026-03-18 20:00:00', 120),
 (2, '优惠券管理', 2, 'CouponController.update', 'PUT', 1, 2, 'store_admin_1', '/admin/coupon/update', '10.0.0.2', '{"couponId":1}', '{"code":200}', 0, NULL, '2026-03-18 20:05:00', 95),
 (3, '课程查询', 4, 'CourseController.list', 'GET', 3, 1, 'member_1', '/user/course/list', '192.168.1.1', '{}', '{"code":200}', 0, NULL, '2026-03-18 20:10:00', 40);
+
+-- ----------------------------
+-- 14. 教案表
+-- ----------------------------
+DROP TABLE IF EXISTS teaching_plans;
+CREATE TABLE teaching_plans (
+  tp_id BIGINT NOT NULL AUTO_INCREMENT,
+  title VARCHAR(100) NOT NULL,
+  coach_id BIGINT NOT NULL,
+  store_id BIGINT NOT NULL,
+  file_url VARCHAR(255) NOT NULL,
+  description VARCHAR(500) DEFAULT NULL,
+  status CHAR(1) DEFAULT '0',
+  reject_reason VARCHAR(255) DEFAULT NULL,
+  create_time DATETIME DEFAULT NULL,
+  update_time DATETIME DEFAULT NULL,
+  PRIMARY KEY (tp_id),
+  KEY idx_tp_coach_id (coach_id),
+  KEY idx_tp_store_id (store_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- 15. 训练方法表
+-- ----------------------------
+DROP TABLE IF EXISTS training_methods;
+CREATE TABLE training_methods (
+  tm_id BIGINT NOT NULL AUTO_INCREMENT,
+  title VARCHAR(100) NOT NULL,
+  coach_id BIGINT NOT NULL,
+  store_id BIGINT NOT NULL,
+  file_url VARCHAR(255) NOT NULL,
+  description VARCHAR(500) DEFAULT NULL,
+  status CHAR(1) DEFAULT '0',
+  reject_reason VARCHAR(255) DEFAULT NULL,
+  create_time DATETIME DEFAULT NULL,
+  update_time DATETIME DEFAULT NULL,
+  PRIMARY KEY (tm_id),
+  KEY idx_tm_coach_id (coach_id),
+  KEY idx_tm_store_id (store_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- ----------------------------
+-- 16. 请求/审批表
+-- ----------------------------
+DROP TABLE IF EXISTS requests;
+CREATE TABLE requests (
+  request_id BIGINT NOT NULL AUTO_INCREMENT,
+  sender_id BIGINT NOT NULL COMMENT '发起人ID',
+  sender_type CHAR(1) NOT NULL COMMENT '发起人类型 0会员 1教练',
+  type VARCHAR(50) NOT NULL COMMENT '请求类型，见RequestConstants',
+  ref_id BIGINT DEFAULT NULL COMMENT '关联资源ID（教案ID/训练方法ID/课程安排ID等）',
+  target_store_id BIGINT DEFAULT NULL COMMENT '目标店铺ID（换店场景）',
+  status CHAR(1) DEFAULT '0' COMMENT '整体状态 0待处理 1全部同意 2已拒绝',
+  message VARCHAR(500) DEFAULT NULL COMMENT '申请说明',
+  reject_reason VARCHAR(255) DEFAULT NULL COMMENT '拒绝原因',
+  approver1_id BIGINT DEFAULT NULL COMMENT '审核人1 ID',
+  approver1_status CHAR(1) DEFAULT '0' COMMENT '审核人1状态 0待审 1同意 2拒绝',
+  approver2_id BIGINT DEFAULT NULL COMMENT '审核人2 ID',
+  approver2_status CHAR(1) DEFAULT NULL COMMENT '审核人2状态',
+  approver3_id BIGINT DEFAULT NULL COMMENT '审核人3 ID（系统管理员）',
+  approver3_status CHAR(1) DEFAULT NULL COMMENT '审核人3状态',
+  create_time DATETIME DEFAULT NULL,
+  update_time DATETIME DEFAULT NULL,
+  PRIMARY KEY (request_id),
+  KEY idx_req_sender_id (sender_id),
+  KEY idx_req_approver1 (approver1_id),
+  KEY idx_req_approver2 (approver2_id),
+  KEY idx_req_approver3 (approver3_id),
+  KEY idx_req_type_status (type, status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

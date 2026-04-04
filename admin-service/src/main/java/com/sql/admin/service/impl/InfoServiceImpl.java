@@ -46,8 +46,8 @@ public class InfoServiceImpl implements InfoService {
     @Autowired
     private RemoteFileService remoteFileService;
 
-    @Value("${file.pic-base-url}")
-    private String picBaseUrl;
+    @Value("${file.avatar-path}")
+    private String avatarUrl;
 
     /**
      * 获取管理员个人信息
@@ -58,7 +58,7 @@ public class InfoServiceImpl implements InfoService {
         AdminInfo info = new AdminInfo(admin);
         // 拼接完整头像 URL
         if (StringUtils.isNotEmpty(admin.getAvatar())) {
-            info.setAvatar(picBaseUrl + admin.getAvatar());
+            info.setAvatar(avatarUrl + admin.getAvatar());
         }
         return info;
     }

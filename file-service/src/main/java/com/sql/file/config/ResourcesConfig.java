@@ -8,72 +8,51 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
- * 通用映射配置
+ * 静态资源映射配置
+ * 将本地存储目录映射为可通过 HTTP 直接访问的 URL 路径
  */
 @Configuration
 public class ResourcesConfig implements WebMvcConfigurer {
-        /**
-         * 通用文件存储在本地的根路径
-         */
-        @Value("${file.path}")
-        private String localFilePath;
 
-        /**
-         * 通用文件资源映射路径前缀
-         */
-        @Value("${file.prefix}")
-        public String localFilePrefix;
+    @Value("${file.avatar-path}")
+    private String avatarPath;
 
-        /**
-         * 图片存储在本地的根路径
-         */
-        @Value("${file.pic-path}")
-        private String localPicPath;
+    @Value("${file.sign-path}")
+    private String signPath;
 
-        /**
-         * 图片资源映射路径前缀
-         */
-        @Value("${file.pic-prefix}")
-        public String localPicPrefix;
+    @Value("${file.tp-path}")
+    private String tpPath;
 
-        /**
-         * 文档存储在本地的根路径
-         */
-        @Value("${file.doc-path}")
-        private String localDocPath;
+    @Value("${file.tm-path}")
+    private String tmPath;
 
-        /**
-         * 文档资源映射路径前缀
-         */
-        @Value("${file.doc-prefix}")
-        public String localDocPrefix;
+    @Value("${file.path}")
+    private String filePath;
 
-        @Override
-        public void addResourceHandlers(ResourceHandlerRegistry registry) {
-                /** 通用文件上传路径 */
-                registry.addResourceHandler(localFilePrefix + "/**")
-                                .addResourceLocations("file:" + localFilePath + File.separator);
-                /** 本地图片上传路径 */
-                registry.addResourceHandler(localPicPrefix + "/**")
-                                .addResourceLocations("file:" + localPicPath + File.separator);
-                /** 本地文档上传路径 */
-                registry.addResourceHandler(localDocPrefix + "/**")
-                                .addResourceLocations("file:" + localDocPath + File.separator);
-        }
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        // 头像
+        registry.addResourceHandler("/pics/avatars/**")
+                .addResourceLocations("file:" + avatarPath + File.separator);
+        // 签到/签退图片
+        registry.addResourceHandler("/pics/signs/**")
+                .addResourceLocations("file:" + signPath + File.separator);
+        // 教案文件
+        registry.addResourceHandler("/tps/**")
+                .addResourceLocations("file:" + tpPath + File.separator);
+        // 训练方法文件
+        registry.addResourceHandler("/tms/**")
+                .addResourceLocations("file:" + tmPath + File.separator);
+        // 通用文件
+        registry.addResourceHandler("/files/**")
+                .addResourceLocations("file:" + filePath + File.separator);
+    }
 
-        /**
-         * 开启跨域
-         */
-        @Override
-        public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping(localFilePrefix + "/**")
-                                .allowedOrigins("*")
-                                .allowedMethods("GET");
-                registry.addMapping(localPicPrefix + "/**")
-                                .allowedOrigins("*")
-                                .allowedMethods("GET");
-                registry.addMapping(localDocPrefix + "/**")
-                                .allowedOrigins("*")
-                                .allowedMethods("GET");
-        }
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/pics/**").allowedOrigins("*").allowedMethods("GET");
+        registry.addMapping("/tps/**").allowedOrigins("*").allowedMethods("GET");
+        registry.addMapping("/tms/**").allowedOrigins("*").allowedMethods("GET");
+        registry.addMapping("/files/**").allowedOrigins("*").allowedMethods("GET");
+    }
 }
