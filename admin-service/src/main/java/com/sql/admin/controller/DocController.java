@@ -60,8 +60,8 @@ public class DocController extends BaseController {
      * 返回 file-service 的完整可访问地址，前端用该地址直接访问文件
      * PDF 可直接由浏览器渲染；doc/docx 建议前端通过 Office Online / WPS 在线预览接口封装
      */
-    @GetMapping("/teachingPlan/{tpId}/url")
-    public R<?> getTeachingPlanUrl(@PathVariable Long tpId) { // TODO:路径是数据库中存储的相对路径，该接口可以接收相对路径并返回绝对路径
+    @GetMapping("/tp/{tpId}/url")
+    public R<?> getTeachingPlanUrl(@PathVariable Long tpId) {
         String url = docService.getTeachingPlanFileUrl(tpId);
         return R.ok(url);
     }
@@ -91,7 +91,7 @@ public class DocController extends BaseController {
      * 获取训练方法在线阅读 URL（Web 端直接在新标签打开或嵌入 iframe）
      */
     @GetMapping("/tm/{tmId}/url")
-    public R<?> getTrainingMethodUrl(@PathVariable Long tmId) {// TODO:路径是数据库中存储的相对路径，该接口可以接收相对路径并返回绝对路径
+    public R<?> getTrainingMethodUrl(@PathVariable Long tmId) {
         String url = docService.getTrainingMethodFileUrl(tmId);
         return R.ok(url);
     }

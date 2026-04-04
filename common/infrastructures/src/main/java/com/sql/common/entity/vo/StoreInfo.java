@@ -19,7 +19,7 @@ public class StoreInfo {
     private Long creatorId;
 
     /**
-     * 店铺所有者昵称
+     * 店铺创建者昵称
      */
     private String creatorName;
 

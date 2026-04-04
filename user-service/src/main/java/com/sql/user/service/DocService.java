@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.sql.common.entity.po.TrainingMethod;
+import com.sql.common.entity.vo.TrainingMethodInfo;
 import com.sql.common.entity.vo.MyTeachingPlanInfo;
 import com.sql.common.entity.vo.MyTrainingMethodInfo;
 import com.sql.user.dto.TeachingPlanUploadDTO;
@@ -39,7 +39,7 @@ public interface DocService {
     /**
      * 查询当前店铺已审核通过的所有训练方法（同店铺教练可见）
      */
-    List<TrainingMethod> listStoreTrainingMethods();
+    List<TrainingMethodInfo> listStoreTrainingMethods();
 
     /**
      * 查询当前教练自己上传的所有训练方法

@@ -9,9 +9,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.sql.api.RemoteFileService;
 import com.sql.common.entity.bo.File;
 import com.sql.common.entity.bo.UserOnline;
+import com.sql.common.entity.po.ClassHour;
 import com.sql.common.entity.po.User;
 import com.sql.common.entity.result.R;
 import com.sql.common.entity.vo.UserInfo;
+import com.sql.user.mapper.ClassHourMapper;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 import com.sql.common.mail.service.MailService;
@@ -32,6 +34,9 @@ public class InfoServiceImpl implements InfoService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private ClassHourMapper classHourMapper;
 
     @Autowired
     private UserTokenService userTokenService;
@@ -168,6 +173,19 @@ public class InfoServiceImpl implements InfoService {
         // 更新缓存
         uo.getUserInfo().setAvatar(fileUrl);
         userTokenService.refreshCacheInfo(uo);
+    }
+
+    /**
+     * 查询当前用户课时信息
+     */
+    @Override
+    public ClassHour getClassHour() {
+        Long userId = ContextHolder.getUO().getUserInfo().getUserId();
+        ClassHour classHour = classHourMapper.selectById(userId);
+        if (classHour == null) {
+            throw new ServiceException("暂无课时记录");
+        }
+        return classHour;
     }
 
     /**

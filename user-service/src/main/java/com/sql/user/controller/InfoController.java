@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
+import com.sql.common.entity.po.ClassHour;
 import com.sql.common.entity.result.R;
 import com.sql.common.entity.vo.UserInfo;
 import com.sql.common.enums.UserTypes;
@@ -86,5 +87,14 @@ public class InfoController {
     public R<?> updateAvatar(@RequestPart("avatarFile") MultipartFile mf) {
         infoService.updateAvatar(mf);
         return R.ok("头像更新成功");
+    }
+
+    /**
+     * 查询个人课时信息（总课时、已用课时、剩余课时）
+     */
+    @GetMapping("/classHour")
+    public R<?> getClassHour() { //TODO:看看是否需要vo
+        ClassHour classHour = infoService.getClassHour();
+        return R.ok(classHour);
     }
 }

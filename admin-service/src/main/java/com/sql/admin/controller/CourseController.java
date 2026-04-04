@@ -73,7 +73,7 @@ public class CourseController extends BaseController {
     @RequiresType(UserTypes.MANAGER)
     @Log(title = "课程管理", businessType = BusinessType.UPDATE, operatorType = UserTypes.MANAGER)
     @PutMapping("/{courseId}/children")
-    public R<?> arrangeChildren(@PathVariable Long courseId, @RequestBody List<Long> childIds) { // TODO:待审查
+    public R<?> arrangeChildren(@PathVariable Long courseId, @RequestBody List<Long> childIds) {
         return R.ok(courseService.arrangeChildren(courseId, childIds), "学员安排成功");
     }
 
@@ -83,7 +83,7 @@ public class CourseController extends BaseController {
     @RequiresType(UserTypes.MANAGER)
     @Log(title = "课程管理", businessType = BusinessType.UPDATE, operatorType = UserTypes.MANAGER)
     @DeleteMapping("/{courseId}/child/{childId}")
-    public R<?> cancelChild(@PathVariable Long courseId, @PathVariable Long childId) { // TODO:待审查
+    public R<?> cancelChild(@PathVariable Long courseId, @PathVariable Long childId) {
         return R.ok(courseService.cancelChild(courseId, childId), "取消安排成功");
     }
 

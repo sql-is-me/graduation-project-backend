@@ -2,6 +2,7 @@ package com.sql.user.service;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.sql.common.entity.po.ClassHour;
 import com.sql.common.entity.vo.UserInfo;
 import com.sql.user.dto.UserInfoUpdateDTO;
 import com.sql.user.dto.UserUpdateEmailDTO;
@@ -34,4 +35,9 @@ public interface InfoService {
      * 发送邮箱验证码
      */
     String sendEmailCode(String email);
+
+    /**
+     * 查询当前用户课时信息（总课时、已用、剩余）
+     */
+    ClassHour getClassHour();
 }

@@ -15,8 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
-import com.sql.common.entity.po.TeachingPlan;
-import com.sql.common.entity.po.TrainingMethod;
 import com.sql.common.entity.result.R;
 import com.sql.common.entity.vo.MyTeachingPlanInfo;
 import com.sql.common.entity.vo.MyTrainingMethodInfo;
@@ -72,8 +70,8 @@ public class DocController extends BaseController {
      * PDF 直接渲染；doc/docx 建议套一层 WPS/Office Online 在线预览地址
      * 仅限教案归属本人
      */
-    @GetMapping("/teachingPlan/{tpId}/url")
-    public R<?> getTeachingPlanUrl(@PathVariable Long tpId) {// TODO:路径是数据库中存储的相对路径，该接口可以接收相对路径并返回绝对路径
+    @GetMapping("/tp/{tpId}/url")
+    public R<?> getTeachingPlanUrl(@PathVariable Long tpId) {
         String url = docService.getTeachingPlanFileUrl(tpId);
         return R.ok(url);
     }
@@ -97,7 +95,7 @@ public class DocController extends BaseController {
     @GetMapping("/tm/store")
     public TableDataInfo listStoreTrainingMethods() {
         startPage();
-        List<TrainingMethodInfo> list = docService.listStoreTrainingMethods();// FIXME:JOIN查询返回训练方法列表时，顺带返回上传者姓名等信息，减少请求次数
+        List<TrainingMethodInfo> list = docService.listStoreTrainingMethods();
         return getDataTable(list);
     }
 
@@ -117,8 +115,8 @@ public class DocController extends BaseController {
      * 同店铺教练均可访问已审核通过的训练方法
      * uniapp 端通过 web-view 组件加载
      */
-    @GetMapping("/trainingMethod/{tmId}/url")
-    public R<?> getTrainingMethodUrl(@PathVariable Long tmId) {// TODO:路径是数据库中存储的相对路径，该接口可以接收相对路径并返回绝对路径
+    @GetMapping("/tm/{tmId}/url")
+    public R<?> getTrainingMethodUrl(@PathVariable Long tmId) {
         String url = docService.getTrainingMethodFileUrl(tmId);
         return R.ok(url);
     }

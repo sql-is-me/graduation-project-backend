@@ -128,19 +128,10 @@ public class StoreServiceImpl implements StoreService {
 
     @Override
     public StoreInfo getStoreById(Long storeId) {
-        Store store = storeMapper.selectById(storeId);
-        if (store == null) {
+        StoreInfo storeInfo = storeMapper.selectStoreInfoById(storeId);
+        if (storeInfo == null) {
             throw new ServiceException("店铺不存在");
         }
-        StoreInfo storeInfo = new StoreInfo(store);
-
-        String creatorName = adminMapper.selectNameByID(store.getCreatorId());
-        storeInfo.setCreatorName(creatorName);
-
-        if (store.getOwnerId() != null) {
-            storeInfo.setOwnerName(adminMapper.selectNameByID(store.getOwnerId()));
-        } // FIXME:改为join
-
         return storeInfo;
     }
 }
