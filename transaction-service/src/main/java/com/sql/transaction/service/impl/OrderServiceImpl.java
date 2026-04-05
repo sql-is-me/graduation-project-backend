@@ -6,11 +6,12 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -23,7 +24,6 @@ import com.sql.common.header.ContextHolder;
 import com.sql.transaction.constants.PackageType;
 import com.sql.transaction.dto.OrderCancelDTO;
 import com.sql.transaction.dto.OrderCreateDTO;
-import com.sql.transaction.dto.WechatPayCallbackDTO;
 import com.sql.transaction.mapper.CouponMapper;
 import com.sql.transaction.mapper.OrderMapper;
 import com.sql.transaction.mapper.UserCouponMapper;
@@ -47,6 +47,17 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ClassHourService classHourService;
+
+    @Autowired
+    private RestTemplate restTemplate;
+
+    @Value("${server.port}")
+    private int serverPort;
+
+    /** 模拟微信支付服务地址（本服务内部） */
+    private String mockPayBase() {
+        return "http://localhost:" + serverPort + "/mock/wechat/pay";
+    }
 
     @Override
     @Transactional
@@ -157,76 +168,76 @@ public class OrderServiceImpl implements OrderService {
         return getMyOrderById(orderId);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     @Transactional
-    public void mockPay(Long orderId) {
+    public Object prepay(Long orderId) {
         Order order = getMyOrderById(orderId);
 
         if (!"0".equals(order.getStatus())) {
             throw new ServiceException("该订单状态不允许支付");
         }
 
-        order.setStatus("1"); // 已支付
-        order.setPayType("mock");
-        order.setPayTime(LocalDateTime.now());
-        order.setTransactionId("MOCK_" + UUID.randomUUID().toString().replace("-", "").substring(0, 16).toUpperCase());
-        orderMapper.updateById(order);
+        // 调用模拟微信统一下单接口
+        Map<String, Object> request = new HashMap<>();
+        request.put("out_trade_no", order.getOrderNo());
+        // request.put("description", "课时购买-" + order.getQuantity() + "课时");
+        request.put("total", order.getPayAmount().multiply(BigDecimal.valueOf(100)).intValue()); // 元转分
 
-        confirmCouponUsed(order);
-        creditClassHours(order.getUserId(), order.getQuantity());
-    }
+        Map<String, Object> response = restTemplate.postForObject(
+                mockPayBase() + "/unified-order", request, Map.class);
 
-    @Override
-    public Object prepayWechat(Long orderId) {
-        Order order = getMyOrderById(orderId);
-
-        if (!"0".equals(order.getStatus())) {
-            throw new ServiceException("该订单状态不允许支付");
+        if (response == null || !"SUCCESS".equals(response.get("code"))) {
+            throw new ServiceException("预支付失败：" + (response != null ? response.get("message") : "无响应"));
         }
 
-        // TODO: 接入微信支付 SDK，调用统一下单接口，替换下方模拟参数
-        Map<String, String> prepayParams = new HashMap<>();
-        prepayParams.put("appId", "wx_appid_placeholder");
-        prepayParams.put("timeStamp", String.valueOf(System.currentTimeMillis() / 1000));
-        prepayParams.put("nonceStr", UUID.randomUUID().toString().replace("-", ""));
-        prepayParams.put("package", "prepay_id=wx_prepay_placeholder_" + order.getOrderNo());
-        prepayParams.put("signType", "RSA");
-        prepayParams.put("paySign", "sign_placeholder");
-        prepayParams.put("orderNo", order.getOrderNo());
-        prepayParams.put("payAmount", order.getPayAmount().toString());
-
+        // 记录 prepay_id 和支付方式
+        String prepayId = (String) response.get("prepay_id");
         order.setPayType("wechat");
+        order.setTransactionId(prepayId); // 暂存 prepay_id，确认支付后更新为真实交易号
         orderMapper.updateById(order);
 
-        return prepayParams;
+        // 返回前端调起支付所需参数
+        Map<String, Object> result = new HashMap<>();
+        result.put("orderNo", order.getOrderNo());
+        result.put("payAmount", order.getPayAmount());
+        result.put("prepay_id", prepayId);
+        result.put("pay_params", response.get("pay_params"));
+        return result;
     }
 
     @Override
     @Transactional
-    public String wechatPayCallback(WechatPayCallbackDTO dto) {
-        // TODO: 接入时需验证微信签名
-        if (!"SUCCESS".equals(dto.getResultCode())) {
-            return "FAIL";
+    public void confirmPay(Long orderId) {
+        Order order = getMyOrderById(orderId);
+
+        if (!"0".equals(order.getStatus())) {
+            throw new ServiceException("该订单状态不允许支付");
         }
 
-        LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Order::getOrderNo, dto.getOrderNo());
-        Order order = orderMapper.selectOne(wrapper);
+        // 调用模拟微信订单查询接口，验证支付结果（对应微信官方按商户订单号查单）
+        @SuppressWarnings("unchecked")
+        Map<String, Object> response = restTemplate.getForObject(
+                mockPayBase() + "/query-order/" + order.getOrderNo(), Map.class);
 
-        if (order == null)
-            return "FAIL";
-        if (!"0".equals(order.getStatus()))
-            return "SUCCESS"; // 幂等
+        if (response == null || !"SUCCESS".equals(response.get("code"))) {
+            throw new ServiceException("查询支付状态失败");
+        }
 
-        order.setStatus("1");
+        String tradeState = (String) response.get("trade_state");
+        if (!"SUCCESS".equals(tradeState)) {
+            throw new ServiceException("支付未完成，当前状态：" + response.get("trade_state_desc"));
+        }
+
+        // 支付成功，更新订单
+        String transactionId = (String) response.get("transaction_id");
+        order.setStatus("1"); // 已支付
         order.setPayTime(LocalDateTime.now());
-        order.setTransactionId(dto.getTransactionId());
+        order.setTransactionId(transactionId);
         orderMapper.updateById(order);
 
         confirmCouponUsed(order);
         creditClassHours(order.getUserId(), order.getQuantity());
-
-        return "SUCCESS";
     }
 
     // ============ 私有方法 ============

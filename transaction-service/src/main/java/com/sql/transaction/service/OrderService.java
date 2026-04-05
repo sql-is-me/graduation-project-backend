@@ -5,8 +5,6 @@ import java.util.List;
 import com.sql.common.entity.po.Order;
 import com.sql.transaction.dto.OrderCancelDTO;
 import com.sql.transaction.dto.OrderCreateDTO;
-import com.sql.transaction.dto.WechatPayCallbackDTO;
-
 public interface OrderService {
 
     /**
@@ -30,17 +28,12 @@ public interface OrderService {
     Order getMyOrder(Long orderId);
 
     /**
-     * 模拟支付（直接将订单置为已支付，用于演示）
+     * 发起支付：调用模拟微信统一下单接口，返回前端调起支付所需参数
      */
-    void mockPay(Long orderId);
+    Object prepay(Long orderId);
 
     /**
-     * 发起微信支付（返回预支付参数）
+     * 确认支付：调用模拟微信查询接口验证支付结果，完成订单
      */
-    Object prepayWechat(Long orderId);
-
-    /**
-     * 微信支付回调处理
-     */
-    String wechatPayCallback(WechatPayCallbackDTO dto);
+    void confirmPay(Long orderId);
 }

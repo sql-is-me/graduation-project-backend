@@ -23,7 +23,6 @@ import com.sql.common.log.annotation.Log;
 import com.sql.common.log.enums.BusinessType;
 import com.sql.transaction.dto.OrderCancelDTO;
 import com.sql.transaction.dto.OrderCreateDTO;
-import com.sql.transaction.dto.WechatPayCallbackDTO;
 import com.sql.transaction.service.OrderService;
 import com.sql.utils.BaseController;
 
@@ -90,31 +89,23 @@ public class OrderController extends BaseController {
     // ─────────────── 支付 ───────────────
 
     /**
-     * 模拟支付（演示用）
-     * 直接将订单置为已支付并到账课时，无需走微信支付流程
+     * 发起支付（预下单）
+     * 调用模拟微信统一下单接口，返回前端调起 wx.requestPayment 所需参数
      */
-    @Log(title = "模拟支付", businessType = BusinessType.OTHER)
-    @PostMapping("/{orderId}/pay/mock")
-    public R<?> mockPay(@PathVariable Long orderId) {
-        orderService.mockPay(orderId);
+    @Log(title = "发起支付", businessType = BusinessType.OTHER)
+    @PostMapping("/{orderId}/pay")
+    public R<?> prepay(@PathVariable Long orderId) {
+        return R.ok(orderService.prepay(orderId), "预支付参数获取成功");
+    }
+
+    /**
+     * 确认支付
+     * 前端完成模拟支付后调用，后端查询模拟微信接口验证支付结果并完成订单
+     */
+    @Log(title = "确认支付", businessType = BusinessType.OTHER)
+    @PostMapping("/{orderId}/pay/confirm")
+    public R<?> confirmPay(@PathVariable Long orderId) {
+        orderService.confirmPay(orderId);
         return R.ok("支付成功，课时已到账");
-    }
-
-    /**
-     * 发起微信支付
-     * 返回微信小程序调起支付所需参数，前端拿到后调用 wx.requestPayment
-     */
-    @Log(title = "微信支付", businessType = BusinessType.OTHER)
-    @PostMapping("/{orderId}/pay/wechat")
-    public R<?> prepayWechat(@PathVariable Long orderId) {
-        return R.ok(orderService.prepayWechat(orderId), "预支付参数获取成功");
-    }
-
-    /**
-     * 微信支付回调通知（无需鉴权，由微信服务器调用）
-     */
-    @PostMapping("/pay/wechat/callback")
-    public String wechatPayCallback(@RequestBody WechatPayCallbackDTO dto) {
-        return orderService.wechatPayCallback(dto);
     }
 }
