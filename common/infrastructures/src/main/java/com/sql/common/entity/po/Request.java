@@ -1,17 +1,19 @@
 package com.sql.common.entity.po;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 
 import lombok.Data;
 
 @Data
-@TableName("requests")
+@TableName(value = "requests", autoResultMap = true)
 public class Request {
     @TableId(value = "request_id", type = IdType.AUTO)
     private Long requestId;
@@ -33,17 +35,14 @@ public class Request {
     private String type;
 
     /**
-     * 关联资源ID
-     * 教案审核时为 tp_id，训练方法审核时为 tm_id，请假时为课程安排ID，换店时为 null
+     * 业务载荷（JSON），根据 type 不同存储不同字段：
+     * VIP_LEAVE:                    {"courseId":1, "childId":2}
+     * COACH_UPLOAD_TEACHING_PLAN:   {"tpId":1, "fileUrl":"/abs/path.pdf"}
+     * COACH_UPLOAD_TRAINING_METHOD: {"tmId":1, "fileUrl":"/abs/path.pdf"}
+     * VIP_BIND_STORE / COACH_BIND_STORE: {"targetStoreId":1}
      */
-    @TableField("ref_id")
-    private Long refId;
-
-    /**
-     * 目标店铺ID（换店场景使用）
-     */
-    @TableField("target_store_id")
-    private Long targetStoreId;
+    @TableField(value = "payload", typeHandler = JacksonTypeHandler.class)
+    private Map<String, Object> payload;
 
     /**
      * 整体状态
@@ -58,7 +57,9 @@ public class Request {
     @TableField("reject_reason")
     private String rejectReason;
 
-    /** 审核人1 ID（店铺管理员 / 原店铺管理员） */
+    /**
+     * 审核人1 ID
+     */
     @TableField("approver1_id")
     private Long approver1Id;
 
@@ -69,21 +70,17 @@ public class Request {
     @TableField("approver1_status")
     private String approver1Status = "0";
 
-    /** 审核人2 ID（目标店铺管理员，三方审核时使用） */
+    /**
+     * 审核人2 ID
+     */
     @TableField("approver2_id")
     private Long approver2Id;
 
-    /** 审核人2状态 */
+    /**
+     * 审核人2状态
+     */
     @TableField("approver2_status")
     private String approver2Status;
-
-    /** 审核人3 ID（系统管理员，三方审核时使用，null表示任意系统管理员均可） */
-    @TableField("approver3_id")
-    private Long approver3Id;
-
-    /** 审核人3状态 */
-    @TableField("approver3_status")
-    private String approver3Status;
 
     @TableField(fill = FieldFill.INSERT, value = "create_time")
     private LocalDateTime createTime;

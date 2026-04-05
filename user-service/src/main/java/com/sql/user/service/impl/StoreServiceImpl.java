@@ -1,5 +1,6 @@
 package com.sql.user.service.impl;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,5 +57,13 @@ public class StoreServiceImpl implements StoreService {
         });
 
         return new StoreAndCoachInfo(brief, managers, coaches);
+    }
+
+    @Override
+    public List<StoreBriefInfo> searchStores(String keyword) {
+        if (StringUtils.isEmpty(keyword)) {
+            return Collections.emptyList();
+        }
+        return storeMapper.searchByName(keyword.trim());
     }
 }

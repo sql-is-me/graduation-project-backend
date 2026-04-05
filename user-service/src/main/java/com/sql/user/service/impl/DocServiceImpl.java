@@ -1,6 +1,8 @@
 package com.sql.user.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -88,13 +90,17 @@ public class DocServiceImpl implements DocService {
             throw new ServiceException("教案保存失败，请联系管理员");
         }
 
-        // 创建审核请求（approver1 = 所属店铺，这里存 storeId，由管理员侧按店铺查询）
+        // 创建审核请求 payload: {"tpId":1, "fileUrl":"/abs/path.pdf"}
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("tpId", tp.getTpId());
+        payload.put("fileUrl", tpUrl + fileUrl);
+
         Request req = new Request();
         req.setSenderId(coach.getUserId());
-        req.setSenderType("1"); // 教练
+        req.setSenderType(RequestConstants.SENDER_TYPE_COACH);
         req.setType(RequestConstants.COACH_UPLOAD_TEACHING_PLAN);
-        req.setRefId(tp.getTpId());
-        req.setApprover1Id(coach.getStoreId()); // 用 storeId 作为审核方标识
+        req.setPayload(payload);
+        req.setApprover1Id(coach.getStoreId());
         req.setApprover1Status(RequestConstants.APPROVER_PENDING);
 
         rows = requestMapper.insert(req);
@@ -159,12 +165,16 @@ public class DocServiceImpl implements DocService {
             throw new ServiceException("训练方法保存失败，请联系管理员");
         }
 
-        // 创建审核请求
+        // 创建审核请求 payload: {"tmId":1, "fileUrl":"/abs/path.pdf"}
+        Map<String, Object> payload = new HashMap<>();
+        payload.put("tmId", tm.getTmId());
+        payload.put("fileUrl", tmUrl + fileUrl);
+
         Request req = new Request();
         req.setSenderId(coach.getUserId());
-        req.setSenderType("1"); // 教练
+        req.setSenderType(RequestConstants.SENDER_TYPE_COACH);
         req.setType(RequestConstants.COACH_UPLOAD_TRAINING_METHOD);
-        req.setRefId(tm.getTmId());
+        req.setPayload(payload);
         req.setApprover1Id(coach.getStoreId());
         req.setApprover1Status(RequestConstants.APPROVER_PENDING);
 

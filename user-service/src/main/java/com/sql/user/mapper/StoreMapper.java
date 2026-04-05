@@ -33,4 +33,11 @@ public interface StoreMapper extends BaseMapper<Store> {
     @Select("SELECT nick_name AS nickName, sex, avatar FROM users " +
             "WHERE store_id = #{storeId} AND user_type = '1' AND status = '0'")
     List<CoachBriefInfo> selectCoachesByStoreId(@Param("storeId") Long storeId);
+
+    /**
+     * 模糊搜索店铺名称（仅返回正常营业的店铺）
+     */
+    @Select("SELECT store_id AS storeId, store_name AS storeName, address FROM stores " +
+            "WHERE store_name LIKE CONCAT('%', #{keyword}, '%') AND status = '0' ORDER BY store_id ASC")
+    List<StoreBriefInfo> searchByName(@Param("keyword") String keyword);
 }
