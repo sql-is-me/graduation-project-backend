@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.po.Coupon;
 import com.sql.common.entity.result.R;
@@ -28,6 +29,7 @@ import com.sql.utils.BaseController;
  */
 @RestController
 @RequestMapping("/transaction/admin/coupon")
+@LoginRequired
 @RequiresType(UserTypes.MANAGER)
 public class AdminCouponController extends BaseController {
 

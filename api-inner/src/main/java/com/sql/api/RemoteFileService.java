@@ -34,13 +34,13 @@ public interface RemoteFileService {
     /**
      * 上传头像（jpg/jpeg/png，限5MB）
      */
-    @PostMapping(value = "/upload/pic", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/upload/avatar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     R<File> uploadAvatar(@RequestPart(value = "file") MultipartFile file);
 
     /**
      * 删除头像
      */
-    @DeleteMapping(value = "/delete/pic")
+    @DeleteMapping(value = "/delete/avatar")
     R<Boolean> deleteAvatar(@RequestParam String fileUrl);
 
     /**
@@ -58,7 +58,7 @@ public interface RemoteFileService {
     /**
      * 上传教案（doc/docx/pdf，限30MB）
      */
-    @PostMapping(value = "/upload/teachingPlan", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/upload/tp", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     R<File> uploadTeachingPlan(@RequestPart(value = "file") MultipartFile file);
 
     /**
@@ -70,7 +70,7 @@ public interface RemoteFileService {
     /**
      * 上传训练方法（ppt/pptx/doc/docx/pdf，限30MB）
      */
-    @PostMapping(value = "/upload/trainingMethod", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/upload/tm", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     R<File> uploadTrainingMethod(@RequestPart(value = "file") MultipartFile file);
 
     /**

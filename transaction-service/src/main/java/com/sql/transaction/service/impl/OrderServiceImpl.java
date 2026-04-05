@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -13,27 +14,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
-import com.sql.api.RemoteClassHourService;
-import com.sql.common.constants.AuthConstants;
 import com.sql.common.entity.bo.UserOnline;
 import com.sql.common.entity.po.Coupon;
 import com.sql.common.entity.po.Order;
 import com.sql.common.entity.po.UserCoupon;
-import com.sql.common.entity.result.R;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
+import com.sql.transaction.constants.PackageType;
 import com.sql.transaction.dto.OrderCancelDTO;
 import com.sql.transaction.dto.OrderCreateDTO;
 import com.sql.transaction.dto.WechatPayCallbackDTO;
 import com.sql.transaction.mapper.CouponMapper;
 import com.sql.transaction.mapper.OrderMapper;
 import com.sql.transaction.mapper.UserCouponMapper;
+import com.sql.transaction.service.ClassHourService;
 import com.sql.transaction.service.OrderService;
 
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    /** 课时单价: 1元 = 1课时 */
+    /** 单课时单价：1元 = 1课时 */
     private static final BigDecimal UNIT_PRICE = BigDecimal.ONE;
 
     @Autowired
@@ -46,7 +46,7 @@ public class OrderServiceImpl implements OrderService {
     private CouponMapper couponMapper;
 
     @Autowired
-    private RemoteClassHourService remoteClassHourService;
+    private ClassHourService classHourService;
 
     @Override
     @Transactional
@@ -59,25 +59,46 @@ public class OrderServiceImpl implements OrderService {
             throw new ServiceException("您尚未绑定店铺，无法购买课时");
         }
 
-        int quantity = dto.getQuantity();
-        BigDecimal totalAmount = UNIT_PRICE.multiply(BigDecimal.valueOf(quantity));
+        int quantity;
+        BigDecimal totalAmount;
         BigDecimal discountAmount = BigDecimal.ZERO;
+        String productType = dto.getProductType();
 
-        // 处理优惠券
+        if ("1".equals(productType)) {
+            // 套餐购买：课时数和原价由套餐决定，套餐本身已含折扣
+            String pkg = dto.getPackageType();
+            if (pkg == null) {
+                throw new ServiceException("未指定套餐类型");
+            }
+            quantity = resolvePackageHours(pkg);
+            BigDecimal packagePrice = resolvePackagePrice(pkg);
+            totalAmount = UNIT_PRICE.multiply(BigDecimal.valueOf(quantity));
+            discountAmount = totalAmount.subtract(packagePrice);
+        } else {
+            // 单课时购买
+            if (dto.getQuantity() == null || dto.getQuantity() < 1) {
+                throw new ServiceException("购买课时数不能为空且至少为1");
+            }
+            quantity = dto.getQuantity();
+            totalAmount = UNIT_PRICE.multiply(BigDecimal.valueOf(quantity));
+        }
+
+        // 再叠加优惠券折扣
         if (dto.getUserCouponId() != null) {
-            discountAmount = applyCoupon(dto.getUserCouponId(), userId, totalAmount);
+            BigDecimal couponDiscount = applyCoupon(dto.getUserCouponId(), userId,
+                    totalAmount.subtract(discountAmount));
+            discountAmount = discountAmount.add(couponDiscount);
         }
 
-        BigDecimal payAmount = totalAmount.subtract(discountAmount);
-        if (payAmount.compareTo(BigDecimal.ZERO) < 0) {
-            payAmount = BigDecimal.ZERO;
-        }
+        BigDecimal payAmount = totalAmount.subtract(discountAmount)
+                .max(BigDecimal.ZERO)
+                .setScale(2, RoundingMode.HALF_UP);
 
         Order order = new Order();
         order.setOrderNo(generateOrderNo());
         order.setUserId(userId);
         order.setStoreId(storeId);
-        order.setProductType("0"); // 课时购买
+        order.setProductType(productType);
         order.setQuantity(quantity);
         order.setUnitPrice(UNIT_PRICE);
         order.setTotalAmount(totalAmount);
@@ -86,23 +107,19 @@ public class OrderServiceImpl implements OrderService {
         order.setCouponId(dto.getUserCouponId());
         order.setStatus("0"); // 待支付
 
-        orderMapper.insert(order);
+        int rows = orderMapper.insert(order);
+        if (rows <= 0) {
+            throw new ServiceException("创建订单失败，请联系工作人员");
+        }
+
         return order;
     }
 
     @Override
     @Transactional
     public int cancelOrder(Long orderId, OrderCancelDTO dto) {
-        UserOnline uo = ContextHolder.getUO();
-        Long userId = uo.getUserInfo().getUserId();
+        Order order = getMyOrderById(orderId);
 
-        Order order = orderMapper.selectById(orderId);
-        if (order == null) {
-            throw new ServiceException("订单不存在");
-        }
-        if (!order.getUserId().equals(userId)) {
-            throw new ServiceException("无权操作此订单");
-        }
         if (!"0".equals(order.getStatus())) {
             throw new ServiceException("仅待支付状态的订单可取消");
         }
@@ -124,23 +141,50 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Object prepayWechat(Long orderId) {
-        UserOnline uo = ContextHolder.getUO();
-        Long userId = uo.getUserInfo().getUserId();
+    public List<Order> listMyOrders(String status) {
+        Long userId = ContextHolder.getUO().getUserInfo().getUserId();
+        LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(Order::getUserId, userId);
+        if (status != null && !status.isBlank()) {
+            wrapper.eq(Order::getStatus, status);
+        }
+        wrapper.orderByDesc(Order::getCreateTime);
+        return orderMapper.selectList(wrapper);
+    }
 
-        Order order = orderMapper.selectById(orderId);
-        if (order == null) {
-            throw new ServiceException("订单不存在");
-        }
-        if (!order.getUserId().equals(userId)) {
-            throw new ServiceException("无权操作此订单");
-        }
+    @Override
+    public Order getMyOrder(Long orderId) {
+        return getMyOrderById(orderId);
+    }
+
+    @Override
+    @Transactional
+    public void mockPay(Long orderId) {
+        Order order = getMyOrderById(orderId);
+
         if (!"0".equals(order.getStatus())) {
             throw new ServiceException("该订单状态不允许支付");
         }
 
-        // TODO: 实际接入微信支付SDK，调用统一下单接口
-        // 此处返回模拟的预支付参数，待接入微信支付后替换
+        order.setStatus("1"); // 已支付
+        order.setPayType("mock");
+        order.setPayTime(LocalDateTime.now());
+        order.setTransactionId("MOCK_" + UUID.randomUUID().toString().replace("-", "").substring(0, 16).toUpperCase());
+        orderMapper.updateById(order);
+
+        confirmCouponUsed(order);
+        creditClassHours(order.getUserId(), order.getQuantity());
+    }
+
+    @Override
+    public Object prepayWechat(Long orderId) {
+        Order order = getMyOrderById(orderId);
+
+        if (!"0".equals(order.getStatus())) {
+            throw new ServiceException("该订单状态不允许支付");
+        }
+
+        // TODO: 接入微信支付 SDK，调用统一下单接口，替换下方模拟参数
         Map<String, String> prepayParams = new HashMap<>();
         prepayParams.put("appId", "wx_appid_placeholder");
         prepayParams.put("timeStamp", String.valueOf(System.currentTimeMillis() / 1000));
@@ -151,7 +195,6 @@ public class OrderServiceImpl implements OrderService {
         prepayParams.put("orderNo", order.getOrderNo());
         prepayParams.put("payAmount", order.getPayAmount().toString());
 
-        // 更新支付方式
         order.setPayType("wechat");
         orderMapper.updateById(order);
 
@@ -161,7 +204,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public String wechatPayCallback(WechatPayCallbackDTO dto) {
-        // TODO: 实际接入时需要验证微信签名
+        // TODO: 接入时需验证微信签名
         if (!"SUCCESS".equals(dto.getResultCode())) {
             return "FAIL";
         }
@@ -170,93 +213,111 @@ public class OrderServiceImpl implements OrderService {
         wrapper.eq(Order::getOrderNo, dto.getOrderNo());
         Order order = orderMapper.selectOne(wrapper);
 
-        if (order == null) {
+        if (order == null)
             return "FAIL";
-        }
-        if (!"0".equals(order.getStatus())) {
-            // 已处理过，直接返回成功
-            return "SUCCESS";
-        }
+        if (!"0".equals(order.getStatus()))
+            return "SUCCESS"; // 幂等
 
-        // 更新订单状态为已支付
         order.setStatus("1");
         order.setPayTime(LocalDateTime.now());
         order.setTransactionId(dto.getTransactionId());
         orderMapper.updateById(order);
 
-        // 标记优惠券已使用
-        if (order.getCouponId() != null) {
-            LambdaUpdateWrapper<UserCoupon> ucWrapper = new LambdaUpdateWrapper<>();
-            ucWrapper.eq(UserCoupon::getUserCouponId, order.getCouponId())
-                    .set(UserCoupon::getStatus, "1")
-                    .set(UserCoupon::getUsedOrderId, order.getOrderId())
-                    .set(UserCoupon::getUsedTime, LocalDateTime.now());
-            userCouponMapper.update(null, ucWrapper);
-        }
-
-        // 通过内部调用admin-service增加课时
-        R<Boolean> result = remoteClassHourService.addClassHours(
-                order.getUserId(), order.getQuantity(), AuthConstants.INNER);
-        if (result == null || !R.isSuccess(result)) {
-            throw new ServiceException("增加课时失败，请联系管理员");
-        }
+        confirmCouponUsed(order);
+        creditClassHours(order.getUserId(), order.getQuantity());
 
         return "SUCCESS";
     }
 
     // ============ 私有方法 ============
 
-    /**
-     * 生成订单编号
-     */
+    private Order getMyOrderById(Long orderId) {
+        Long userId = ContextHolder.getUO().getUserInfo().getUserId();
+        Order order = orderMapper.selectById(orderId);
+        if (order == null) {
+            throw new ServiceException("订单不存在");
+        }
+        if (!order.getUserId().equals(userId)) {
+            throw new ServiceException("无权操作此订单");
+        }
+        return order;
+    }
+
+    private void confirmCouponUsed(Order order) {
+        if (order.getCouponId() == null)
+            return;
+        LambdaUpdateWrapper<UserCoupon> ucWrapper = new LambdaUpdateWrapper<>();
+        ucWrapper.eq(UserCoupon::getUserCouponId, order.getCouponId())
+                .set(UserCoupon::getStatus, "1")
+                .set(UserCoupon::getUsedOrderId, order.getOrderId())
+                .set(UserCoupon::getUsedTime, LocalDateTime.now());
+        userCouponMapper.update(null, ucWrapper);
+    }
+
+    private void creditClassHours(Long userId, int hours) {
+        int rows = classHourService.addClassHours(userId, hours);
+        if (rows <= 0) {
+            throw new ServiceException("课时到账失败，请联系管理员");
+        }
+    }
+
     private String generateOrderNo() {
         return "LS" + System.currentTimeMillis() + (int) (Math.random() * 1000);
     }
 
-    /**
-     * 应用优惠券，返回优惠金额
-     */
-    private BigDecimal applyCoupon(Long userCouponId, Long userId, BigDecimal totalAmount) {
+    private BigDecimal applyCoupon(Long userCouponId, Long userId, BigDecimal effectiveAmount) {
         UserCoupon userCoupon = userCouponMapper.selectById(userCouponId);
-        if (userCoupon == null) {
+        if (userCoupon == null)
             throw new ServiceException("优惠券不存在");
-        }
-        if (!userCoupon.getUserId().equals(userId)) {
+        if (!userCoupon.getUserId().equals(userId))
             throw new ServiceException("该优惠券不属于当前用户");
-        }
-        if (!"0".equals(userCoupon.getStatus())) {
+        if (!"0".equals(userCoupon.getStatus()))
             throw new ServiceException("该优惠券已使用或已过期");
-        }
 
         Coupon coupon = couponMapper.selectById(userCoupon.getCouponId());
-        if (coupon == null) {
+        if (coupon == null)
             throw new ServiceException("优惠券模板不存在");
-        }
 
         LocalDateTime now = LocalDateTime.now();
         if (now.isBefore(coupon.getStartTime()) || now.isAfter(coupon.getEndTime())) {
             throw new ServiceException("优惠券不在有效期内");
         }
-
-        if (totalAmount.compareTo(coupon.getMinAmount()) < 0) {
-            throw new ServiceException("订单金额未达到优惠券使用门槛(满" + coupon.getMinAmount() + "元可用)");
+        if (effectiveAmount.compareTo(coupon.getMinAmount()) < 0) {
+            throw new ServiceException("订单金额未达到优惠券使用门槛（满" + coupon.getMinAmount() + "元可用）");
         }
 
         BigDecimal discount;
         if ("0".equals(coupon.getCouponType())) {
-            // 满减券
             discount = coupon.getDiscountValue();
         } else {
-            // 折扣券: 优惠金额 = 总金额 * (1 - 折扣比例)
-            discount = totalAmount.multiply(BigDecimal.ONE.subtract(coupon.getDiscountValue()))
+            discount = effectiveAmount
+                    .multiply(BigDecimal.ONE.subtract(coupon.getDiscountValue()))
                     .setScale(2, RoundingMode.HALF_UP);
         }
 
-        // 锁定优惠券（标记使用中，支付回调时确认）
+        // 锁定优惠券（支付回调时确认）
         userCoupon.setStatus("1");
         userCoupon.setUsedTime(LocalDateTime.now());
         userCouponMapper.updateById(userCoupon);
 
         return discount;
+    }
+
+    private int resolvePackageHours(String pkg) {
+        return switch (pkg) {
+            case PackageType.P10 -> PackageType.P10_HOURS;
+            case PackageType.P30 -> PackageType.P30_HOURS;
+            case PackageType.P50 -> PackageType.P50_HOURS;
+            default -> throw new ServiceException("无效的套餐类型：" + pkg);
+        };
+    }
+
+    private BigDecimal resolvePackagePrice(String pkg) {
+        return switch (pkg) {
+            case PackageType.P10 -> PackageType.P10_PRICE;
+            case PackageType.P30 -> PackageType.P30_PRICE;
+            case PackageType.P50 -> PackageType.P50_PRICE;
+            default -> throw new ServiceException("无效的套餐类型：" + pkg);
+        };
     }
 }

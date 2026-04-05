@@ -68,7 +68,7 @@ public class InnerFileController {
      * 头像上传请求（仅内部调用，限5MB，仅jpg/jpeg/png）
      */
     @InnerAuth
-    @PostMapping("/upload/pic")
+    @PostMapping("/upload/avatar")
     public R<File> uploadAvatar(@RequestPart(value = "file") MultipartFile mf) {
         try {
             String url = fileService.uploadAvatar(mf);
@@ -86,7 +86,7 @@ public class InnerFileController {
      * 头像删除请求（仅内部调用）
      */
     @InnerAuth
-    @DeleteMapping("/delete/pic")
+    @DeleteMapping("/delete/avatar")
     public R<Boolean> deleteAvatar(String fileUrl) {
         try {
             if (!FileUtils.validateFilePath(fileUrl)) {
@@ -140,7 +140,7 @@ public class InnerFileController {
      * 教案上传请求（仅内部调用，限30MB，仅pdf/doc）
      */
     @InnerAuth
-    @PostMapping("/upload/teachingPlan")
+    @PostMapping("/upload/tp")
     public R<File> uploadTeachingPlan(@RequestPart(value = "file") MultipartFile mf) {
         try {
             String url = fileService.uploadTeachingPlan(mf);
@@ -176,7 +176,7 @@ public class InnerFileController {
      * 训练方法上传请求（仅内部调用，限30MB，仅pdf/doc/docx/ppt/pptx）
      */
     @InnerAuth
-    @PostMapping("/upload/trainingMethod")
+    @PostMapping("/upload/tm")
     public R<File> uploadTrainingMethod(@RequestPart(value = "file") MultipartFile mf) {
         try {
             String url = fileService.uploadTrainingMethod(mf);
