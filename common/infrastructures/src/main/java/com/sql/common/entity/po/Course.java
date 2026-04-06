@@ -75,9 +75,40 @@ public class Course {
 
     /**
      * 课程状态
-     * 0-准备中，1-已完成
+     * 0-准备中，1-进行中，2-已完成，3-已取消
      */
     private String status = "0"; // 默认准备中
+
+    /**
+     * 签到照片URL（相对路径）
+     */
+    @TableField("sign_in_photo")
+    private String signInPhoto;
+
+    /**
+     * 签到时间
+     */
+    @TableField("sign_in_time")
+    private LocalDateTime signInTime;
+
+    /**
+     * 签退照片URL（相对路径）
+     */
+    @TableField("sign_out_photo")
+    private String signOutPhoto;
+
+    /**
+     * 签退时间
+     */
+    @TableField("sign_out_time")
+    private LocalDateTime signOutTime;
+
+    /**
+     * 核销状态
+     * 0-未核销，1-已核销
+     */
+    @TableField("verify_status")
+    private String verifyStatus = "0"; // 默认未核销
 
     /**
      * 创建时间

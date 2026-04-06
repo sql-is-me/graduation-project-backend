@@ -20,8 +20,8 @@ import com.sql.admin.service.CourseService;
 import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.dto.CourseCreateDTO;
-import com.sql.common.entity.po.Course;
 import com.sql.common.entity.result.R;
+import com.sql.common.entity.vo.CourseInfo;
 import com.sql.common.entity.vo.TableDataInfo;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;
@@ -46,17 +46,6 @@ public class CourseController extends BaseController {
     }
 
     /**
-     * 安排/更换教练
-     */
-    @RequiresType(UserTypes.MANAGER)
-    @Log(title = "课程管理", businessType = BusinessType.UPDATE, operatorType = UserTypes.MANAGER)
-    @PutMapping("/{courseId}/coach/{coachId}")
-    public R<?> assignCoach(@PathVariable Long courseId, @PathVariable Long coachId) {
-        courseService.assignCoach(courseId, coachId);
-        return R.ok("教练安排成功");
-    }
-
-    /**
      * 取消课程
      */
     @RequiresType(UserTypes.MANAGER)
@@ -65,6 +54,17 @@ public class CourseController extends BaseController {
     public R<?> cancelCourse(@PathVariable Long courseId) {
         courseService.cancelCourse(courseId);
         return R.ok("课程取消成功");
+    }
+
+    /**
+     * 安排/更换教练
+     */
+    @RequiresType(UserTypes.MANAGER)
+    @Log(title = "课程管理", businessType = BusinessType.UPDATE, operatorType = UserTypes.MANAGER)
+    @PutMapping("/{courseId}/coach/{coachId}")
+    public R<?> assignCoach(@PathVariable Long courseId, @PathVariable Long coachId) {
+        courseService.assignCoach(courseId, coachId);
+        return R.ok("教练安排成功");
     }
 
     /**
@@ -96,7 +96,7 @@ public class CourseController extends BaseController {
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate courseDate,
             @RequestParam(required = false) Long storeId) {
         startPage();
-        List<Course> list = courseService.listCourses(storeId, courseDate);
+        List<CourseInfo> list = courseService.listCourses(storeId, courseDate);
         return getDataTable(list);
     }
 

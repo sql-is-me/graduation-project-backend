@@ -21,12 +21,6 @@ spring:
     import:
       - nacos:user-service-dev.yml
 
-# 文件服务访问基础地址
-file:
-  avatar-path: http://127.0.0.1:9900/pics/avatars
-  tp-path: http://127.0.0.1:9900/tps
-  tm-path: http://127.0.0.1:9900/tms
-
 wechat:
   app-id: wx1234567890abcdef
   app-secret: abcdef123

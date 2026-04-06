@@ -31,6 +31,11 @@ public class FileUploadUtils {
     public static final long PICTURE_MAX_SIZE = 5 * 1024 * 1024L;
 
     /**
+     * 孩子照片最大大小 10M
+     */
+    public static final long CHILDREN_PHOTO_MAX_SIZE = 10 * 1024 * 1024L;
+
+    /**
      * 签到/签退图片最大大小 20M
      */
     public static final long SIGN_PICTURE_MAX_SIZE = 20 * 1024 * 1024L;
@@ -116,6 +121,19 @@ public class FileUploadUtils {
     public static final String uploadTrainingMethod(String baseDir, MultipartFile file) throws IOException {
         try {
             return upload(baseDir, file, TEACHING_PLAN_MAX_SIZE, MimeTypeUtils.TRAINING_METHOD_EXTENSION);
+        } catch (FileException fe) {
+            throw new IOException(fe.getDefaultMessage(), fe);
+        } catch (Exception e) {
+            throw new IOException(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 孩子照片上传（限制10MB，仅允许jpg/jpeg/png）
+     */
+    public static final String uploadChildPhoto(String baseDir, MultipartFile file) throws IOException {
+        try {
+            return upload(baseDir, file, CHILDREN_PHOTO_MAX_SIZE, MimeTypeUtils.AVATAR_EXTENSION);
         } catch (FileException fe) {
             throw new IOException(fe.getDefaultMessage(), fe);
         } catch (Exception e) {

@@ -5,14 +5,20 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.sql.api.RemoteFileService;
+import com.sql.common.entity.bo.File;
 import com.sql.common.entity.bo.UserOnline;
 import com.sql.common.entity.po.Children;
+import com.sql.common.entity.result.R;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 import com.sql.user.dto.ChildrenDTO;
 import com.sql.user.mapper.ChildrenMapper;
 import com.sql.user.service.ChildrenService;
+import com.sql.utils.StringUtils;
+import com.sql.utils.file.FileUtils;
 
 /**
  * 孩子信息管理服务
@@ -23,6 +29,9 @@ public class ChildrenServiceImpl implements ChildrenService {
     @Autowired
     private ChildrenMapper childrenMapper;
 
+    @Autowired
+    private RemoteFileService remoteFileService;
+
     /**
      * 查询当前会员的孩子列表
      */
@@ -30,7 +39,9 @@ public class ChildrenServiceImpl implements ChildrenService {
     public List<Children> listByCurrentUser() {
         UserOnline uo = ContextHolder.getUO();
         Long parentId = uo.getUserInfo().getUserId();
-        return childrenMapper.selectByParentId(parentId);
+        List<Children> list = childrenMapper.selectByParentId(parentId);
+        list.forEach(c -> c.setPhoto(FileUtils.toAbsoluteUrl(FileUtils.TYPE_CHILD_PHOTO, c.getPhoto())));
+        return list;
     }
 
     /**
@@ -48,6 +59,7 @@ public class ChildrenServiceImpl implements ChildrenService {
         if (!child.getParentId().equals(uo.getUserInfo().getUserId())) {
             throw new ServiceException("无权查看该孩子信息");
         }
+        child.setPhoto(FileUtils.toAbsoluteUrl(FileUtils.TYPE_CHILD_PHOTO, child.getPhoto()));
         return child;
     }
 
@@ -116,6 +128,36 @@ public class ChildrenServiceImpl implements ChildrenService {
         if (rows <= 0) {
             throw new ServiceException("修改孩子信息失败");
         }
+    }
+
+    /**
+     * 上传/更换孩子照片
+     */
+    @Override
+    public void updatePhoto(Long childId, MultipartFile file) {
+        Children child = childrenMapper.selectById(childId);
+        if (child == null) {
+            throw new ServiceException("孩子信息不存在");
+        }
+
+        UserOnline uo = ContextHolder.getUO();
+        if (!child.getParentId().equals(uo.getUserInfo().getUserId())) {
+            throw new ServiceException("无权修改该孩子照片");
+        }
+
+        R<File> result = remoteFileService.uploadChildPhoto(file);
+        if (StringUtils.isNull(result) || StringUtils.isNull(result.getData())) {
+            throw new ServiceException("文件服务异常，请联系管理员");
+        }
+
+        // 删除旧照片（非默认）
+        String oldPhoto = child.getPhoto();
+        if (StringUtils.isNotEmpty(oldPhoto) && !oldPhoto.endsWith("/default_child.jpg")) {
+            remoteFileService.deleteChildPhoto(oldPhoto);
+        }
+
+        child.setPhoto(result.getData().getUrl());
+        childrenMapper.updateById(child);
     }
 
     /**

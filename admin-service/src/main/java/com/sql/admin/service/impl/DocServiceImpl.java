@@ -3,7 +3,6 @@ package com.sql.admin.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.sql.admin.mapper.TeachingPlanMapper;
@@ -16,6 +15,7 @@ import com.sql.common.entity.vo.TeachingPlanInfo;
 import com.sql.common.entity.vo.TrainingMethodInfo;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
+import com.sql.utils.file.FileUtils;
 
 /**
  * 店铺文档服务实现
@@ -29,11 +29,6 @@ public class DocServiceImpl implements DocService {
     @Autowired
     private TrainingMethodMapper trainingMethodMapper;
 
-    @Value("${file.tp-path}")
-    private String tpUrl;
-
-    @Value("${file.tm-path}")
-    private String tmUrl;
 
     /**
      * 获取当前管理员所属店铺ID，系统管理员不允许直接调用文档接口
@@ -68,7 +63,7 @@ public class DocServiceImpl implements DocService {
     public String getTeachingPlanFileUrl(Long tpId) {
         TeachingPlan tp = getTeachingPlan(tpId);
         // fileUrl 为相对路径如 /xxx.pdf，拼接对应 url 返回完整可访问地址
-        return tpUrl + tp.getFileUrl();
+        return FileUtils.toAbsoluteUrl(FileUtils.TYPE_TP, tp.getFileUrl());
     }
 
     @Override
@@ -91,6 +86,6 @@ public class DocServiceImpl implements DocService {
     @Override
     public String getTrainingMethodFileUrl(Long tmId) {
         TrainingMethod tm = getTrainingMethod(tmId);
-        return tmUrl + tm.getFileUrl();
+        return FileUtils.toAbsoluteUrl(FileUtils.TYPE_TM, tm.getFileUrl());
     }
 }

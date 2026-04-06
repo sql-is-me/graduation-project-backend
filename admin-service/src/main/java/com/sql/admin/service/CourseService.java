@@ -4,7 +4,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.sql.common.entity.dto.CourseCreateDTO;
-import com.sql.common.entity.po.Course;
+import com.sql.common.entity.vo.CourseDetailedInfo;
+import com.sql.common.entity.vo.CourseInfo;
 
 public interface CourseService {
     /**
@@ -13,14 +14,14 @@ public interface CourseService {
     long createCourse(CourseCreateDTO dto);
 
     /**
-     * 安排/更换教练
-     */
-    void assignCoach(Long courseId, Long coachId);
-
-    /**
      * 取消课程
      */
     void cancelCourse(Long courseId);
+
+    /**
+     * 安排/更换教练
+     */
+    void assignCoach(Long courseId, Long coachId);
 
     /**
      * 批量安排孩子上课
@@ -35,10 +36,10 @@ public interface CourseService {
     /**
      * 查询课程列表（按日期筛选）
      */
-    List<Course> listCourses(Long StoreId, LocalDate courseDate);
+    List<CourseInfo> listCourses(Long StoreId, LocalDate courseDate);
 
     /**
      * 查询课程详情
      */
-    Course getCourseById(Long courseId);
+    CourseDetailedInfo getCourseById(Long courseId);
 }

@@ -21,7 +21,9 @@ import com.sql.common.entity.dto.StoreCreateDTO;
 import com.sql.common.entity.dto.StoreUpdateDTO;
 import com.sql.common.entity.po.Store;
 import com.sql.common.entity.result.R;
+import com.sql.common.entity.vo.CoachesInfo;
 import com.sql.common.entity.vo.TableDataInfo;
+import com.sql.common.entity.vo.VIPsInfo;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;
 import com.sql.common.log.enums.BusinessType;
@@ -100,5 +102,28 @@ public class StoreController extends BaseController {
     @GetMapping("/{storeId}")
     public R<?> getStoreById(@PathVariable Long storeId) {
         return R.ok(storeService.getStoreById(storeId));
+    }
+
+    /**
+     * 查看当前店铺旗下会员信息
+     * 包含基础信息、孩子信息及课时余额
+     */
+    @RequiresType(UserTypes.MANAGER)
+    @GetMapping("/list/vip")
+    public TableDataInfo listStoreVIPs() {
+        startPage();
+        List<VIPsInfo> list = storeService.listStoreVIPs();
+        return getDataTable(list);
+    }
+
+    /**
+     * 查看当前店铺旗下教练信息
+     */
+    @RequiresType(UserTypes.MANAGER)
+    @GetMapping("/list/coach")
+    public TableDataInfo listStoreCoachs() {
+        startPage();
+        List<CoachesInfo> list = storeService.listStoreCoachs();
+        return getDataTable(list);
     }
 }

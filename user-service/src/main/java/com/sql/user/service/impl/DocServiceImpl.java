@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +29,7 @@ import com.sql.user.mapper.TeachingPlanMapper;
 import com.sql.user.mapper.TrainingMethodMapper;
 import com.sql.user.service.DocService;
 import com.sql.utils.StringUtils;
+import com.sql.utils.file.FileUtils;
 
 /**
  * 教练文档服务实现（教案 + 训练方法）
@@ -48,12 +48,6 @@ public class DocServiceImpl implements DocService {
 
     @Autowired
     private RemoteFileService remoteFileService;
-
-    @Value("${file.tp-path}")
-    private String tpUrl;
-
-    @Value("${file.tm-path}")
-    private String tmUrl;
 
     @Override
     public void uploadTeachingPlan(TeachingPlanUploadDTO dto, MultipartFile file) {
@@ -93,7 +87,7 @@ public class DocServiceImpl implements DocService {
         // 创建审核请求 payload: {"tpId":1, "fileUrl":"/abs/path.pdf"}
         Map<String, Object> payload = new HashMap<>();
         payload.put("tpId", tp.getTpId());
-        payload.put("fileUrl", tpUrl + fileUrl);
+        payload.put("fileUrl", FileUtils.toAbsoluteUrl(FileUtils.TYPE_TP, fileUrl));
 
         Request req = new Request();
         req.setSenderId(coach.getUserId());
@@ -127,7 +121,7 @@ public class DocServiceImpl implements DocService {
         if (!tp.getCoachId().equals(uo.getUserInfo().getUserId())) {
             throw new ServiceException("无权访问该教案");
         }
-        return tpUrl + tp.getFileUrl();
+        return FileUtils.toAbsoluteUrl(FileUtils.TYPE_TP, tp.getFileUrl());
     }
 
     @Override
@@ -168,7 +162,7 @@ public class DocServiceImpl implements DocService {
         // 创建审核请求 payload: {"tmId":1, "fileUrl":"/abs/path.pdf"}
         Map<String, Object> payload = new HashMap<>();
         payload.put("tmId", tm.getTmId());
-        payload.put("fileUrl", tmUrl + fileUrl);
+        payload.put("fileUrl", FileUtils.toAbsoluteUrl(FileUtils.TYPE_TM, fileUrl));
 
         Request req = new Request();
         req.setSenderId(coach.getUserId());
@@ -216,6 +210,6 @@ public class DocServiceImpl implements DocService {
         if (!tm.getStoreId().equals(storeId)) {
             throw new ServiceException("无权访问该训练方法");
         }
-        return tmUrl + tm.getFileUrl();
+        return FileUtils.toAbsoluteUrl(FileUtils.TYPE_TM, tm.getFileUrl());
     }
 }

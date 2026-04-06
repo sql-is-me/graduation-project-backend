@@ -33,9 +33,3 @@ spring:
   config:
     import:
       - nacos:admin-service-dev.yml
-
-# 文件服务访问基础地址
-file:
-  avatar-path: http://127.0.0.1:9900/pics/avatars
-  tp-path: http://127.0.0.1:9900/tps
-  tm-path: http://127.0.0.1:9900/tms

@@ -207,4 +207,40 @@ public class InnerFileController {
             return R.fail(e.getMessage());
         }
     }
+
+    /**
+     * 孩子照片上传请求（仅内部调用，限10MB，仅jpg/jpeg/png）
+     */
+    @InnerAuth
+    @PostMapping("/upload/child-photo")
+    public R<File> uploadChildPhoto(@RequestPart(value = "file") MultipartFile mf) {
+        try {
+            String url = fileService.uploadChildPhoto(mf);
+            File file = new File();
+            file.setName(FileUtils.getName(url));
+            file.setUrl(url);
+            return R.ok(file);
+        } catch (Exception e) {
+            log.error("上传孩子照片失败", e);
+            return R.fail(e.getMessage());
+        }
+    }
+
+    /**
+     * 孩子照片删除请求（仅内部调用）
+     */
+    @InnerAuth
+    @DeleteMapping("/delete/child-photo")
+    public R<Boolean> deleteChildPhoto(String fileUrl) {
+        try {
+            if (!FileUtils.validateFilePath(fileUrl)) {
+                throw new Exception(StringUtils.format("资源文件({})非法，不允许删除。 ", fileUrl));
+            }
+            fileService.deleteChildPhoto(fileUrl);
+            return R.ok();
+        } catch (Exception e) {
+            log.error("删除孩子照片失败", e);
+            return R.fail(e.getMessage());
+        }
+    }
 }

@@ -3,7 +3,9 @@ package com.sql.user.service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sql.common.entity.po.ClassHour;
+import com.sql.common.entity.vo.CoachInfo;
 import com.sql.common.entity.vo.UserInfo;
+import com.sql.common.entity.vo.VIPInfo;
 import com.sql.user.dto.UserInfoUpdateDTO;
 import com.sql.user.dto.UserUpdateEmailDTO;
 
@@ -40,4 +42,15 @@ public interface InfoService {
      * 查询当前用户课时信息（总课时、已用、剩余）
      */
     ClassHour getClassHour();
+
+    /**
+     * 查询指定会员的详细信息
+     * 包含剩余课时和孩子信息
+     */
+    VIPInfo getVIPInfo(Long vipId);// TODO: 何意味？
+
+    /**
+     * 查询指定教练的详细信息
+     */
+    CoachInfo getCoachInfo(Long coachId);
 }

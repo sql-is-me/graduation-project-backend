@@ -1,6 +1,8 @@
 package com.sql.admin.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -8,12 +10,16 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sql.admin.mapper.AdminMapper;
 import com.sql.admin.mapper.StoreMapper;
+import com.sql.admin.mapper.UserMapper;
 import com.sql.admin.service.StoreService;
 import com.sql.common.entity.dto.StoreCreateDTO;
 import com.sql.common.entity.dto.StoreUpdateDTO;
 import com.sql.common.entity.po.Admin;
 import com.sql.common.entity.po.Store;
+import com.sql.common.entity.po.User;
+import com.sql.common.entity.vo.CoachesInfo;
 import com.sql.common.entity.vo.StoreInfo;
+import com.sql.common.entity.vo.VIPsInfo;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 import com.sql.utils.StringUtils;
@@ -26,6 +32,9 @@ public class StoreServiceImpl implements StoreService {
 
     @Autowired
     private AdminMapper adminMapper;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public Long createStore(StoreCreateDTO dto) {
@@ -133,5 +142,57 @@ public class StoreServiceImpl implements StoreService {
             throw new ServiceException("店铺不存在");
         }
         return storeInfo;
+    }
+
+    @Override
+    public List<VIPsInfo> listStoreVIPs() {
+        Long storeId = ContextHolder.getAO().getAdminInfo().getStoreId();
+        if (storeId == null) {
+            throw new ServiceException("当前管理员未绑定店铺");
+        }
+
+        // 查询本店所有会员（userType=0）
+        LambdaQueryWrapper<User> userWrapper = new LambdaQueryWrapper<>();
+        userWrapper.eq(User::getStoreId, storeId)
+                .eq(User::getUserType, "0")
+                .orderByDesc(User::getCreateTime);
+        List<User> vips = userMapper.selectList(userWrapper);
+
+        if (vips.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<VIPsInfo> vipsInfo = vips
+                .stream()
+                .map(VIPsInfo::new)
+                .collect(Collectors.toList());
+
+        return vipsInfo;
+    }
+
+    @Override
+    public List<CoachesInfo> listStoreCoachs() {
+        Long storeId = ContextHolder.getAO().getAdminInfo().getStoreId();
+        if (storeId == null) {
+            throw new ServiceException("当前管理员未绑定店铺");
+        }
+
+        // 查询本店所有教练
+        LambdaQueryWrapper<User> userWrapper = new LambdaQueryWrapper<>();
+        userWrapper.eq(User::getStoreId, storeId)
+                .eq(User::getUserType, "1")
+                .orderByDesc(User::getCreateTime);
+        List<User> coaches = userMapper.selectList(userWrapper);
+
+        if (coaches.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        List<CoachesInfo> coachesInfo = coaches
+                .stream()
+                .map(CoachesInfo::new)
+                .collect(Collectors.toList());
+
+        return coachesInfo;
     }
 }

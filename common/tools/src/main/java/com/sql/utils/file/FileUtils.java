@@ -4,10 +4,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Properties;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.ArrayUtils;
@@ -25,6 +27,69 @@ public class FileUtils {
     public static final char BACKSLASH = '\\';
 
     public static String FILENAME_PATTERN = "[a-zA-Z0-9_\\-\\|\\.\\u4e00-\\u9fa5]+";
+
+    // ── 文件类型常量（与 file-service ResourcesConfig 路径映射一致） ──
+
+    public static final String TYPE_AVATAR = "avatar";
+    public static final String TYPE_SIGN = "sign";
+    public static final String TYPE_TP = "tp";
+    public static final String TYPE_TM = "tm";
+    public static final String TYPE_CHILD_PHOTO = "child_photo";
+
+    /** 文件服务域名，从 file.properties 读取，默认值兜底 */
+    private static String fileDomain = "http://127.0.0.1:9900";
+
+    static {
+        try (InputStream is = FileUtils.class.getResourceAsStream("/file.properties")) {
+            if (is != null) {
+                Properties props = new Properties();
+                props.load(is);
+                String d = props.getProperty("file.domain");
+                if (d != null && !d.isBlank()) {
+                    fileDomain = d;
+                }
+            }
+        } catch (IOException ignored) {
+        }
+    }
+
+    /** 文件类型 → HTTP 路径映射 */
+    private static String typePath(String type) {
+        return switch (type) {
+            case TYPE_AVATAR -> "/pics/avatars";
+            case TYPE_SIGN -> "/pics/signs";
+            case TYPE_TP -> "/tps";
+            case TYPE_TM -> "/tms";
+            case TYPE_CHILD_PHOTO -> "/pics/children/photos";
+            default -> throw new IllegalArgumentException("未知的文件类型：" + type);
+        };
+    }
+
+    /**
+     * 将数据库中存储的相对路径拼接为完整访问 URL
+     * <p>
+     * 例如：toAbsoluteUrl("avatar", "/20260322_xxx.jpg")
+     * 返回："http://127.0.0.1:9900/pics/avatars/20260322_xxx.jpg"
+     * </p>
+     *
+     * @param type         文件类型常量（TYPE_AVATAR / TYPE_SIGN / TYPE_TP / TYPE_TM）
+     * @param relativePath 数据库中存储的相对路径（如 /20260322_xxx.jpg）
+     * @return 完整的访问 URL；如果相对路径为空则返回 null
+     */
+    public static String toAbsoluteUrl(String type, String relativePath) {
+        if (relativePath == null || relativePath.isBlank()) {
+            return null;
+        }
+        String basePath = fileDomain + typePath(type);
+        // 避免拼接时出现双斜杠
+        if (basePath.endsWith("/") && relativePath.startsWith("/")) {
+            return basePath + relativePath.substring(1);
+        }
+        if (!basePath.endsWith("/") && !relativePath.startsWith("/")) {
+            return basePath + "/" + relativePath;
+        }
+        return basePath + relativePath;
+    }
 
     /**
      * 输出指定文件的byte数组

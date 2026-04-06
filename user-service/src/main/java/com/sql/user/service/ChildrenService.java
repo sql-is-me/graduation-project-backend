@@ -2,6 +2,8 @@ package com.sql.user.service;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.sql.common.entity.po.Children;
 import com.sql.user.dto.ChildrenDTO;
 
@@ -30,7 +32,13 @@ public interface ChildrenService {
     void update(ChildrenDTO dto);
 
     /**
+     * 上传/更换孩子照片
+     */
+    void updatePhoto(Long childId, MultipartFile file);
+
+    /**
      * 删除孩子信息
      */
     void delete(Long childId);
+
 }

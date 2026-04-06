@@ -3,7 +3,6 @@ package com.sql.admin.service.impl;
 import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,6 +25,7 @@ import com.sql.common.tokens.AdminTokenService;
 import com.sql.utils.PasswordUtils;
 import com.sql.utils.StringUtils;
 import com.sql.utils.file.FileTypeUtils;
+import com.sql.utils.file.FileUtils;
 import com.sql.utils.file.MimeTypeUtils;
 
 /**
@@ -46,9 +46,6 @@ public class InfoServiceImpl implements InfoService {
     @Autowired
     private RemoteFileService remoteFileService;
 
-    @Value("${file.avatar-path}")
-    private String avatarUrl;
-
     /**
      * 获取管理员个人信息
      */
@@ -57,9 +54,7 @@ public class InfoServiceImpl implements InfoService {
         Admin admin = ContextHolder.getAO().getAdminInfo();
         AdminInfo info = new AdminInfo(admin);
         // 拼接完整头像 URL
-        if (StringUtils.isNotEmpty(admin.getAvatar())) {
-            info.setAvatar(avatarUrl + admin.getAvatar());
-        }
+        info.setAvatar(FileUtils.toAbsoluteUrl(FileUtils.TYPE_AVATAR, admin.getAvatar()));
         return info;
     }
 

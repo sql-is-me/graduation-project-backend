@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.po.Children;
@@ -69,6 +71,17 @@ public class ChildrenController {
     public R<?> update(@RequestBody ChildrenDTO dto) {
         childrenService.update(dto);
         return R.ok("修改孩子信息成功");
+    }
+
+    /**
+     * 上传/更换孩子照片
+     */
+    @Log(title = "孩子照片", businessType = BusinessType.UPDATE)
+    @PostMapping("/{childId}/photo")
+    public R<?> updatePhoto(@PathVariable Long childId,
+            @RequestPart("file") MultipartFile file) {
+        childrenService.updatePhoto(childId, file);
+        return R.ok("上传孩子照片成功");
     }
 
     /**

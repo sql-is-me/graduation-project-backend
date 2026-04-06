@@ -78,4 +78,16 @@ public interface RemoteFileService {
      */
     @DeleteMapping(value = "/delete/tm")
     R<Boolean> deleteTrainingMethod(@RequestParam String fileUrl);
+
+    /**
+     * 上传孩子照片（jpg/jpeg/png，限10MB）
+     */
+    @PostMapping(value = "/upload/child-photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    R<File> uploadChildPhoto(@RequestPart(value = "file") MultipartFile file);
+
+    /**
+     * 删除孩子照片
+     */
+    @DeleteMapping(value = "/delete/child-photo")
+    R<Boolean> deleteChildPhoto(@RequestParam String fileUrl);
 }

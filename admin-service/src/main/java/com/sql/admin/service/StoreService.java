@@ -5,7 +5,9 @@ import java.util.List;
 import com.sql.common.entity.dto.StoreCreateDTO;
 import com.sql.common.entity.dto.StoreUpdateDTO;
 import com.sql.common.entity.po.Store;
+import com.sql.common.entity.vo.CoachesInfo;
 import com.sql.common.entity.vo.StoreInfo;
+import com.sql.common.entity.vo.VIPsInfo;
 
 public interface StoreService {
     /**
@@ -30,6 +32,7 @@ public interface StoreService {
 
     /**
      * 查询店铺列表
+     * 
      * @param status 店铺状态筛选
      */
     List<Store> listStores(String status);
@@ -38,4 +41,14 @@ public interface StoreService {
      * 根据ID查询店铺
      */
     StoreInfo getStoreById(Long storeId);
+
+    /**
+     * 查看当前店铺旗下所有会员信息（含孩子信息与课时余额）
+     */
+    List<VIPsInfo> listStoreVIPs();
+
+    /**
+     * 查看当前店铺旗下所有教练信息
+     */
+    List<CoachesInfo> listStoreCoachs();
 }

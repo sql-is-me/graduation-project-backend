@@ -70,6 +70,16 @@ public class RemoteFileFallbackFactory implements FallbackFactory<RemoteFileServ
             public R<Boolean> deleteTrainingMethod(String fileUrl) {
                 return R.fail("删除训练方法失败:" + throwable.getMessage());
             }
+
+            @Override
+            public R<File> uploadChildPhoto(MultipartFile file) {
+                return R.fail("上传孩子照片失败:" + throwable.getMessage());
+            }
+
+            @Override
+            public R<Boolean> deleteChildPhoto(String fileUrl) {
+                return R.fail("删除孩子照片失败:" + throwable.getMessage());
+            }
         };
     }
 }

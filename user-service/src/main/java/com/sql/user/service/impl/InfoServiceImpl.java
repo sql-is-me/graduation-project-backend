@@ -1,18 +1,23 @@
 package com.sql.user.service.impl;
 
 import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sql.api.RemoteFileService;
 import com.sql.common.entity.bo.File;
 import com.sql.common.entity.bo.UserOnline;
+import com.sql.common.entity.po.Children;
 import com.sql.common.entity.po.ClassHour;
 import com.sql.common.entity.po.User;
 import com.sql.common.entity.result.R;
+import com.sql.common.entity.vo.CoachInfo;
 import com.sql.common.entity.vo.UserInfo;
+import com.sql.common.entity.vo.VIPInfo;
+import com.sql.user.mapper.ChildrenMapper;
 import com.sql.user.mapper.ClassHourMapper;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
@@ -24,6 +29,7 @@ import com.sql.user.mapper.UserMapper;
 import com.sql.user.service.InfoService;
 import com.sql.utils.StringUtils;
 import com.sql.utils.file.FileTypeUtils;
+import com.sql.utils.file.FileUtils;
 import com.sql.utils.file.MimeTypeUtils;
 
 /**
@@ -34,6 +40,9 @@ public class InfoServiceImpl implements InfoService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private ChildrenMapper childrenMapper;
 
     @Autowired
     private ClassHourMapper classHourMapper;
@@ -47,9 +56,6 @@ public class InfoServiceImpl implements InfoService {
     @Autowired
     private RemoteFileService remoteFileService;
 
-    @Value("${file.avatar-path}")
-    private String avatarUrl;
-
     /**
      * 获取当前登录用户信息
      */
@@ -58,9 +64,7 @@ public class InfoServiceImpl implements InfoService {
         User user = ContextHolder.getUO().getUserInfo();
         UserInfo info = new UserInfo(user);
         // 拼接完整头像 URL
-        if (StringUtils.isNotEmpty(user.getAvatar())) {
-            info.setAvatar(avatarUrl + user.getAvatar());
-        }
+        info.setAvatar(FileUtils.toAbsoluteUrl(FileUtils.TYPE_AVATAR, user.getAvatar()));
         return info;
     }
 
@@ -201,5 +205,37 @@ public class InfoServiceImpl implements InfoService {
         mailService.sendEmailCode(email, emailCode);
 
         return emailCode; // FIXME:自动化测试使用，正式环境不应返回验证码
+    }
+
+    @Override
+    public VIPInfo getVIPInfo(Long vipId) {
+        User vip = userMapper.selectById(vipId);
+
+        if (vip == null) {
+            throw new ServiceException("该会员不存在");
+        }
+
+        // 批量查询孩子，按 parentId 分组
+        List<Children> children = childrenMapper.selectByParentId(vipId);
+
+        // 批量查询课时
+        ClassHour classHour = classHourMapper.selectByVIPId(vipId);
+
+        VIPInfo vipInfo = new VIPInfo(vip, classHour.getRemainingHours(), children);
+        vipInfo.setAvatar(FileUtils.toAbsoluteUrl(FileUtils.TYPE_AVATAR, vip.getAvatar()));
+        return vipInfo;
+    }
+
+    @Override
+    public CoachInfo getCoachInfo(Long coachId) {
+        User coach = userMapper.selectById(coachId);
+
+        if (coach == null) {
+            throw new ServiceException("该教练不存在");
+        }
+
+        CoachInfo coachInfo = new CoachInfo(coach);
+        coachInfo.setAvatar(FileUtils.toAbsoluteUrl(FileUtils.TYPE_AVATAR, coach.getAvatar()));
+        return coachInfo;
     }
 }
