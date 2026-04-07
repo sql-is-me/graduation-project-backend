@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sql.common.entity.po.AttendanceRecord;
-import com.sql.common.entity.po.Children;
+import com.sql.common.entity.po.Child;
 import com.sql.common.entity.po.Course;
 import com.sql.common.entity.po.User;
 import com.sql.common.entity.vo.ChildAndAttendanceInfo;
@@ -23,7 +23,7 @@ import com.sql.common.entity.vo.CourseInfo;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 import com.sql.utils.file.FileUtils;
-import com.sql.user.mapper.ChildrenMapper;
+import com.sql.user.mapper.ChildMapper;
 import com.sql.user.mapper.CourseChildMapper;
 import com.sql.user.mapper.CourseMapper;
 import com.sql.user.mapper.UserMapper;
@@ -39,7 +39,7 @@ public class CourseServiceImpl implements CourseService {
     private CourseChildMapper courseChildMapper;
 
     @Autowired
-    private ChildrenMapper childrenMapper;
+    private ChildMapper childMapper;
 
     @Autowired
     private UserMapper userMapper;
@@ -136,11 +136,11 @@ public class CourseServiceImpl implements CourseService {
     public List<CourseInfo> listVipCourses(LocalDate courseDate) {
         Long parentId = ContextHolder.getUO().getUserInfo().getUserId();
 
-        List<Children> children = childrenMapper.selectByParentId(parentId);
+        List<Child> children = childMapper.selectByParentId(parentId);
         if (children == null || children.isEmpty()) {
             return new ArrayList<>();
         }
-        List<Long> myChildIds = children.stream().map(Children::getChildId).toList();
+        List<Long> myChildIds = children.stream().map(Child::getChildId).toList();
 
         LambdaQueryWrapper<Course> wrapper = new LambdaQueryWrapper<>();
         if (courseDate != null) {
@@ -175,8 +175,8 @@ public class CourseServiceImpl implements CourseService {
         }
 
         // 获取自己名下的孩子ID集合
-        List<Children> myChildren = childrenMapper.selectByParentId(parentId);
-        Set<Long> myChildIds = myChildren.stream().map(Children::getChildId).collect(Collectors.toSet());
+        List<Child> myChildren = childMapper.selectByParentId(parentId);
+        Set<Long> myChildIds = myChildren.stream().map(Child::getChildId).collect(Collectors.toSet());
 
         // 校验该课程下至少有一个属于自己的孩子
         boolean hasChild = course.getChildIds() != null &&
@@ -242,7 +242,7 @@ public class CourseServiceImpl implements CourseService {
             if (filterIds != null && !filterIds.contains(childId))
                 continue;
 
-            Children child = childrenMapper.selectById(childId);
+            Child child = childMapper.selectById(childId);
             if (child == null)
                 continue;
 

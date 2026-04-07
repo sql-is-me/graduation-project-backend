@@ -2,7 +2,8 @@ package com.sql.common.entity.vo;
 
 import java.util.List;
 
-import com.sql.common.entity.po.Children;
+import com.sql.common.entity.po.Child;
+import com.sql.common.entity.po.ClassHour;
 import com.sql.common.entity.po.User;
 
 import lombok.Data;
@@ -25,10 +26,13 @@ public class VIPInfo {
     /** 课时余额 */
     private Integer remainingHours;
 
-    /** 该会员的孩子列表 */
-    private List<Children> children;
+    /** 已用课时 */
+    private Integer usedHours;
 
-    public VIPInfo(User user, Integer remainingHours, List<Children> children) {
+    /** 该会员的孩子列表 */
+    private List<Child> children;
+
+    public VIPInfo(User user, ClassHour classHour, List<Child> children) {
         this.userId = user.getUserId();
         this.nickName = user.getNickName();
         this.phone = user.getPhone();
@@ -36,7 +40,8 @@ public class VIPInfo {
         this.sex = user.getSex();
         this.avatar = user.getAvatar();
         this.status = user.getStatus();
-        this.remainingHours = remainingHours;
+        this.remainingHours = classHour.getRemainingHours();
+        this.usedHours = classHour.getUsedHours();
         this.children = children;
     }
 }

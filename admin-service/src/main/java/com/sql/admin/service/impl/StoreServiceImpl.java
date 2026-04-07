@@ -9,23 +9,28 @@ import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sql.admin.mapper.AdminMapper;
-import com.sql.admin.mapper.ChildrenMapper;
+import com.sql.admin.mapper.ChildMapper;
+import com.sql.admin.mapper.ClassHourMapper;
 import com.sql.admin.mapper.StoreMapper;
 import com.sql.admin.mapper.UserMapper;
 import com.sql.admin.service.StoreService;
 import com.sql.common.entity.dto.StoreCreateDTO;
 import com.sql.common.entity.dto.StoreUpdateDTO;
 import com.sql.common.entity.po.Admin;
-import com.sql.common.entity.po.Children;
+import com.sql.common.entity.po.Child;
+import com.sql.common.entity.po.ClassHour;
 import com.sql.common.entity.po.Store;
 import com.sql.common.entity.po.User;
 import com.sql.common.entity.vo.ChildInfo;
+import com.sql.common.entity.vo.CoachInfo;
 import com.sql.common.entity.vo.CoachesInfo;
 import com.sql.common.entity.vo.StoreInfo;
+import com.sql.common.entity.vo.VIPInfo;
 import com.sql.common.entity.vo.VIPsInfo;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 import com.sql.utils.StringUtils;
+import com.sql.utils.file.FileUtils;
 
 @Service
 public class StoreServiceImpl implements StoreService {
@@ -40,7 +45,10 @@ public class StoreServiceImpl implements StoreService {
     private UserMapper userMapper;
 
     @Autowired
-    private ChildrenMapper childrenMapper;
+    private ChildMapper childMapper;
+
+    @Autowired
+    private ClassHourMapper classHourMapper;
 
     @Override
     public Long createStore(StoreCreateDTO dto) {
@@ -177,6 +185,24 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
+    public VIPInfo getVIPInfo(Long vipId) {
+        User vip = userMapper.selectById(vipId);
+        if (vip == null || !"0".equals(vip.getUserType())) {
+            throw new ServiceException("该会员不存在");
+        }
+
+        // 查询孩子
+        List<Child> children = childMapper.selectByParentId(vipId);
+
+        // 查询课时
+        ClassHour classHour = classHourMapper.selectByVIPId(vipId);
+
+        VIPInfo vipInfo = new VIPInfo(vip, classHour, children);
+        vipInfo.setAvatar(FileUtils.toAbsoluteUrl(FileUtils.TYPE_AVATAR, vip.getAvatar()));
+        return vipInfo;
+    }
+
+    @Override
     public List<CoachesInfo> listStoreCoaches() {
         Long storeId = ContextHolder.getAO().getAdminInfo().getStoreId();
         if (storeId == null) {
@@ -203,6 +229,18 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
+    public CoachInfo getCoachInfo(Long coachId) {
+        User coach = userMapper.selectById(coachId);
+        if (coach == null || !"1".equals(coach.getUserType())) {
+            throw new ServiceException("该教练不存在");
+        }
+
+        CoachInfo coachInfo = new CoachInfo(coach);
+        coachInfo.setAvatar(FileUtils.toAbsoluteUrl(FileUtils.TYPE_AVATAR, coach.getAvatar()));
+        return coachInfo;
+    }
+
+    @Override
     public List<ChildInfo> listStoreChildren() {
         Long storeId = ContextHolder.getAO().getAdminInfo().getStoreId();
         if (storeId == null) {
@@ -222,9 +260,9 @@ public class StoreServiceImpl implements StoreService {
         }
 
         // 查这些会员旗下的所有孩子
-        LambdaQueryWrapper<Children> childWrapper = new LambdaQueryWrapper<>();
-        childWrapper.in(Children::getParentId, parentIds).orderByAsc(Children::getParentId);
-        List<Children> children = childrenMapper.selectList(childWrapper);
+        LambdaQueryWrapper<Child> childWrapper = new LambdaQueryWrapper<>();
+        childWrapper.in(Child::getParentId, parentIds).orderByAsc(Child::getParentId);
+        List<Child> children = childMapper.selectList(childWrapper);
 
         return children.stream().map(ChildInfo::new).collect(Collectors.toList());
     }

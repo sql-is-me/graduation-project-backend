@@ -1,7 +1,6 @@
 package com.sql.user.service.impl;
 
 import java.util.Arrays;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,14 +9,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.sql.api.RemoteFileService;
 import com.sql.common.entity.bo.File;
 import com.sql.common.entity.bo.UserOnline;
-import com.sql.common.entity.po.Children;
 import com.sql.common.entity.po.ClassHour;
 import com.sql.common.entity.po.User;
 import com.sql.common.entity.result.R;
-import com.sql.common.entity.vo.CoachInfo;
+import com.sql.common.entity.vo.ClassHourInfo;
 import com.sql.common.entity.vo.UserInfo;
-import com.sql.common.entity.vo.VIPInfo;
-import com.sql.user.mapper.ChildrenMapper;
 import com.sql.user.mapper.ClassHourMapper;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
@@ -40,9 +36,6 @@ public class InfoServiceImpl implements InfoService {
 
     @Autowired
     private UserMapper userMapper;
-
-    @Autowired
-    private ChildrenMapper childrenMapper;
 
     @Autowired
     private ClassHourMapper classHourMapper;
@@ -183,13 +176,14 @@ public class InfoServiceImpl implements InfoService {
      * 查询当前用户课时信息
      */
     @Override
-    public ClassHour getClassHour() {
+    public ClassHourInfo getClassHour() {
         Long userId = ContextHolder.getUO().getUserInfo().getUserId();
         ClassHour classHour = classHourMapper.selectById(userId);
         if (classHour == null) {
             throw new ServiceException("暂无课时记录");
         }
-        return classHour;
+        ClassHourInfo classHourInfo = new ClassHourInfo(classHour);
+        return classHourInfo;
     }
 
     /**
@@ -207,35 +201,4 @@ public class InfoServiceImpl implements InfoService {
         return emailCode; // FIXME:自动化测试使用，正式环境不应返回验证码
     }
 
-    @Override
-    public VIPInfo getVIPInfo(Long vipId) {
-        User vip = userMapper.selectById(vipId);
-
-        if (vip == null) {
-            throw new ServiceException("该会员不存在");
-        }
-
-        // 批量查询孩子，按 parentId 分组
-        List<Children> children = childrenMapper.selectByParentId(vipId);
-
-        // 批量查询课时
-        ClassHour classHour = classHourMapper.selectByVIPId(vipId);
-
-        VIPInfo vipInfo = new VIPInfo(vip, classHour.getRemainingHours(), children);
-        vipInfo.setAvatar(FileUtils.toAbsoluteUrl(FileUtils.TYPE_AVATAR, vip.getAvatar()));
-        return vipInfo;
-    }
-
-    @Override
-    public CoachInfo getCoachInfo(Long coachId) {
-        User coach = userMapper.selectById(coachId);
-
-        if (coach == null) {
-            throw new ServiceException("该教练不存在");
-        }
-
-        CoachInfo coachInfo = new CoachInfo(coach);
-        coachInfo.setAvatar(FileUtils.toAbsoluteUrl(FileUtils.TYPE_AVATAR, coach.getAvatar()));
-        return coachInfo;
-    }
 }

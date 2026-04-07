@@ -10,13 +10,13 @@ import org.springframework.web.multipart.MultipartFile;
 import com.sql.api.RemoteFileService;
 import com.sql.common.entity.bo.File;
 import com.sql.common.entity.bo.UserOnline;
-import com.sql.common.entity.po.Children;
+import com.sql.common.entity.po.Child;
 import com.sql.common.entity.result.R;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 import com.sql.user.dto.ChildrenDTO;
-import com.sql.user.mapper.ChildrenMapper;
-import com.sql.user.service.ChildrenService;
+import com.sql.user.mapper.ChildMapper;
+import com.sql.user.service.ChildService;
 import com.sql.utils.StringUtils;
 import com.sql.utils.file.FileUtils;
 
@@ -24,10 +24,10 @@ import com.sql.utils.file.FileUtils;
  * 孩子信息管理服务
  */
 @Service
-public class ChildrenServiceImpl implements ChildrenService {
+public class ChildServiceImpl implements ChildService {
 
     @Autowired
-    private ChildrenMapper childrenMapper;
+    private ChildMapper childMapper;
 
     @Autowired
     private RemoteFileService remoteFileService;
@@ -36,10 +36,10 @@ public class ChildrenServiceImpl implements ChildrenService {
      * 查询当前会员的孩子列表
      */
     @Override
-    public List<Children> listByCurrentUser() {
+    public List<Child> listByCurrentUser() {
         UserOnline uo = ContextHolder.getUO();
         Long parentId = uo.getUserInfo().getUserId();
-        List<Children> list = childrenMapper.selectByParentId(parentId);
+        List<Child> list = childMapper.selectByParentId(parentId);
         list.forEach(c -> c.setPhoto(FileUtils.toAbsoluteUrl(FileUtils.TYPE_CHILD_PHOTO, c.getPhoto())));
         return list;
     }
@@ -48,8 +48,8 @@ public class ChildrenServiceImpl implements ChildrenService {
      * 根据ID查询孩子详情
      */
     @Override
-    public Children getById(Long childId) {
-        Children child = childrenMapper.selectById(childId);
+    public Child getById(Long childId) {
+        Child child = childMapper.selectById(childId);
         if (child == null) {
             throw new ServiceException("孩子信息不存在");
         }
@@ -75,7 +75,7 @@ public class ChildrenServiceImpl implements ChildrenService {
         UserOnline uo = ContextHolder.getUO();
         Long parentId = uo.getUserInfo().getUserId();
 
-        Children child = new Children();
+        Child child = new Child();
         child.setParentId(parentId);
         child.setChildName(dto.getChildName());
         child.setBirthday(dto.getBirthday());
@@ -83,7 +83,7 @@ public class ChildrenServiceImpl implements ChildrenService {
         child.setSex(dto.getSex() != null ? dto.getSex() : "0");
         child.setCreateTime(LocalDateTime.now());
 
-        int rows = childrenMapper.insert(child);
+        int rows = childMapper.insert(child);
         if (rows <= 0) {
             throw new ServiceException("新增孩子信息失败");
         }
@@ -99,7 +99,7 @@ public class ChildrenServiceImpl implements ChildrenService {
         }
 
         // 校验归属权
-        Children existChild = childrenMapper.selectById(dto.getChildId());
+        Child existChild = childMapper.selectById(dto.getChildId());
         if (existChild == null) {
             throw new ServiceException("孩子信息不存在");
         }
@@ -124,7 +124,7 @@ public class ChildrenServiceImpl implements ChildrenService {
         }
         existChild.setUpdateTime(LocalDateTime.now());
 
-        int rows = childrenMapper.updateById(existChild);
+        int rows = childMapper.updateById(existChild);
         if (rows <= 0) {
             throw new ServiceException("修改孩子信息失败");
         }
@@ -135,7 +135,7 @@ public class ChildrenServiceImpl implements ChildrenService {
      */
     @Override
     public void updatePhoto(Long childId, MultipartFile file) {
-        Children child = childrenMapper.selectById(childId);
+        Child child = childMapper.selectById(childId);
         if (child == null) {
             throw new ServiceException("孩子信息不存在");
         }
@@ -157,7 +157,7 @@ public class ChildrenServiceImpl implements ChildrenService {
         }
 
         child.setPhoto(result.getData().getUrl());
-        childrenMapper.updateById(child);
+        childMapper.updateById(child);
     }
 
     /**
@@ -165,7 +165,7 @@ public class ChildrenServiceImpl implements ChildrenService {
      */
     @Override
     public void delete(Long childId) {
-        Children existChild = childrenMapper.selectById(childId);
+        Child existChild = childMapper.selectById(childId);
         if (existChild == null) {
             throw new ServiceException("孩子信息不存在");
         }
@@ -175,7 +175,7 @@ public class ChildrenServiceImpl implements ChildrenService {
             throw new ServiceException("无权删除该孩子信息");
         }
 
-        int rows = childrenMapper.deleteById(childId);
+        int rows = childMapper.deleteById(childId);
         if (rows <= 0) {
             throw new ServiceException("删除孩子信息失败");
         }

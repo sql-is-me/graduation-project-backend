@@ -1,6 +1,6 @@
 package com.sql.common.entity.vo;
 
-import com.sql.common.entity.po.Children;
+import com.sql.common.entity.po.Child;
 
 import lombok.Data;
 
@@ -36,7 +36,7 @@ public class ChildInfo {
      */
     private String status;
 
-    public ChildInfo(Children child) {
+    public ChildInfo(Child child) {
         this.childId = child.getChildId();
         this.parentId = child.getParentId();
         this.childName = child.getChildName();

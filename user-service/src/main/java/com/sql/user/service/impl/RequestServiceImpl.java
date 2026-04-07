@@ -11,13 +11,13 @@ import com.sql.common.constants.AuthConstants;
 import com.sql.common.constants.RequestConstants;
 import com.sql.common.entity.bo.CoachInviteBody;
 import com.sql.common.entity.bo.UserOnline;
-import com.sql.common.entity.po.Children;
+import com.sql.common.entity.po.Child;
 import com.sql.common.entity.po.Request;
 import com.sql.common.entity.po.User;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 import com.sql.common.redis.service.RedisService;
-import com.sql.user.mapper.ChildrenMapper;
+import com.sql.user.mapper.ChildMapper;
 import com.sql.user.mapper.RequestMapper;
 import com.sql.user.mapper.UserMapper;
 import com.sql.user.service.RequestService;
@@ -35,7 +35,7 @@ public class RequestServiceImpl implements RequestService {
     private UserMapper userMapper;
 
     @Autowired
-    private ChildrenMapper childrenMapper;
+    private ChildMapper childMapper;
 
     @Autowired
     private RedisService redisService;
@@ -52,7 +52,7 @@ public class RequestServiceImpl implements RequestService {
         }
 
         // 校验孩子属于当前用户
-        Children child = childrenMapper.selectById(childId);
+        Child child = childMapper.selectById(childId);
         if (child == null || !child.getParentId().equals(user.getUserId())) {
             throw new ServiceException("孩子信息不存在或不属于您");
         }

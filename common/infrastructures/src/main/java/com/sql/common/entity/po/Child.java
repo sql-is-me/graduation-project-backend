@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
  */
 @Data
 @TableName("children")
-public class Children {
+public class Child {
     /**
      * 孩子ID
      */

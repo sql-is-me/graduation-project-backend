@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.sql.admin.mapper.ChildrenMapper;
+import com.sql.admin.mapper.ChildMapper;
 import com.sql.admin.mapper.ClassHourMapper;
 import com.sql.admin.mapper.CourseChildMapper;
 import com.sql.admin.mapper.CourtMapper;
@@ -23,7 +23,7 @@ import com.sql.admin.service.CourseService;
 import com.sql.utils.file.FileUtils;
 import com.sql.common.entity.dto.CourseCreateDTO;
 import com.sql.common.entity.dto.VerifyChildDTO;
-import com.sql.common.entity.po.Children;
+import com.sql.common.entity.po.Child;
 import com.sql.common.entity.po.ClassHour;
 import com.sql.common.entity.po.Course;
 import com.sql.common.entity.po.AttendanceRecord;
@@ -54,7 +54,7 @@ public class CourseServiceImpl implements CourseService {
     private UserMapper userMapper;
 
     @Autowired
-    private ChildrenMapper childrenMapper;
+    private ChildMapper childMapper;
 
     @Autowired
     private ClassHourMapper classHourMapper;
@@ -127,7 +127,7 @@ public class CourseServiceImpl implements CourseService {
         if (childIds != null && !childIds.isEmpty()) {
             Map<Long, Integer> parentReturnMap = new HashMap<>();
             for (Long childId : childIds) {
-                Children child = childrenMapper.selectById(childId);
+                Child child = childMapper.selectById(childId);
                 if (child != null) {
                     parentReturnMap.merge(child.getParentId(), course.getTotalHours(), Integer::sum);
                 }
@@ -197,7 +197,7 @@ public class CourseServiceImpl implements CourseService {
         Map<Long, Integer> parentDeductMap = new HashMap<>();
         for (Long childId : inputChildIds) {
             // 校验孩子是否存在且正常
-            Children child = childrenMapper.selectById(childId);
+            Child child = childMapper.selectById(childId);
             if (child == null) {
                 throw new ServiceException("孩子(ID:" + childId + ")信息不存在");
             }
@@ -258,7 +258,7 @@ public class CourseServiceImpl implements CourseService {
         }
 
         // 返还家长课时
-        Children child = childrenMapper.selectById(childId);
+        Child child = childMapper.selectById(childId);
         if (child != null) {
             returnClassHours(child.getParentId(), course.getTotalHours());
         }
@@ -329,7 +329,7 @@ public class CourseServiceImpl implements CourseService {
                         .eq(AttendanceRecord::getCourseId, courseId));
 
         for (Long childId : childIds) {
-            Children child = childrenMapper.selectById(childId);
+            Child child = childMapper.selectById(childId);
             if (child != null) {
                 ChildAndAttendanceInfo caInfo = new ChildAndAttendanceInfo();
                 caInfo.setChildId(childId);
@@ -372,7 +372,7 @@ public class CourseServiceImpl implements CourseService {
         List<Long> childIds = course.getChildIds();
         if (childIds != null) {
             for (Long childId : childIds) {
-                Children child = childrenMapper.selectById(childId);
+                Child child = childMapper.selectById(childId);
                 if (child == null) continue;
 
                 ChildAndAttendanceInfo caInfo = new ChildAndAttendanceInfo();
@@ -418,7 +418,7 @@ public class CourseServiceImpl implements CourseService {
                 new LambdaQueryWrapper<AttendanceRecord>().eq(AttendanceRecord::getCourseId, courseId));
         for (AttendanceRecord record : allRecords) {
             if ("5".equals(record.getStatus())) {
-                Children child = childrenMapper.selectById(record.getChildId());
+                Child child = childMapper.selectById(record.getChildId());
                 if (child != null) {
                     returnClassHours(child.getParentId(), course.getTotalHours());
                 }
@@ -454,7 +454,7 @@ public class CourseServiceImpl implements CourseService {
 
             // 早退、缺勤返还课时；迟到不返还
             if ("3".equals(status) || "4".equals(status)) {
-                Children child = childrenMapper.selectById(dto.getChildId());
+                Child child = childMapper.selectById(dto.getChildId());
                 if (child != null) {
                     returnClassHours(child.getParentId(), course.getTotalHours());
                 }

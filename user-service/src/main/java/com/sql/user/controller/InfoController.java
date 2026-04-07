@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,11 +15,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
-import com.sql.common.entity.po.ClassHour;
 import com.sql.common.entity.result.R;
-import com.sql.common.entity.vo.CoachInfo;
+import com.sql.common.entity.vo.ClassHourInfo;
 import com.sql.common.entity.vo.UserInfo;
-import com.sql.common.entity.vo.VIPInfo;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;
 import com.sql.common.log.enums.BusinessType;
@@ -96,29 +93,8 @@ public class InfoController {
      * 查询个人课时信息（总课时、已用课时、剩余课时）
      */
     @GetMapping("/classHour")
-    public R<?> getClassHour() { // TODO:看看是否需要vo
-        ClassHour classHour = infoService.getClassHour();
+    public R<?> getClassHour() {
+        ClassHourInfo classHour = infoService.getClassHour();
         return R.ok(classHour);
-    }
-
-    /**
-     * 查询指定会员信息
-     * 包含基本信息，孩子信息，剩余课时
-     */
-    @RequiresType(UserTypes.MANAGER)
-    @GetMapping("/vip/{vipId}")
-    public R<?> getVIPInfo(@PathVariable Long vipId) {
-        VIPInfo vipInfo = infoService.getVIPInfo(vipId);
-        return R.ok(vipInfo);
-    }
-
-    /**
-     * 查询指定教练信息
-     */
-    @RequiresType(UserTypes.MANAGER)
-    @GetMapping("/coach/{coachId}")
-    public R<?> getCoachInfo(@PathVariable Long coachId) {
-        CoachInfo coachInfo = infoService.getCoachInfo(coachId);
-        return R.ok(coachInfo);
     }
 }

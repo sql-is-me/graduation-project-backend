@@ -23,7 +23,7 @@ import lombok.Data;
  * </p>
  */
 @Data
-@TableName("attendance_record")
+@TableName("attendance_records")
 public class AttendanceRecord {
     @TableId(value = "record_id", type = IdType.AUTO)
     private Long recordId;

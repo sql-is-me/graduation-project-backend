@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sql.common.auth.annotation.RequiresType;
-import com.sql.common.entity.po.Children;
+import com.sql.common.entity.po.Child;
 import com.sql.common.entity.result.R;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;
 import com.sql.common.log.enums.BusinessType;
 import com.sql.user.dto.ChildrenDTO;
-import com.sql.user.service.ChildrenService;
+import com.sql.user.service.ChildService;
 
 /**
  * 孩子信息管理控制器
@@ -30,17 +30,17 @@ import com.sql.user.service.ChildrenService;
 @RestController
 @RequestMapping("/user/children")
 @RequiresType(UserTypes.VIP)
-public class ChildrenController {
+public class ChildController {
 
     @Autowired
-    private ChildrenService childrenService;
+    private ChildService childrenService;
 
     /**
      * 查询当前用户的孩子列表
      */
     @GetMapping("/list")
     public R<?> list() {
-        List<Children> children = childrenService.listByCurrentUser();
+        List<Child> children = childrenService.listByCurrentUser();
         return R.ok(children);
     }
 
@@ -49,7 +49,7 @@ public class ChildrenController {
      */
     @GetMapping("/{childId}")
     public R<?> getInfo(@PathVariable Long childId) {
-        Children child = childrenService.getById(childId);
+        Child child = childrenService.getById(childId);
         return R.ok(child);
     }
 

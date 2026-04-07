@@ -6,8 +6,10 @@ import com.sql.common.entity.dto.StoreCreateDTO;
 import com.sql.common.entity.dto.StoreUpdateDTO;
 import com.sql.common.entity.po.Store;
 import com.sql.common.entity.vo.ChildInfo;
+import com.sql.common.entity.vo.CoachInfo;
 import com.sql.common.entity.vo.CoachesInfo;
 import com.sql.common.entity.vo.StoreInfo;
+import com.sql.common.entity.vo.VIPInfo;
 import com.sql.common.entity.vo.VIPsInfo;
 
 public interface StoreService {
@@ -49,9 +51,20 @@ public interface StoreService {
     List<VIPsInfo> listStoreVIPs();
 
     /**
+     * 查询指定会员的详细信息
+     * 包含剩余课时和孩子信息
+     */
+    VIPInfo getVIPInfo(Long vipId);
+
+    /**
      * 查看当前店铺旗下所有教练信息
      */
     List<CoachesInfo> listStoreCoaches();
+
+    /**
+     * 查询指定教练的详细信息
+     */
+    CoachInfo getCoachInfo(Long coachId);
 
     /**
      * 查看当前店铺旗下所有孩子信息（含所属家长ID）

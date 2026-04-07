@@ -22,8 +22,10 @@ import com.sql.common.entity.dto.StoreUpdateDTO;
 import com.sql.common.entity.po.Store;
 import com.sql.common.entity.result.R;
 import com.sql.common.entity.vo.ChildInfo;
+import com.sql.common.entity.vo.CoachInfo;
 import com.sql.common.entity.vo.CoachesInfo;
 import com.sql.common.entity.vo.TableDataInfo;
+import com.sql.common.entity.vo.VIPInfo;
 import com.sql.common.entity.vo.VIPsInfo;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;
@@ -118,6 +120,17 @@ public class StoreController extends BaseController {
     }
 
     /**
+     * 查询指定会员信息
+     * 包含基本信息，孩子信息，剩余课时
+     */
+    @RequiresType(UserTypes.MANAGER)
+    @GetMapping("/vip/{vipId}")
+    public R<?> getVIPInfo(@PathVariable Long vipId) {
+        VIPInfo vipInfo = storeService.getVIPInfo(vipId);
+        return R.ok(vipInfo);
+    }
+
+    /**
      * 查看当前店铺旗下教练信息
      */
     @RequiresType(UserTypes.MANAGER)
@@ -126,6 +139,16 @@ public class StoreController extends BaseController {
         startPage();
         List<CoachesInfo> list = storeService.listStoreCoaches();
         return getDataTable(list);
+    }
+
+    /**
+     * 查询指定教练信息
+     */
+    @RequiresType(UserTypes.MANAGER)
+    @GetMapping("/coach/{coachId}")
+    public R<?> getCoachInfo(@PathVariable Long coachId) {
+        CoachInfo coachInfo = storeService.getCoachInfo(coachId);
+        return R.ok(coachInfo);
     }
 
     /**
