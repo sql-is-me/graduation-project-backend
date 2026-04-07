@@ -12,14 +12,14 @@ import java.time.LocalDateTime;
  * 供系统管理员查阅所有用户的登录/登出记录
  */
 @Data
-@TableName("loginInfo")
-public class LoginInfo {
+@TableName("loginLog")
+public class LoginLog {
 
     /**
      * 日志主键
      */
-    @TableId(value = "info_id", type = IdType.AUTO)
-    private Long infoId;
+    @TableId(value = "log_id", type = IdType.AUTO)
+    private Long logId;
 
     /**
      * 用户账号

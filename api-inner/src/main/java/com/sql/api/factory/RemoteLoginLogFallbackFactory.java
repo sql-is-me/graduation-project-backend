@@ -6,7 +6,7 @@ import org.springframework.cloud.openfeign.FallbackFactory;
 import org.springframework.stereotype.Component;
 
 import com.sql.api.RemoteLoginLogService;
-import com.sql.common.entity.po.LoginInfo;
+import com.sql.common.entity.po.LoginLog;
 import com.sql.common.entity.result.R;
 
 /**
@@ -23,7 +23,7 @@ public class RemoteLoginLogFallbackFactory implements FallbackFactory<RemoteLogi
         log.error("日志服务调用失败:{}", throwable.getMessage());
         return new RemoteLoginLogService() {
             @Override
-            public R<Boolean> saveLoginInfo(LoginInfo loginInfo, String source) {
+            public R<Boolean> saveLoginLog(LoginLog loginLog, String source) {
                 return R.fail("保存登录日志失败:" + throwable.getMessage());
             }
         };

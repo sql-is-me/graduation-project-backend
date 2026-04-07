@@ -6,13 +6,14 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.sql.admin.mapper.LoginInfoMapper;
+import com.sql.admin.mapper.LoginLogMapper;
 import com.sql.admin.mapper.OperLogMapper;
 import com.sql.admin.service.LogService;
-import com.sql.common.entity.dto.LoginInfoSelectDTO;
+import com.sql.common.entity.dto.LoginLogSelectDTO;
 import com.sql.common.entity.dto.OperLogSelectDTO;
-import com.sql.common.entity.po.LoginInfo;
+import com.sql.common.entity.po.LoginLog;
 import com.sql.common.entity.po.OperLog;
+import com.sql.common.entity.vo.LoginInfo;
 import com.sql.common.entity.vo.OperLogInfo;
 import com.sql.common.exception.ServiceException;
 import com.sql.utils.StringUtils;
@@ -25,7 +26,7 @@ public class LogServiceImpl implements LogService {
     private OperLogMapper operLogMapper;
 
     @Autowired
-    private LoginInfoMapper loginInfoMapper;
+    private LoginLogMapper loginLogMapper;
 
     // ==================== 操作日志 ====================
 
@@ -78,41 +79,41 @@ public class LogServiceImpl implements LogService {
      * 查询登录日志列表（支持按用户名、IP、状态筛选）
      */
     @Override
-    public List<com.sql.common.entity.vo.LoginInfo> listLoginInfo(LoginInfoSelectDTO dto) {
-        LambdaQueryWrapper<LoginInfo> wrapper = new LambdaQueryWrapper<>();
-        wrapper.like(StringUtils.isNotEmpty(dto.getUsername()), LoginInfo::getUsername, dto.getUsername())
-                .like(StringUtils.isNotEmpty(dto.getIpAddr()), LoginInfo::getIpAddr, dto.getIpAddr())
-                .eq(StringUtils.isNotEmpty(dto.getStatus()), LoginInfo::getStatus, dto.getStatus())
-                .orderByDesc(LoginInfo::getInfoId);
-        return loginInfoMapper.selectList(wrapper)
+    public List<LoginInfo> listLoginLog(LoginLogSelectDTO dto) {
+        LambdaQueryWrapper<LoginLog> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(StringUtils.isNotEmpty(dto.getUsername()), LoginLog::getUsername, dto.getUsername())
+                .like(StringUtils.isNotEmpty(dto.getIpAddr()), LoginLog::getIpAddr, dto.getIpAddr())
+                .eq(StringUtils.isNotEmpty(dto.getStatus()), LoginLog::getStatus, dto.getStatus())
+                .orderByDesc(LoginLog::getLogId);
+        return loginLogMapper.selectList(wrapper)
                 .stream()
-                .map(com.sql.common.entity.vo.LoginInfo::new)
+                .map(LoginInfo::new)
                 .collect(Collectors.toList());
     }
 
     @Override
-    public LoginInfo getLoginInfo(Long infoId) {
-        return loginInfoMapper.selectById(infoId);
+    public LoginLog getLoginLog(Long infoId) {
+        return loginLogMapper.selectById(infoId);
     }
 
     @Override
-    public void deleteLoginInfo(List<Long> infoIds) {
-        int rows = loginInfoMapper.deleteByIds(infoIds);
+    public void deleteLoginLog(List<Long> infoIds) {
+        int rows = loginLogMapper.deleteByIds(infoIds);
         if (rows <= 0) {
             throw new ServiceException("删除登录日志失败，请联系工作人员");
         }
     }
 
-    public int insertLoginInfo(LoginInfo loginInfo) {
-        return loginInfoMapper.insert(loginInfo);
+    public int insertLoginLog(LoginLog loginLog) {
+        return loginLogMapper.insert(loginLog);
     }
 
     /**
      * 清空登录日志
      */
-    public void cleanLoginInfo() {
-        LambdaQueryWrapper<LoginInfo> wrapper = new LambdaQueryWrapper<>();
-        wrapper.gt(LoginInfo::getInfoId, 0);
-        loginInfoMapper.delete(wrapper);
+    public void cleanLoginLog() {
+        LambdaQueryWrapper<LoginLog> wrapper = new LambdaQueryWrapper<>();
+        wrapper.gt(LoginLog::getLogId, 0);
+        loginLogMapper.delete(wrapper);
     }
 }

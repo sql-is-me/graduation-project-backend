@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sql.admin.service.LogService;
 import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
-import com.sql.common.entity.dto.LoginInfoSelectDTO;
+import com.sql.common.entity.dto.LoginLogSelectDTO;
 import com.sql.common.entity.dto.OperLogSelectDTO;
 import com.sql.common.entity.result.R;
 import com.sql.common.entity.vo.LoginInfo;
@@ -78,18 +78,18 @@ public class LogController extends BaseController {
      * 查询登录日志列表（支持按用户名、IP地址、登录状态筛选）
      */
     @GetMapping("/login")
-    public TableDataInfo listLoginInfo(LoginInfoSelectDTO dto) {
+    public TableDataInfo listLoginLog(LoginLogSelectDTO dto) {
         startPage();
-        List<LoginInfo> list = logService.listLoginInfo(dto);
+        List<LoginInfo> list = logService.listLoginLog(dto);
         return getDataTable(list);
     }
 
     /**
      * 查询登录日志详情
      */
-    @GetMapping("/login/{loginInfoId}")
-    public R<?> getLoginInfoById(@PathVariable Long loginInfoId) {
-        return R.ok(logService.getLoginInfo(loginInfoId));
+    @GetMapping("/login/{loginLogId}")
+    public R<?> getLoginLogById(@PathVariable Long loginLogId) {
+        return R.ok(logService.getLoginLog(loginLogId));
     }
 
     /**
@@ -97,8 +97,8 @@ public class LogController extends BaseController {
      */
     @Log(title = "登录日志", businessType = BusinessType.DELETE, operatorType = UserTypes.ADMIN)
     @DeleteMapping("/login")
-    public R<?> deleteLoginInfo(@RequestParam List<Long> infoIds) {
-        logService.deleteLoginInfo(infoIds);
+    public R<?> deleteLoginLog(@RequestParam List<Long> logIds) {
+        logService.deleteLoginLog(logIds);
         return R.ok("删除登录日志成功");
     }
 
@@ -107,8 +107,8 @@ public class LogController extends BaseController {
      */
     @Log(title = "登录日志", businessType = BusinessType.DELETE, operatorType = UserTypes.ADMIN)
     @DeleteMapping("/login/clean")
-    public R<?> cleanLoginInfo() {
-        logService.cleanLoginInfo();
+    public R<?> cleanLoginLog() {
+        logService.cleanLoginLog();
         return R.ok("清空登录日志成功");
     }
 }

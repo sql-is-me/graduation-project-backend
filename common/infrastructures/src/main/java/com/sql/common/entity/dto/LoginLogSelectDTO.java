@@ -3,7 +3,7 @@ package com.sql.common.entity.dto;
 import lombok.Data;
 
 @Data
-public class LoginInfoSelectDTO {
+public class LoginLogSelectDTO {
     /**
      * 用户账号
      */

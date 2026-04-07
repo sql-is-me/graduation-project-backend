@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import com.sql.common.constants.ServiceNameConstants;
 import com.sql.api.factory.RemoteLoginLogFallbackFactory;
 import com.sql.common.constants.AuthConstants;
-import com.sql.common.entity.po.LoginInfo;
+import com.sql.common.entity.po.LoginLog;
 import com.sql.common.entity.result.R;
 
 /**
@@ -19,11 +19,11 @@ public interface RemoteLoginLogService {
         /**
          * 保存登录记录
          *
-         * @param LoginInfo 登录实体
-         * @param source    请求来源
+         * @param LoginLog 登录实体
+         * @param source   请求来源
          * @return 结果
          */
-        @PostMapping("/loginInfo")
-        public R<Boolean> saveLoginInfo(@RequestBody LoginInfo loginInfo,
+        @PostMapping("/loginLog")
+        public R<Boolean> saveLoginLog(@RequestBody LoginLog loginLog,
                         @RequestHeader(AuthConstants.FROM_SOURCE) String source);
 }

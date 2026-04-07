@@ -3,6 +3,8 @@ package com.sql.common.entity.vo;
 import lombok.Data;
 import java.time.LocalDateTime;
 
+import com.sql.common.entity.po.LoginLog;
+
 @Data
 public class LoginInfo {
 
@@ -32,8 +34,8 @@ public class LoginInfo {
      */
     private LocalDateTime accessTime;
 
-    public LoginInfo(com.sql.common.entity.po.LoginInfo entity) {
-        this.infoId = entity.getInfoId();
+    public LoginInfo(LoginLog entity) {
+        this.infoId = entity.getLogId();
         this.username = entity.getUsername();
         this.status = entity.getStatus();
         this.ipAddr = entity.getIpAddr();

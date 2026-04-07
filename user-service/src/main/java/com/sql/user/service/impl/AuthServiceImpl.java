@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import com.sql.api.RemoteLoginLogService;
 import com.sql.common.constants.AuthConstants;
 import com.sql.common.entity.bo.CoachInviteBody;
-import com.sql.common.entity.po.LoginInfo;
+import com.sql.common.entity.po.LoginLog;
 import com.sql.common.entity.po.User;
 import com.sql.common.enums.AccountStatus;
 import com.sql.common.exception.ServiceException;
@@ -108,12 +108,12 @@ public class AuthServiceImpl implements AuthService {
             }
         } catch (Exception e) {
             log.error("登录失败", e);
-            recordLoginInfo(openId, AuthConstants.LOGIN_FAIL, "登录失败: " + e.getMessage());
+            recordLoginLog(openId, AuthConstants.LOGIN_FAIL, "登录失败: " + e.getMessage());
             throw new ServiceException("登录失败: " + e.getMessage());
         }
 
         String accessToken = userTokenService.createToken(user, session_key);
-        recordLoginInfo(openId, AuthConstants.LOGIN_SUCCESS, "登录成功");
+        recordLoginLog(openId, AuthConstants.LOGIN_SUCCESS, "登录成功");
 
         return accessToken;
     }
@@ -196,13 +196,13 @@ public class AuthServiceImpl implements AuthService {
             }
         } catch (Exception e) {
             log.error("注册失败", e);
-            recordLoginInfo(openId, AuthConstants.LOGIN_FAIL, "注册失败: " + e.getMessage());
+            recordLoginLog(openId, AuthConstants.LOGIN_FAIL, "注册失败: " + e.getMessage());
             throw new ServiceException("注册失败: " + e.getMessage());
         }
 
         // 创建token，直接完成登录
         String accessToken = userTokenService.createToken(user, session_key);
-        recordLoginInfo(openId, AuthConstants.REGISTER, "注册成功");
+        recordLoginLog(openId, AuthConstants.REGISTER, "注册成功");
 
         return accessToken;
     }
@@ -226,18 +226,18 @@ public class AuthServiceImpl implements AuthService {
     /**
      * 记录登录信息
      */
-    public void recordLoginInfo(String openId, String status, String message) {
-        LoginInfo loginInfo = new LoginInfo();
-        loginInfo.setAccessTime(LocalDateTime.now());
-        loginInfo.setUsername(openId);
-        loginInfo.setIpAddr(IpUtils.getIpAddr());
-        loginInfo.setMsg(message);
+    public void recordLoginLog(String openId, String status, String message) {
+        LoginLog loginLog = new LoginLog();
+        loginLog.setAccessTime(LocalDateTime.now());
+        loginLog.setUsername(openId);
+        loginLog.setIpAddr(IpUtils.getIpAddr());
+        loginLog.setMsg(message);
 
         if (StringUtils.equalsAny(status, AuthConstants.LOGIN_SUCCESS, AuthConstants.LOGOUT, AuthConstants.REGISTER)) {
-            loginInfo.setStatus(AuthConstants.LOGIN_SUCCESS_STATUS);
+            loginLog.setStatus(AuthConstants.LOGIN_SUCCESS_STATUS);
         } else if (AuthConstants.LOGIN_FAIL.equals(status)) {
-            loginInfo.setStatus(AuthConstants.LOGIN_FAIL_STATUS);
+            loginLog.setStatus(AuthConstants.LOGIN_FAIL_STATUS);
         }
-        remoteLoginLogService.saveLoginInfo(loginInfo, AuthConstants.INNER);
+        remoteLoginLogService.saveLoginLog(loginLog, AuthConstants.INNER);
     }
 }

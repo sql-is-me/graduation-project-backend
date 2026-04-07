@@ -20,7 +20,7 @@ import com.sql.common.entity.bo.AdminOnline;
 import com.sql.common.entity.dto.AdminRegisterDTO;
 import com.sql.common.entity.dto.AdminResetPasswordDTO;
 import com.sql.common.entity.po.Admin;
-import com.sql.common.entity.po.LoginInfo;
+import com.sql.common.entity.po.LoginLog;
 import com.sql.common.entity.po.Store;
 import com.sql.common.enums.AccountStatus;
 import com.sql.common.exception.ServiceException;
@@ -85,14 +85,14 @@ public class AuthServiceImpl implements AuthService {
 
             validatePassword(admin, password);
         } catch (ServiceException e) {
-            recordLoginInfo(username, AuthConstants.LOGIN_FAIL, e.getMessage());
+            recordLoginLog(username, AuthConstants.LOGIN_FAIL, e.getMessage());
             throw new ServiceException(e.getMessage());
         }
 
         adminMapper.updateById(admin);
 
         String accessToken = adminTokenService.createToken(admin);
-        recordLoginInfo(admin.getUsername(), AuthConstants.LOGIN_SUCCESS, "登录成功");
+        recordLoginLog(admin.getUsername(), AuthConstants.LOGIN_SUCCESS, "登录成功");
 
         return accessToken;
     }
@@ -108,7 +108,7 @@ public class AuthServiceImpl implements AuthService {
         // 删除用户缓存记录
         adminTokenService.delAdminCache(ao);
 
-        recordLoginInfo(username, AuthConstants.LOGOUT, "退出成功");
+        recordLoginLog(username, AuthConstants.LOGOUT, "退出成功");
     }
 
     /**
@@ -160,7 +160,7 @@ public class AuthServiceImpl implements AuthService {
         redisService.deleteObject(adminInviteKey);
         redisService.deleteObject(inviteKey);
 
-        recordLoginInfo(username, AuthConstants.REGISTER, "管理员注册成功");
+        recordLoginLog(username, AuthConstants.REGISTER, "管理员注册成功");
     }
 
     /**
@@ -354,20 +354,20 @@ public class AuthServiceImpl implements AuthService {
      * @param status   状态
      * @param message  消息内容
      */
-    public void recordLoginInfo(String username, String status, String message) {
-        LoginInfo loginInfo = new LoginInfo();
-        loginInfo.setAccessTime(LocalDateTime.now());
-        loginInfo.setUsername(username);
-        loginInfo.setIpAddr(IpUtils.getIpAddr());
-        loginInfo.setMsg(message);
+    public void recordLoginLog(String username, String status, String message) {
+        LoginLog loginLog = new LoginLog();
+        loginLog.setAccessTime(LocalDateTime.now());
+        loginLog.setUsername(username);
+        loginLog.setIpAddr(IpUtils.getIpAddr());
+        loginLog.setMsg(message);
 
         // 日志状态
         if (StringUtils.equalsAny(status, AuthConstants.LOGIN_SUCCESS, AuthConstants.LOGOUT, AuthConstants.REGISTER)) {
-            loginInfo.setStatus(AuthConstants.LOGIN_SUCCESS_STATUS);
+            loginLog.setStatus(AuthConstants.LOGIN_SUCCESS_STATUS);
         } else if (AuthConstants.LOGIN_FAIL.equals(status)) {
-            loginInfo.setStatus(AuthConstants.LOGIN_FAIL_STATUS);
+            loginLog.setStatus(AuthConstants.LOGIN_FAIL_STATUS);
         }
 
-        remoteLoginLogService.saveLoginInfo(loginInfo, AuthConstants.INNER);
+        remoteLoginLogService.saveLoginLog(loginLog, AuthConstants.INNER);
     }
 }

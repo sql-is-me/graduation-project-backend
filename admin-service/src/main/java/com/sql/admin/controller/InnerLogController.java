@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sql.admin.service.LogService;
 import com.sql.common.auth.annotation.InnerAuth;
-import com.sql.common.entity.po.LoginInfo;
+import com.sql.common.entity.po.LoginLog;
 import com.sql.common.entity.po.OperLog;
 import com.sql.common.entity.result.R;
 import com.sql.utils.BaseController;
@@ -36,9 +36,9 @@ public class InnerLogController extends BaseController {
     }
 
     @InnerAuth
-    @PostMapping("/loginInfo")
-    public R<Boolean> addLoginInfo(@RequestBody LoginInfo loginInfo) {
-        int rows = logService.insertLoginInfo(loginInfo);
+    @PostMapping("/loginLog")
+    public R<Boolean> addLoginLog(@RequestBody LoginLog loginLog) {
+        int rows = logService.insertLoginLog(loginLog);
         if (rows > 0) {
             return R.ok(true);
         } else {
