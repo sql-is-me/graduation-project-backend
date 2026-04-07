@@ -13,9 +13,14 @@ public interface CouponService {
     List<Coupon> listAvailableCoupons();
 
     /**
-     * 领取优惠券
+     * 店铺详情页领取优惠券（需绑定店铺）
      */
     int claimCoupon(Long couponId);
+
+    /**
+     * 活动链接领取优惠券（无需绑定店铺，通过 token 匹配）
+     */
+    int claimCouponByToken(String token);
 
     /**
      * 查询我的优惠券列表

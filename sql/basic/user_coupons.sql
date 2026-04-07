@@ -8,6 +8,7 @@ CREATE TABLE user_coupons (
   claim_time DATETIME DEFAULT NULL,
   used_time DATETIME DEFAULT NULL,
   PRIMARY KEY (user_coupon_id),
+  UNIQUE KEY uk_user_coupon (user_id, coupon_id),
   KEY idx_uc_user_id (user_id),
   KEY idx_uc_coupon_id (coupon_id),
   KEY idx_uc_used_order_id (used_order_id)

@@ -11,9 +11,8 @@ public interface ClassHourService {
      *
      * @param userId 用户ID
      * @param hours  增加的课时数
-     * @return 操作结果
      */
-    int addClassHours(Long userId, int hours);
+    void addClassHours(Long userId, int hours);
 
     /**
      * 查看当前店铺旗下会员的课时余额

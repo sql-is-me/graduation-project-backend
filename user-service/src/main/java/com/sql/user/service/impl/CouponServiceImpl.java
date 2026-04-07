@@ -74,13 +74,12 @@ public class CouponServiceImpl implements CouponService {
             throw new ServiceException("优惠券不在有效期内");
         }
 
-        // 检查是否超过领取限制
+        // 每人每张优惠券只能领取一次
         LambdaQueryWrapper<UserCoupon> countWrapper = new LambdaQueryWrapper<>();
         countWrapper.eq(UserCoupon::getUserId, userId)
                 .eq(UserCoupon::getCouponId, couponId);
-        long claimedCount = userCouponMapper.selectCount(countWrapper);
-        if (claimedCount >= coupon.getClaimLimit()) {
-            throw new ServiceException("已达到该优惠券的领取上限");
+        if (userCouponMapper.selectCount(countWrapper) > 0) {
+            throw new ServiceException("您已领取过该优惠券");
         }
 
         // 减少优惠券库存
@@ -91,6 +90,53 @@ public class CouponServiceImpl implements CouponService {
         UserCoupon userCoupon = new UserCoupon();
         userCoupon.setUserId(userId);
         userCoupon.setCouponId(couponId);
+        userCoupon.setStatus("0"); // 未使用
+        userCoupon.setClaimTime(LocalDateTime.now());
+
+        return userCouponMapper.insert(userCoupon);
+    }
+
+    @Override
+    @Transactional
+    public int claimCouponByToken(String token) {
+        UserOnline uo = ContextHolder.getUO();
+        Long userId = uo.getUserInfo().getUserId();
+
+        // 通过 token 查找优惠券
+        LambdaQueryWrapper<Coupon> tokenWrapper = new LambdaQueryWrapper<>();
+        tokenWrapper.eq(Coupon::getLinkToken, token);
+        Coupon coupon = couponMapper.selectOne(tokenWrapper);
+        if (coupon == null) {
+            throw new ServiceException("活动链接无效或已失效");
+        }
+        if (!"0".equals(coupon.getStatus())) {
+            throw new ServiceException("该优惠券已停用");
+        }
+        if (coupon.getRemainingCount() <= 0) {
+            throw new ServiceException("优惠券已领完");
+        }
+
+        LocalDateTime now = LocalDateTime.now();
+        if (now.isBefore(coupon.getStartTime()) || now.isAfter(coupon.getEndTime())) {
+            throw new ServiceException("优惠券不在有效期内");
+        }
+
+        // 每人每张优惠券只能领取一次
+        LambdaQueryWrapper<UserCoupon> countWrapper = new LambdaQueryWrapper<>();
+        countWrapper.eq(UserCoupon::getUserId, userId)
+                .eq(UserCoupon::getCouponId, coupon.getCouponId());
+        if (userCouponMapper.selectCount(countWrapper) > 0) {
+            throw new ServiceException("您已领取过该优惠券");
+        }
+
+        // 减少优惠券库存
+        coupon.setRemainingCount(coupon.getRemainingCount() - 1);
+        couponMapper.updateById(coupon);
+
+        // 创建用户优惠券记录
+        UserCoupon userCoupon = new UserCoupon();
+        userCoupon.setUserId(userId);
+        userCoupon.setCouponId(coupon.getCouponId());
         userCoupon.setStatus("0"); // 未使用
         userCoupon.setClaimTime(LocalDateTime.now());
 

@@ -19,8 +19,10 @@ import com.sql.common.enums.AccountStatus;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.redis.service.RedisService;
 import com.sql.common.tokens.UserTokenService;
+import com.sql.common.entity.po.ClassHour;
 import com.sql.user.dto.UserLoginDTO;
 import com.sql.user.dto.UserRegisterDTO;
+import com.sql.user.mapper.ClassHourMapper;
 import com.sql.user.mapper.UserMapper;
 import com.sql.user.service.AuthService;
 import com.sql.utils.IpUtils;
@@ -35,6 +37,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private ClassHourMapper classHourMapper;
 
     @Autowired
     private UserTokenService userTokenService;
@@ -181,6 +186,13 @@ public class AuthServiceImpl implements AuthService {
             int rows = userMapper.insert(user);
             if (rows <= 0) {
                 throw new ServiceException("注册失败，请联系管理员");
+            }
+
+            // 会员注册时初始化课时记录（remaining_hours=0，后续购买后增加）
+            if ("0".equals(userType)) {
+                ClassHour classHour = new ClassHour();
+                classHour.setUserId(user.getUserId());
+                classHourMapper.insert(classHour);
             }
         } catch (Exception e) {
             log.error("注册失败", e);

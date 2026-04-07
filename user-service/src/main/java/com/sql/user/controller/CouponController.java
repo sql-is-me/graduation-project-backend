@@ -43,12 +43,21 @@ public class CouponController extends BaseController {
     }
 
     /**
-     * 领取优惠券
+     * 店铺详情页领取优惠券（需绑定店铺）
      */
     @Log(title = "优惠券领取", businessType = BusinessType.INSERT)
     @PostMapping("/claim/{couponId}")
     public R<?> claimCoupon(@PathVariable Long couponId) {
         return R.ok(couponService.claimCoupon(couponId), "优惠券领取成功");
+    }
+
+    /**
+     * 活动链接领取优惠券（通过 token，无需绑定店铺）
+     */
+    @Log(title = "优惠券领取", businessType = BusinessType.INSERT)
+    @PostMapping("/claim/link/{token}")
+    public R<?> claimCouponByToken(@PathVariable String token) {
+        return R.ok(couponService.claimCouponByToken(token), "优惠券领取成功");
     }
 
     /**

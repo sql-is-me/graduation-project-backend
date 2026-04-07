@@ -1,5 +1,7 @@
 package com.sql.common.entity.po;
 
+import java.time.LocalDateTime;
+
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -15,33 +17,32 @@ public class ClassHour {
     private Long chId;
 
     /**
-     * 用户id
-     * 关联users表
+     * 用户id（关联users表）
      */
     @TableField("user_id")
     private Long userId;
 
     /**
-     * 课时数
+     * 总购买课时数
      */
     @TableField("hours")
-    private Integer hours;
+    private Integer hours = 0;
 
     /**
-     * 已用课时
+     * 已用课时数
      */
     @TableField("used_hours")
-    private Integer usedHours;
+    private Integer usedHours = 0;
 
     /**
-     * 剩余课时
+     * 剩余课时数
      */
     @TableField("remaining_hours")
-    private Integer remainingHours;
+    private Integer remainingHours = 0;
 
-    /**
-     * 更新时间
-     */
+    @TableField(fill = FieldFill.INSERT, value = "create_time")
+    private LocalDateTime createTime;
+
     @TableField(fill = FieldFill.INSERT_UPDATE, value = "update_time")
-    private String updateTime;
+    private LocalDateTime updateTime;
 }

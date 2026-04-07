@@ -75,6 +75,13 @@ public class Coupon {
     private Integer claimLimit;
 
     /**
+     * 活动链接领券Token
+     * 非空时允许通过活动链接领取（无需绑定店铺）
+     */
+    @TableField("link_token")
+    private String linkToken;
+
+    /**
      * 生效开始时间
      */
     @TableField("start_time")

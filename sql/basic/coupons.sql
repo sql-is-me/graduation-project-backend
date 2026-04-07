@@ -10,6 +10,7 @@ CREATE TABLE coupons (
   total_count INT NOT NULL,
   remaining_count INT NOT NULL,
   claim_limit INT NOT NULL DEFAULT 1,
+  link_token VARCHAR(64) DEFAULT NULL COMMENT '活动链接领券Token，非空时可通过链接领取',
   start_time DATETIME NOT NULL,
   end_time DATETIME NOT NULL,
   status CHAR(1) DEFAULT '0',
@@ -17,7 +18,8 @@ CREATE TABLE coupons (
   update_time DATETIME DEFAULT NULL,
   PRIMARY KEY (coupon_id),
   KEY idx_coupon_store_id (store_id),
-  KEY idx_coupon_creator_id (creator_id)
+  KEY idx_coupon_creator_id (creator_id),
+  UNIQUE KEY uk_coupon_link_token (link_token)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO coupons (coupon_id, coupon_name, store_id, creator_id, coupon_type, discount_value, min_amount, total_count, remaining_count, claim_limit, start_time, end_time, status, create_time, update_time) VALUES

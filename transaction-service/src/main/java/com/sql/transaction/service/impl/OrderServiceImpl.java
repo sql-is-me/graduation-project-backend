@@ -266,10 +266,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private void creditClassHours(Long userId, int hours) {
-        int rows = classHourService.addClassHours(userId, hours);
-        if (rows <= 0) {
-            throw new ServiceException("课时到账失败，请联系管理员");
-        }
+        classHourService.addClassHours(userId, hours);
     }
 
     private String generateOrderNo() {

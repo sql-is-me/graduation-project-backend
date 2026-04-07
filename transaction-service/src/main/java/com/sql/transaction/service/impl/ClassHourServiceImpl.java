@@ -27,23 +27,19 @@ public class ClassHourServiceImpl implements ClassHourService {
 
     @Override
     @Transactional
-    public int addClassHours(Long userId, int hours) {
+    public void addClassHours(Long userId, int hours) {
         LambdaQueryWrapper<ClassHour> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(ClassHour::getUserId, userId);
         ClassHour classHour = classHourMapper.selectOne(wrapper);
 
-        if (classHour == null) {
-            classHour = new ClassHour();
-            classHour.setUserId(userId);
-            classHour.setHours(hours);
-            classHour.setUsedHours(0);
-            classHour.setRemainingHours(hours);
-            return classHourMapper.insert(classHour);
-        } else {
-            classHour.setHours(classHour.getHours() + hours);
-            classHour.setRemainingHours(classHour.getRemainingHours() + hours);
-            return classHourMapper.updateById(classHour);
+        classHour.setHours(classHour.getHours() + hours);
+        classHour.setRemainingHours(classHour.getRemainingHours() + hours);
+
+        int rows = classHourMapper.updateById(classHour);
+        if (rows <= 0) {
+            throw new ServiceException("课时到账失败，请联系管理员");
         }
+
     }
 
     @Override
