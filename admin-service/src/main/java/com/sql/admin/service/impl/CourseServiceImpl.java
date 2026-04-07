@@ -28,7 +28,7 @@ import com.sql.common.entity.po.Course;
 import com.sql.common.entity.po.AttendanceRecord;
 import com.sql.common.entity.po.Court;
 import com.sql.common.entity.po.User;
-import com.sql.common.entity.vo.ChildInfo;
+import com.sql.common.entity.vo.ChildAndAttendanceInfo;
 import com.sql.common.entity.vo.CourseDetailedInfo;
 import com.sql.common.entity.vo.CourseInfo;
 import com.sql.common.exception.ServiceException;
@@ -306,7 +306,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseDetailedInfo getCourseById(Long courseId) { // TODO:待审核
+    public CourseDetailedInfo getCourseById(Long courseId) {
         Long storeId = getStoreId();
         Course course = getCourseAndValidate(courseId, storeId);
 
@@ -320,23 +320,42 @@ public class CourseServiceImpl implements CourseService {
         }
 
         // 获取孩子信息
-        List<ChildInfo> childInfos = new ArrayList<>();
+        List<ChildAndAttendanceInfo> caInfos = new ArrayList<>();
+
+        // 获取孩子id
         List<Long> childIds = course.getChildIds();
+        // 获取出勤情况
+        List<AttendanceRecord> attendanceRecords = courseChildMapper
+                .selectList(new LambdaQueryWrapper<AttendanceRecord>()
+                        .eq(AttendanceRecord::getCourseId, courseId));
+
         for (Long childId : childIds) {
             Children child = childrenMapper.selectById(childId);
             if (child != null) {
-                ChildInfo ci = new ChildInfo();
-                ci.setChildId(childId);
-                ci.setChildName(child.getChildName());
-                ci.setPhoto(FileUtils.toAbsoluteUrl(FileUtils.TYPE_CHILD_PHOTO, child.getPhoto()));
-                ci.setSex(child.getSex());
-                childInfos.add(ci);
+                ChildAndAttendanceInfo caInfo = new ChildAndAttendanceInfo();
+                caInfo.setChildId(childId);
+                caInfo.setChildName(child.getChildName());
+                caInfo.setPhoto(FileUtils.toAbsoluteUrl(FileUtils.TYPE_CHILD_PHOTO, child.getPhoto()));
+                caInfo.setSex(child.getSex());
+
+                // 从 attendanceRecords 中查找当前孩子的出勤记录
+                String status = attendanceRecords
+                        .stream()
+                        .filter(record -> record.getChildId().equals(childId))
+                        .map(AttendanceRecord::getStatus)
+                        .findFirst()
+                        .orElseThrow(() -> new RuntimeException(
+                                "未找到ID:" + childId + "，姓名:" + child.getChildName() + "的孩子的出勤记录"));
+                caInfo.setStatus(status);
+
+                caInfos.add(caInfo);
             }
         }
 
         CourseDetailedInfo info = new CourseDetailedInfo(course);
         info.setCoachName(coachName);
         info.setCoachAvatar(coachAvatar);
+        info.setChildAndAttendanceInfos(caInfos);
 
         return info;
     }

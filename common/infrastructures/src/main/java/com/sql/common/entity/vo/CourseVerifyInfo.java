@@ -14,7 +14,7 @@ public class CourseVerifyInfo {
     /**
      * 上课孩子信息
      */
-    private List<ChildInfo> childInfos;
+    private List<ChildAndAttendanceInfo> childAndAttendanceInfos;
 
     /**
      * 签到照片URL（相对路径）

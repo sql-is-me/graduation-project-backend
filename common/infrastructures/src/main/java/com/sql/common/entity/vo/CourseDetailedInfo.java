@@ -47,9 +47,9 @@ public class CourseDetailedInfo {
     private Integer totalHours;
 
     /**
-     * 上课孩子信息
+     * 上课孩子信息及出勤情况
      */
-    private List<ChildInfo> childInfos;
+    private List<ChildAndAttendanceInfo> childAndAttendanceInfos;
 
     /**
      * 上课教练名称
@@ -59,7 +59,7 @@ public class CourseDetailedInfo {
     /**
      * 上课教练头像
      */
-    private String coachAvatar; // 绝对路径
+    private String coachAvatar;
 
     /**
      * 课程状态

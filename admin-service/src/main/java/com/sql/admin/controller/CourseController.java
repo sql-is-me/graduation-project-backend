@@ -102,10 +102,14 @@ public class CourseController extends BaseController {
 
     /**
      * 查询课程详情
+     * 
+     * @return CourseDetailedInfo,包含课程详情，教练详情，以及上课孩子详情和出勤详情
      */
     @RequiresType({ UserTypes.ADMIN, UserTypes.MANAGER })
     @GetMapping("/{courseId}")
     public R<?> getCourseById(@PathVariable Long courseId) {
         return R.ok(courseService.getCourseById(courseId));
     }
+
+    
 }
