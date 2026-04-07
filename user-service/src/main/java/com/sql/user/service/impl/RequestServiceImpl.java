@@ -96,7 +96,7 @@ public class RequestServiceImpl implements RequestService {
 
         // 发送请求时即消耗邀请码
         redisService.deleteObject(inviteKey);
-        String reverseKey = AuthConstants.INVITE_COACH + inviteBody.getReferrerIdId() + ":" + inviteBody.getStoreId();
+        String reverseKey = AuthConstants.INVITE_COACH + inviteBody.getReferrerId() + ":" + inviteBody.getStoreId();
         redisService.deleteObject(reverseKey);
 
         String senderType = user.isCoach()

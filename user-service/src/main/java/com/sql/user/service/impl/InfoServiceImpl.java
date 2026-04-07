@@ -107,10 +107,9 @@ public class InfoServiceImpl implements InfoService {
 
         // 校验新邮箱与旧邮箱不能相同
         if (currentUser.getEmail() != null) {
-            mailService.sendWarningEmail(currentUser.getEmail());
-
             if (currentUser.getEmail().equals(email))
                 throw new ServiceException("新邮箱不能与旧邮箱相同");
+            mailService.sendWarningEmail(currentUser.getEmail());
         }
 
         // 校验邮箱唯一

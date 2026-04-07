@@ -9,13 +9,13 @@ import lombok.Data;
 @Data
 public class CoachInviteBody implements Serializable {
     /** 生成邀请码的管理员ID */
-    private Long referrerIdId;
+    private Long referrerId;
 
     /** 门店ID */
     private Long storeId;
 
     public CoachInviteBody(Long referrerIdId, Long storeId) {
-        this.referrerIdId = referrerIdId;
+        this.referrerId = referrerIdId;
         this.storeId = storeId;
     }
 }

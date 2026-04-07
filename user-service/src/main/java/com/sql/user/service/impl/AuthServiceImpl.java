@@ -177,7 +177,7 @@ public class AuthServiceImpl implements AuthService {
                 user.setStoreId(inviteBody.getStoreId());
 
                 // 注册成功后删除邀请码（一次性使用）
-                String coachInviteKey = AuthConstants.INVITE_COACH + inviteBody.getReferrerIdId() + ":"
+                String coachInviteKey = AuthConstants.INVITE_COACH + inviteBody.getReferrerId() + ":"
                         + inviteBody.getStoreId();
                 redisService.deleteObject(coachInviteKey);
                 redisService.deleteObject(inviteKey);

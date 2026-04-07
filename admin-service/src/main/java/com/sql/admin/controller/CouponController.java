@@ -41,7 +41,7 @@ public class CouponController extends BaseController {
      * 可在 linkToken 字段设置活动链接Token，使该券支持通过活动链接领取
      */
     @Log(title = "优惠券管理", businessType = BusinessType.INSERT, operatorType = UserTypes.MANAGER)
-    @PostMapping("/create")
+    @PostMapping
     public R<?> createCoupon(@Validated @RequestBody CouponCreateDTO dto) {
         return R.ok(couponService.createCoupon(dto), "优惠券创建成功");
     }
@@ -50,7 +50,7 @@ public class CouponController extends BaseController {
      * 停用/启用优惠券
      */
     @Log(title = "优惠券管理", businessType = BusinessType.UPDATE, operatorType = UserTypes.MANAGER)
-    @PutMapping("/toggle/{couponId}")
+    @PutMapping("/{couponId}/status")
     public R<?> toggleCouponStatus(@PathVariable Long couponId) {
         return R.ok(couponService.toggleCouponStatus(couponId), "操作成功");
     }

@@ -45,7 +45,7 @@ public class StoreController extends BaseController {
      */
     @RequiresType(UserTypes.ADMIN)
     @Log(title = "店铺管理", businessType = BusinessType.INSERT, operatorType = UserTypes.ADMIN)
-    @PostMapping("/create")
+    @PostMapping
     public R<?> createStore(@Validated @RequestBody StoreCreateDTO dto) {
         Long storeId = storeService.createStore(dto);
         return R.ok(storeId, "店铺创建成功");
@@ -58,7 +58,7 @@ public class StoreController extends BaseController {
      */
     @RequiresType({ UserTypes.ADMIN, UserTypes.MANAGER })
     @Log(title = "店铺管理", businessType = BusinessType.UPDATE)
-    @PutMapping("/update/{storeId}")
+    @PutMapping("/{storeId}")
     public R<?> updateStore(@PathVariable Long storeId, @RequestBody StoreUpdateDTO dto) {
         storeService.updateStore(storeId, dto);
         return R.ok("店铺信息修改成功");
@@ -80,7 +80,7 @@ public class StoreController extends BaseController {
      */
     @RequiresType(UserTypes.ADMIN)
     @Log(title = "店铺管理", businessType = BusinessType.UPDATE, operatorType = UserTypes.ADMIN)
-    @PutMapping("/setOwner/{storeId}/{ownerId}")
+    @PutMapping("/{storeId}/owner/{ownerId}")
     public R<?> setOwner(@PathVariable Long storeId, @PathVariable Long ownerId) {
         storeService.setOwner(storeId, ownerId);
         return R.ok("店铺所有人设置成功");

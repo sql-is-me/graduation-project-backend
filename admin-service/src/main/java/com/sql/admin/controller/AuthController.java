@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -118,7 +117,7 @@ public class AuthController {
      * 发送邮箱验证码
      */
     @Log(title = "邮箱验证码", businessType = BusinessType.UPDATE)
-    @GetMapping("/emailCode")
+    @PostMapping("/email-code")
     public R<?> sendEmailCode(@RequestParam String email) {
         String code = authService.sendEmailCode(email);
         return R.ok(code, "验证码已发送");

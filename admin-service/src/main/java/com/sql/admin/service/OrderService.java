@@ -7,7 +7,7 @@ import com.sql.common.entity.po.Order;
 /**
  * 管理员订单查询服务
  */
-public interface AdminOrderService {
+public interface OrderService {
 
     /**
      * 系统管理员查询全部订单
@@ -21,4 +21,14 @@ public interface AdminOrderService {
      * @param status 按状态筛选（可选）
      */
     List<Order> listStoreOrders(String status);
+
+    /**
+     * 系统管理员查询任意订单详情
+     */
+    Order getOrderById(Long orderId);
+
+    /**
+     * 店铺管理员查询本店铺订单详情
+     */
+    Order getStoreOrderById(Long orderId);
 }

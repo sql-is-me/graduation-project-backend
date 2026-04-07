@@ -73,7 +73,7 @@ public class InfoController {
      * 发送邮箱验证码
      */
     @Log(title = "邮箱验证码", businessType = BusinessType.UPDATE)
-    @GetMapping("/emailCode")
+    @PostMapping("/email-code")
     public R<?> sendEmailCode(@RequestParam String email) {
         String code = infoService.sendEmailCode(email);
         return R.ok(code, "验证码已发送");
@@ -92,6 +92,7 @@ public class InfoController {
     /**
      * 查询个人课时信息（总课时、已用课时、剩余课时）
      */
+    @RequiresType(UserTypes.VIP)
     @GetMapping("/classHour")
     public R<?> getClassHour() {
         ClassHourInfo classHour = infoService.getClassHour();

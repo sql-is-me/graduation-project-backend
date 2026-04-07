@@ -42,7 +42,7 @@ public class CourtController extends BaseController {
 
     @RequiresType(UserTypes.MANAGER)
     @Log(title = "场地管理", businessType = BusinessType.INSERT, operatorType = UserTypes.MANAGER)
-    @PostMapping("/add")
+    @PostMapping
     public R<?> addCourt(@Validated @RequestBody CourtCreateDTO dto) {
         return R.ok(courtService.addCourt(dto), "场地添加成功");
     }
@@ -53,7 +53,7 @@ public class CourtController extends BaseController {
 
     @RequiresType(UserTypes.MANAGER)
     @Log(title = "场地管理", businessType = BusinessType.UPDATE, operatorType = UserTypes.MANAGER)
-    @PutMapping("/update/{courtId}")
+    @PutMapping("/{courtId}")
     public R<?> updateCourt(@PathVariable Long courtId, @RequestBody CourtUpdateDTO dto) {
         courtService.updateCourt(courtId, dto);
         return R.ok("场地信息修改成功");

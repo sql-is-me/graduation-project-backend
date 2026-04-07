@@ -41,7 +41,7 @@ public class CourseController extends BaseController {
      */
     @RequiresType(UserTypes.MANAGER)
     @Log(title = "课程管理", businessType = BusinessType.INSERT, operatorType = UserTypes.MANAGER)
-    @PostMapping("/create")
+    @PostMapping
     public R<?> createCourse(@Validated @RequestBody CourseCreateDTO dto) {
         return R.ok(courseService.createCourse(dto), "课程创建成功");
     }

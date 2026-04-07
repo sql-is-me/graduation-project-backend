@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.po.Order;
 import com.sql.common.entity.result.R;
@@ -22,6 +23,7 @@ import com.sql.utils.BaseController;
  */
 @RestController
 @RequestMapping("/user/order")
+@LoginRequired
 @RequiresType(UserTypes.VIP)
 public class OrderController extends BaseController {
 

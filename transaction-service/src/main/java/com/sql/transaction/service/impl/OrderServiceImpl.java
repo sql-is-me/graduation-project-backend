@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.sql.common.entity.bo.UserOnline;
 import com.sql.common.entity.po.Coupon;
@@ -149,23 +147,6 @@ public class OrderServiceImpl implements OrderService {
         order.setCancelTime(LocalDateTime.now());
         order.setCancelReason(dto != null ? dto.getCancelReason() : null);
         return orderMapper.updateById(order);
-    }
-
-    @Override
-    public List<Order> listMyOrders(String status) {
-        Long userId = ContextHolder.getUO().getUserInfo().getUserId();
-        LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Order::getUserId, userId);
-        if (status != null && !status.isBlank()) {
-            wrapper.eq(Order::getStatus, status);
-        }
-        wrapper.orderByDesc(Order::getCreateTime);
-        return orderMapper.selectList(wrapper);
-    }
-
-    @Override
-    public Order getMyOrder(Long orderId) {
-        return getMyOrderById(orderId);
     }
 
     @SuppressWarnings("unchecked")

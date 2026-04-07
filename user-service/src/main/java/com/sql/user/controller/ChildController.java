@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.po.Child;
 import com.sql.common.entity.result.R;
@@ -29,6 +30,7 @@ import com.sql.user.service.ChildService;
  */
 @RestController
 @RequestMapping("/user/children")
+@LoginRequired
 @RequiresType(UserTypes.VIP)
 public class ChildController {
 
