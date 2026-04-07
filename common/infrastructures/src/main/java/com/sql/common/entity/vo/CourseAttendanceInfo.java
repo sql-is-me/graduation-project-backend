@@ -8,7 +8,7 @@ import com.sql.common.entity.po.Course;
 import lombok.Data;
 
 @Data
-public class CourseVerifyInfo {
+public class CourseAttendanceInfo {
     private Long courseId;
 
     /**
@@ -17,7 +17,7 @@ public class CourseVerifyInfo {
     private List<ChildAndAttendanceInfo> childAndAttendanceInfos;
 
     /**
-     * 签到照片URL（相对路径）
+     * 签到照片URL（绝对路径）
      */
     private String signInPhoto;
 
@@ -27,7 +27,7 @@ public class CourseVerifyInfo {
     private LocalDateTime signInTime;
 
     /**
-     * 签退照片URL（相对路径）
+     * 签退照片URL（绝对路径）
      */
     private String signOutPhoto;
 
@@ -36,11 +36,9 @@ public class CourseVerifyInfo {
      */
     private LocalDateTime signOutTime;
 
-    public CourseVerifyInfo(Course course) {
+    public CourseAttendanceInfo(Course course) {
         this.courseId = course.getCourseId();
-        this.signInPhoto = course.getSignInPhoto();
         this.signInTime = course.getSignInTime();
-        this.signOutPhoto = course.getSignOutPhoto();
         this.signOutTime = course.getSignOutTime();
     }
 }

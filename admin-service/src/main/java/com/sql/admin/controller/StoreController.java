@@ -21,6 +21,7 @@ import com.sql.common.entity.dto.StoreCreateDTO;
 import com.sql.common.entity.dto.StoreUpdateDTO;
 import com.sql.common.entity.po.Store;
 import com.sql.common.entity.result.R;
+import com.sql.common.entity.vo.ChildInfo;
 import com.sql.common.entity.vo.CoachesInfo;
 import com.sql.common.entity.vo.TableDataInfo;
 import com.sql.common.entity.vo.VIPsInfo;
@@ -121,9 +122,20 @@ public class StoreController extends BaseController {
      */
     @RequiresType(UserTypes.MANAGER)
     @GetMapping("/list/coach")
-    public TableDataInfo listStoreCoachs() {
+    public TableDataInfo listStoreCoaches() {
         startPage();
-        List<CoachesInfo> list = storeService.listStoreCoachs();
+        List<CoachesInfo> list = storeService.listStoreCoaches();
+        return getDataTable(list);
+    }
+
+    /**
+     * 查看当前店铺旗下所有孩子信息（含所属家长ID）
+     */
+    @RequiresType(UserTypes.MANAGER)
+    @GetMapping("/list/children")
+    public TableDataInfo listStoreChildren() {
+        startPage();
+        List<ChildInfo> list = storeService.listStoreChildren();
         return getDataTable(list);
     }
 }

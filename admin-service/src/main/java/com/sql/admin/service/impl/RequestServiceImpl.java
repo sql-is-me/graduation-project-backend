@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.sql.admin.mapper.ChildrenMapper;
-import com.sql.admin.mapper.ClassHourMapper;
 import com.sql.admin.mapper.CourseChildMapper;
 import com.sql.admin.mapper.CourseMapper;
 import com.sql.admin.mapper.RequestMapper;
@@ -20,8 +18,6 @@ import com.sql.admin.service.RequestService;
 import com.sql.common.constants.RequestConstants;
 import com.sql.common.entity.bo.AdminOnline;
 import com.sql.common.entity.po.Admin;
-import com.sql.common.entity.po.Children;
-import com.sql.common.entity.po.ClassHour;
 import com.sql.common.entity.po.Course;
 import com.sql.common.entity.po.AttendanceRecord;
 import com.sql.common.entity.po.Request;
@@ -48,12 +44,6 @@ public class RequestServiceImpl implements RequestService {
 
     @Autowired
     private CourseChildMapper courseChildMapper;
-
-    @Autowired
-    private ClassHourMapper classHourMapper;
-
-    @Autowired
-    private ChildrenMapper childrenMapper;
 
     @Autowired
     private UserMapper userMapper;
@@ -157,14 +147,8 @@ public class RequestServiceImpl implements RequestService {
         ccWrapper.eq(AttendanceRecord::getCourseId, courseId).eq(AttendanceRecord::getChildId, childId);
         AttendanceRecord cc = courseChildMapper.selectOne(ccWrapper);
         if (cc != null) {
-            cc.setStatus("4"); // 请假
+            cc.setStatus("5"); // 请假，课时在课程核销时统一返还
             courseChildMapper.updateById(cc);
-        }
-
-        // 返还家长课时
-        Children child = childrenMapper.selectById(childId);
-        if (child != null) {
-            returnClassHours(child.getParentId(), course.getTotalHours());
         }
     }
 
@@ -274,20 +258,5 @@ public class RequestServiceImpl implements RequestService {
             return ((Number) value).longValue();
         }
         return Long.parseLong(value.toString());
-    }
-
-    /**
-     * 返还家长课时
-     */
-    private void returnClassHours(Long parentId, int hours) {
-        LambdaQueryWrapper<ClassHour> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(ClassHour::getUserId, parentId);
-        ClassHour classHour = classHourMapper.selectOne(wrapper);
-
-        if (classHour != null) {
-            classHour.setRemainingHours(classHour.getRemainingHours() + hours);
-            classHour.setUsedHours(Math.max(0, classHour.getUsedHours() - hours));
-            classHourMapper.updateById(classHour);
-        }
     }
 }

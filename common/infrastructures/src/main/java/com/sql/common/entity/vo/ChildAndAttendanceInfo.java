@@ -25,8 +25,8 @@ public class ChildAndAttendanceInfo {
     private String sex;
 
     /**
-     * 课程状态
-     * 0-准备中，1-进行中，2-已完成，3-已取消
+     * 出勤状态
+     * 0-待出勤 1-正常完课 2-迟到 3-早退 4-缺勤 5-请假
      */
     private String status;
 }

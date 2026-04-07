@@ -12,10 +12,7 @@ public class VerifyChildDTO {
 
     /**
      * 出勤状态
-     * 1-正常完课 2-早退 3-缺勤
+     * 1-正常完课 2-迟到 3-早退 4-缺勤
      */
-    private String status;// TODO:迟到
-
-    /** 备注（可选） */
-    private String remark;
+    private String status;
 }

@@ -20,6 +20,7 @@ import com.sql.admin.service.CourseService;
 import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.dto.CourseCreateDTO;
+import com.sql.common.entity.dto.VerifyChildDTO;
 import com.sql.common.entity.result.R;
 import com.sql.common.entity.vo.CourseInfo;
 import com.sql.common.entity.vo.TableDataInfo;
@@ -102,7 +103,7 @@ public class CourseController extends BaseController {
 
     /**
      * 查询课程详情
-     * 
+     *
      * @return CourseDetailedInfo,包含课程详情，教练详情，以及上课孩子详情和出勤详情
      */
     @RequiresType({ UserTypes.ADMIN, UserTypes.MANAGER })
@@ -111,5 +112,26 @@ public class CourseController extends BaseController {
         return R.ok(courseService.getCourseById(courseId));
     }
 
-    
+    /**
+     * 查询课程考勤信息（签到签退照片+时间，及每个孩子当前出勤状态）
+     * 供管理员核销前查看
+     */
+    @RequiresType(UserTypes.MANAGER)
+    @GetMapping("/{courseId}/attendanceInfo")
+    public R<?> getCourseAttendanceInfo(@PathVariable Long courseId) {
+        return R.ok(courseService.getCourseAttendanceInfo(courseId));
+    }
+
+    /**
+     * 批量核销孩子出勤状态
+     * 管理员对照签到签退照片，为每个孩子设置出勤状态
+     * status: 1-正常完课 2-迟到 3-早退 4-缺勤
+     */
+    @RequiresType(UserTypes.MANAGER)
+    @Log(title = "考勤核销", businessType = BusinessType.UPDATE, operatorType = UserTypes.MANAGER)
+    @PostMapping("/{courseId}/verify")
+    public R<?> batchVerify(@PathVariable Long courseId, @RequestBody List<VerifyChildDTO> items) {
+        courseService.batchVerify(courseId, items);
+        return R.ok("核销完成");
+    }
 }

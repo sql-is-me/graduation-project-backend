@@ -5,6 +5,7 @@ import java.util.List;
 import com.sql.common.entity.dto.StoreCreateDTO;
 import com.sql.common.entity.dto.StoreUpdateDTO;
 import com.sql.common.entity.po.Store;
+import com.sql.common.entity.vo.ChildInfo;
 import com.sql.common.entity.vo.CoachesInfo;
 import com.sql.common.entity.vo.StoreInfo;
 import com.sql.common.entity.vo.VIPsInfo;
@@ -50,5 +51,10 @@ public interface StoreService {
     /**
      * 查看当前店铺旗下所有教练信息
      */
-    List<CoachesInfo> listStoreCoachs();
+    List<CoachesInfo> listStoreCoaches();
+
+    /**
+     * 查看当前店铺旗下所有孩子信息（含所属家长ID）
+     */
+    List<ChildInfo> listStoreChildren();
 }

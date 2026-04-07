@@ -68,7 +68,7 @@ public class CourseDetailedInfo {
     private String status;
 
     /**
-     * 签到照片URL（相对路径）
+     * 签到照片URL（绝对路径）
      */
     private String signInPhoto;
 
@@ -78,7 +78,7 @@ public class CourseDetailedInfo {
     private LocalDateTime signInTime;
 
     /**
-     * 签退照片URL（相对路径）
+     * 签退照片URL（绝对路径）
      */
     private String signOutPhoto;
 
@@ -112,9 +112,7 @@ public class CourseDetailedInfo {
         this.startTime = course.getStartTime();
         this.totalHours = course.getTotalHours();
         this.status = course.getStatus();
-        this.signInPhoto = course.getSignInPhoto();
         this.signInTime = course.getSignInTime();
-        this.signOutPhoto = course.getSignOutPhoto();
         this.signOutTime = course.getSignOutTime();
         this.verifyStatus = course.getVerifyStatus();
         this.createTime = course.getCreateTime();

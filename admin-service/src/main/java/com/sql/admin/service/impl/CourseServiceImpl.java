@@ -22,6 +22,7 @@ import com.sql.admin.mapper.UserMapper;
 import com.sql.admin.service.CourseService;
 import com.sql.utils.file.FileUtils;
 import com.sql.common.entity.dto.CourseCreateDTO;
+import com.sql.common.entity.dto.VerifyChildDTO;
 import com.sql.common.entity.po.Children;
 import com.sql.common.entity.po.ClassHour;
 import com.sql.common.entity.po.Course;
@@ -29,6 +30,7 @@ import com.sql.common.entity.po.AttendanceRecord;
 import com.sql.common.entity.po.Court;
 import com.sql.common.entity.po.User;
 import com.sql.common.entity.vo.ChildAndAttendanceInfo;
+import com.sql.common.entity.vo.CourseAttendanceInfo;
 import com.sql.common.entity.vo.CourseDetailedInfo;
 import com.sql.common.entity.vo.CourseInfo;
 import com.sql.common.exception.ServiceException;
@@ -120,7 +122,7 @@ public class CourseServiceImpl implements CourseService {
             throw new ServiceException("课程不处于准备状态，无法取消");
         }
 
-        // 返还所有已安排孩子的家长课时
+        // 返还所有已安排孩子的家长课时（含已请假的孩子，请假仅标记状态不返还课时，统一在此处理）
         List<Long> childIds = course.getChildIds();
         if (childIds != null && !childIds.isEmpty()) {
             Map<Long, Integer> parentReturnMap = new HashMap<>();
@@ -135,12 +137,9 @@ public class CourseServiceImpl implements CourseService {
             }
         }
 
-        // 删除所有出勤记录
-        LambdaQueryWrapper<AttendanceRecord> recordWrapper = new LambdaQueryWrapper<>();
-        recordWrapper.eq(AttendanceRecord::getCourseId, courseId);
-        courseChildMapper.delete(recordWrapper);
-
-        int rows = courseMapper.deleteById(courseId);
+        // 软删除：将课程状态置为已取消（3），保留出勤记录用于审计
+        course.setStatus("3");
+        int rows = courseMapper.updateById(course);
         if (rows <= 0) {
             throw new ServiceException("取消课程失败，请联系工作人员");
         }
@@ -336,7 +335,6 @@ public class CourseServiceImpl implements CourseService {
                 caInfo.setChildId(childId);
                 caInfo.setChildName(child.getChildName());
                 caInfo.setPhoto(FileUtils.toAbsoluteUrl(FileUtils.TYPE_CHILD_PHOTO, child.getPhoto()));
-                caInfo.setSex(child.getSex());
 
                 // 从 attendanceRecords 中查找当前孩子的出勤记录
                 String status = attendanceRecords
@@ -358,6 +356,119 @@ public class CourseServiceImpl implements CourseService {
         info.setChildAndAttendanceInfos(caInfos);
 
         return info;
+    }
+
+    @Override
+    public CourseAttendanceInfo getCourseAttendanceInfo(Long courseId) {
+        Long storeId = getStoreId();
+        Course course = getCourseAndValidate(courseId, storeId);
+
+        // 获取所有孩子的出勤记录
+        List<AttendanceRecord> records = courseChildMapper.selectList(
+                new LambdaQueryWrapper<AttendanceRecord>()
+                        .eq(AttendanceRecord::getCourseId, courseId));
+
+        List<ChildAndAttendanceInfo> caInfos = new ArrayList<>();
+        List<Long> childIds = course.getChildIds();
+        if (childIds != null) {
+            for (Long childId : childIds) {
+                Children child = childrenMapper.selectById(childId);
+                if (child == null) continue;
+
+                ChildAndAttendanceInfo caInfo = new ChildAndAttendanceInfo();
+                caInfo.setChildId(childId);
+                caInfo.setChildName(child.getChildName());
+                caInfo.setPhoto(FileUtils.toAbsoluteUrl(FileUtils.TYPE_CHILD_PHOTO, child.getPhoto()));
+
+                records.stream()
+                        .filter(r -> r.getChildId().equals(childId))
+                        .findFirst()
+                        .ifPresent(r -> caInfo.setStatus(r.getStatus()));
+
+                caInfos.add(caInfo);
+            }
+        }
+
+        CourseAttendanceInfo info = new CourseAttendanceInfo(course);
+        info.setSignInPhoto(FileUtils.toAbsoluteUrl(FileUtils.TYPE_SIGN, course.getSignInPhoto()));
+        info.setSignOutPhoto(FileUtils.toAbsoluteUrl(FileUtils.TYPE_SIGN, course.getSignOutPhoto()));
+        info.setChildAndAttendanceInfos(caInfos);
+        return info;
+    }
+
+    @Override
+    @Transactional
+    public void batchVerify(Long courseId, List<VerifyChildDTO> items) {
+        Long storeId = getStoreId();
+        Course course = getCourseAndValidate(courseId, storeId);
+
+        // 课程必须处于已完成状态（签到签退照片均已上传）
+        if (!"2".equals(course.getStatus())) {
+            throw new ServiceException("课程尚未结束，无法核销（需等待教练上传签退照片）");
+        }
+        // 防止重复核销
+        if ("1".equals(course.getVerifyStatus())) {
+            throw new ServiceException("该课程已核销，无法重复操作");
+        }
+
+        Long adminId = ContextHolder.getAO().getAdminInfo().getAdminId();
+
+        // 先统一处理已请假（status=5）的孩子：返还课时（请假仅标记，课时在此处统一返还）
+        List<AttendanceRecord> allRecords = courseChildMapper.selectList(
+                new LambdaQueryWrapper<AttendanceRecord>().eq(AttendanceRecord::getCourseId, courseId));
+        for (AttendanceRecord record : allRecords) {
+            if ("5".equals(record.getStatus())) {
+                Children child = childrenMapper.selectById(record.getChildId());
+                if (child != null) {
+                    returnClassHours(child.getParentId(), course.getTotalHours());
+                }
+                record.setVerifyAdminId(adminId);
+                record.setVerifyTime(LocalDateTime.now());
+                courseChildMapper.updateById(record);
+            }
+        }
+
+        for (VerifyChildDTO dto : items) {
+            LambdaQueryWrapper<AttendanceRecord> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(AttendanceRecord::getCourseId, courseId)
+                    .eq(AttendanceRecord::getChildId, dto.getChildId());
+            AttendanceRecord record = courseChildMapper.selectOne(wrapper);
+
+            if (record == null) {
+                throw new ServiceException("孩子(ID:" + dto.getChildId() + ")不在此课程中");
+            }
+            // 已请假的由上方统一处理，跳过
+            if ("5".equals(record.getStatus())) {
+                continue;
+            }
+            // 已核销过的不重复处理
+            if (!"0".equals(record.getStatus())) {
+                continue;
+            }
+
+            String status = dto.getStatus();
+            // 1-正常完课 2-迟到 3-早退 4-缺勤
+            if (!"1".equals(status) && !"2".equals(status) && !"3".equals(status) && !"4".equals(status)) {
+                throw new ServiceException("无效的出勤状态：" + status + "，仅支持 1-正常完课 2-迟到 3-早退 4-缺勤");
+            }
+
+            // 早退、缺勤返还课时；迟到不返还
+            if ("3".equals(status) || "4".equals(status)) {
+                Children child = childrenMapper.selectById(dto.getChildId());
+                if (child != null) {
+                    returnClassHours(child.getParentId(), course.getTotalHours());
+                }
+            }
+
+            record.setStatus(status);
+            record.setVerifyAdminId(adminId);
+            record.setVerifyTime(LocalDateTime.now());
+            courseChildMapper.updateById(record);
+        }
+
+        // 标记课程核销完成
+        course.setVerifyStatus("1");
+        courseMapper.updateById(course);
     }
 
     // ============ 私有工具方法 ============

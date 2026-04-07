@@ -58,11 +58,6 @@ public class AttendanceRecord {
     @TableField("verify_time")
     private LocalDateTime verifyTime;
 
-    /**
-     * 备注
-     */
-    private String remark;
-
     @TableField(fill = FieldFill.INSERT, value = "create_time")
     private LocalDateTime createTime;
 

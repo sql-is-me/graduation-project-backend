@@ -9,14 +9,17 @@ import org.springframework.stereotype.Service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sql.admin.mapper.AdminMapper;
+import com.sql.admin.mapper.ChildrenMapper;
 import com.sql.admin.mapper.StoreMapper;
 import com.sql.admin.mapper.UserMapper;
 import com.sql.admin.service.StoreService;
 import com.sql.common.entity.dto.StoreCreateDTO;
 import com.sql.common.entity.dto.StoreUpdateDTO;
 import com.sql.common.entity.po.Admin;
+import com.sql.common.entity.po.Children;
 import com.sql.common.entity.po.Store;
 import com.sql.common.entity.po.User;
+import com.sql.common.entity.vo.ChildInfo;
 import com.sql.common.entity.vo.CoachesInfo;
 import com.sql.common.entity.vo.StoreInfo;
 import com.sql.common.entity.vo.VIPsInfo;
@@ -35,6 +38,9 @@ public class StoreServiceImpl implements StoreService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private ChildrenMapper childrenMapper;
 
     @Override
     public Long createStore(StoreCreateDTO dto) {
@@ -171,7 +177,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<CoachesInfo> listStoreCoachs() {
+    public List<CoachesInfo> listStoreCoaches() {
         Long storeId = ContextHolder.getAO().getAdminInfo().getStoreId();
         if (storeId == null) {
             throw new ServiceException("当前管理员未绑定店铺");
@@ -194,5 +200,32 @@ public class StoreServiceImpl implements StoreService {
                 .collect(Collectors.toList());
 
         return coachesInfo;
+    }
+
+    @Override
+    public List<ChildInfo> listStoreChildren() {
+        Long storeId = ContextHolder.getAO().getAdminInfo().getStoreId();
+        if (storeId == null) {
+            throw new ServiceException("当前管理员未绑定店铺");
+        }
+
+        // 先查本店所有会员ID
+        LambdaQueryWrapper<User> userWrapper = new LambdaQueryWrapper<>();
+        userWrapper.eq(User::getStoreId, storeId).eq(User::getUserType, "0").select(User::getUserId);
+        List<Long> parentIds = userMapper.selectList(userWrapper)
+                .stream()
+                .map(User::getUserId)
+                .collect(Collectors.toList());
+
+        if (parentIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        // 查这些会员旗下的所有孩子
+        LambdaQueryWrapper<Children> childWrapper = new LambdaQueryWrapper<>();
+        childWrapper.in(Children::getParentId, parentIds).orderByAsc(Children::getParentId);
+        List<Children> children = childrenMapper.selectList(childWrapper);
+
+        return children.stream().map(ChildInfo::new).collect(Collectors.toList());
     }
 }
