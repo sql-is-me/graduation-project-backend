@@ -162,6 +162,9 @@ public class AuthServiceImpl implements AuthService {
 
             // 教练注册：校验邀请码并绑定店铺
             if ("1".equals(userType)) {
+                // 确立默认照片
+                user.setPhoto("/default_coach_photo.jpg");
+
                 String inviteCode = dto.getInviteCode();
                 if (StringUtils.isEmpty(inviteCode)) {
                     throw new ServiceException("成为教练需要提供邀请码");

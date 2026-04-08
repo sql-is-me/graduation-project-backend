@@ -152,7 +152,7 @@ public class ChildServiceImpl implements ChildService {
 
         // 删除旧照片（非默认）
         String oldPhoto = child.getPhoto();
-        if (StringUtils.isNotEmpty(oldPhoto) && !oldPhoto.endsWith("/default_child.jpg")) {
+        if (StringUtils.isNotEmpty(oldPhoto) && !oldPhoto.endsWith("/default_child_photo.jpg")) {
             remoteFileService.deleteChildPhoto(oldPhoto);
         }
 

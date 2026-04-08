@@ -32,23 +32,26 @@ public class FeignRequestInterceptor implements RequestInterceptor {
             }
 
             String type = headers.get(ContextHolderConstants.CH_TYPE);
-            if (type.equals("0")) {
-                String token = headers.get(ContextHolderConstants.CH_TOKEN);
-                if (StringUtils.isNotEmpty(token)) {
-                    requestTemplate.header(ContextHolderConstants.CH_TOKEN, token);
-                }
-                String username = headers.get(ContextHolderConstants.CH_USERNAME);
-                if (StringUtils.isNotEmpty(username)) {
-                    requestTemplate.header(ContextHolderConstants.CH_USERNAME, username);
-                }
-            } else {
-                String session_key = headers.get(ContextHolderConstants.CH_SESSION_KEY);
-                if (StringUtils.isNotEmpty(session_key)) {
-                    requestTemplate.header(ContextHolderConstants.CH_SESSION_KEY, session_key);
-                }
-                String username = headers.get(ContextHolderConstants.CH_OPENID);
-                if (StringUtils.isNotEmpty(username)) {
-                    requestTemplate.header(ContextHolderConstants.CH_OPENID, username);
+            if (StringUtils.isNotEmpty(type)) {
+                requestTemplate.header(ContextHolderConstants.CH_TYPE, type);
+                if ("0".equals(type)) {
+                    String token = headers.get(ContextHolderConstants.CH_TOKEN);
+                    if (StringUtils.isNotEmpty(token)) {
+                        requestTemplate.header(ContextHolderConstants.CH_TOKEN, token);
+                    }
+                    String username = headers.get(ContextHolderConstants.CH_USERNAME);
+                    if (StringUtils.isNotEmpty(username)) {
+                        requestTemplate.header(ContextHolderConstants.CH_USERNAME, username);
+                    }
+                } else {
+                    String session_key = headers.get(ContextHolderConstants.CH_SESSION_KEY);
+                    if (StringUtils.isNotEmpty(session_key)) {
+                        requestTemplate.header(ContextHolderConstants.CH_SESSION_KEY, session_key);
+                    }
+                    String openId = headers.get(ContextHolderConstants.CH_OPENID);
+                    if (StringUtils.isNotEmpty(openId)) {
+                        requestTemplate.header(ContextHolderConstants.CH_OPENID, openId);
+                    }
                 }
             }
 

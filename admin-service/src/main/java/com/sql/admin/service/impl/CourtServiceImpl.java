@@ -95,18 +95,20 @@ public class CourtServiceImpl implements CourtService {
 
     @Override
     public List<CourtInfo> listCourts(Long storeId) {
-        Long storeId_admin = ContextHolder.getAO().getAdminInfo().getStoreId();
-        LambdaQueryWrapper<Court> wrapper = new LambdaQueryWrapper<>();
-
-        if (storeId_admin != null && storeId_admin != storeId) {
+        Long adminstoreId = ContextHolder.getAO().getAdminInfo().getStoreId();
+        if (adminstoreId != null && storeId != null) {
             throw new ServiceException("无权查看其他店铺的场地");
         }
 
-        // 店铺管理员查询的话是null，直接全查，或者也可以根据需要查
-        if (storeId == null) {
+        LambdaQueryWrapper<Court> wrapper = new LambdaQueryWrapper<>();
+
+        if (adminstoreId == null && storeId == null) {// 系统管理员全查
             wrapper.orderByAsc(Court::getCourtId)
                     .orderByAsc(Court::getStoreId);
-        } else {
+        } else if (adminstoreId != null) {// 店铺管理员查自己店铺的
+            wrapper.eq(Court::getStoreId, adminstoreId)
+                    .orderByAsc(Court::getCourtId);
+        } else {// 系统管理员查指定店铺的
             wrapper.eq(Court::getStoreId, storeId)
                     .orderByAsc(Court::getCourtId);
         }

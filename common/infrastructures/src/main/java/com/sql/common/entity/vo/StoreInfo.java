@@ -59,6 +59,9 @@ public class StoreInfo {
      */
     private LocalDateTime updateTime;
 
+    public StoreInfo() {
+    }
+
     public StoreInfo(Store store) {
         this.storeId = store.getStoreId();
         this.creatorId = store.getCreatorId();

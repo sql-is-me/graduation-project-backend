@@ -13,12 +13,14 @@ public class CoachesInfo {
     private String nickName;
     private String phone;
     private String sex;
+    private String photo;
     private String status;
 
     public CoachesInfo(User user) {
         this.nickName = user.getNickName();
         this.phone = user.getPhone();
         this.sex = user.getSex();
+        this.photo = user.getPhoto();
         this.status = user.getStatus();
     }
 }

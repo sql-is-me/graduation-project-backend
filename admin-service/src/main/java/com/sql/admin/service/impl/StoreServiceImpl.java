@@ -220,12 +220,15 @@ public class StoreServiceImpl implements StoreService {
             return new ArrayList<>();
         }
 
-        List<CoachesInfo> coachesInfo = coaches
-                .stream()
-                .map(CoachesInfo::new)
-                .collect(Collectors.toList());
+        List<CoachesInfo> coachesInfos = new ArrayList<>();
+        for (User coach : coaches) {
+            CoachesInfo coachesInfo = new CoachesInfo(coach);
+            coachesInfo.setPhoto(FileUtils.toAbsoluteUrl(FileUtils.TYPE_COACH_PHOTO, coach.getPhoto()));
 
-        return coachesInfo;
+            coachesInfos.add(coachesInfo);
+        }
+
+        return coachesInfos;
     }
 
     @Override

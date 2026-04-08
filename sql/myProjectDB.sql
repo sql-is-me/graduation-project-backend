@@ -56,9 +56,9 @@ CREATE TABLE admins (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO admins (admin_id, username, password, nick_name, email, phone, sex, avatar, store_id, admin_type, referrer_id, status, create_time, update_time) VALUES
-(1, 'topadmin', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '系统管理员', '2244509212@qq.com', '13900000001', '0', '/default_admin.jpg', NULL, '0', NULL, '0', '2026-03-18 08:00:00', '2026-03-18 08:00:00'),
-(2, 'store_admin_1', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '店铺管理员1', 'store1@example.com', '13900000002', '0', '/default_admin.jpg', 1, '1', 1, '0', '2026-03-18 08:05:00', '2026-03-18 08:05:00'),
-(3, 'store_admin_2', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '店铺管理员2', 'store2@example.com', '13900000003', '1', '/default_admin.jpg', 2, '1', 1, '0', '2026-03-18 08:10:00', '2026-03-18 08:10:00');
+(1, 'admin', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '系统管理员', '2244509212@qq.com', '13900000001', '0', '/default_admin.jpg', NULL, '0', NULL, '0', '2026-03-18 08:00:00', '2026-03-18 08:00:00'),
+(2, 'manager1', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '店铺管理员1', 'store1@example.com', '13900000002', '0', '/default_admin.jpg', 1, '1', 1, '0', '2026-03-18 08:05:00', '2026-03-18 08:05:00'),
+(3, 'manager2', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '店铺管理员2', 'store2@example.com', '13900000003', '1', '/default_admin.jpg', 2, '1', 1, '0', '2026-03-18 08:10:00', '2026-03-18 08:10:00');
 
 -- ----------------------------
 -- 3. 用户表（会员+教练）
@@ -74,7 +74,7 @@ CREATE TABLE users (
   phone VARCHAR(11) DEFAULT '',
   sex CHAR(1) DEFAULT '2',
   avatar VARCHAR(255) DEFAULT '/default_user.jpg',
-  photo VARCHAR(255) DEFAULT '/default_coach_photo.jpg' COMMENT '个人展示照片（仅教练使用）',
+  photo VARCHAR(255) DEFAULT '',
   store_id BIGINT DEFAULT NULL,
   status CHAR(1) DEFAULT '0',
   create_time DATETIME DEFAULT NULL,
@@ -83,6 +83,10 @@ CREATE TABLE users (
   UNIQUE KEY uk_users_open_id (open_id),
   KEY idx_user_store_id (store_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+Insert INTO users (user_id, open_id, union_id, nick_name, user_type, email, phone, sex, avatar, photo, store_id, status, create_time, update_time) VALUES
+(1, 'openid_member_1', 'unionid_1', '会员小明', '0', 'member1@example.com', '13900000001', '0', '/default_user.jpg', '', 1, '0', '2026-03-18 09:00:00', '2026-03-18 09:00:00'),
+(2, 'openid_coach_1', 'unionid_2', '教练小红', '1', 'coach1@example.com', '13900000002', '1', '/default_user.jpg', '/default_coach_photo.jpg', 1, '0', '2026-03-18 09:05:00', '2026-03-18 09:05:00');
 
 
 -- ----------------------------
@@ -124,9 +128,8 @@ CREATE TABLE children (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO children (child_id, parent_id, child_name, birthday, photo, sex, status, create_time, update_time) VALUES
-(1, 1, '小明', '2016-05-12', '', '0', '0', '2026-03-18 11:00:00', '2026-03-18 11:00:00'),
-(2, 1, '小红', '2017-08-21', '', '1', '0', '2026-03-18 11:05:00', '2026-03-18 11:05:00'),
-(3, 2, '小刚', '2015-02-03', '', '0', '0', '2026-03-18 11:10:00', '2026-03-18 11:10:00');
+(1, 1, '小明', '2016-05-12', '/default_child_photo.jpg', '0', '0', '2026-03-18 11:00:00', '2026-03-18 11:00:00'),
+(2, 1, '小红', '2017-08-21', '/default_child_photo.jpg', '1', '0', '2026-03-18 11:05:00', '2026-03-18 11:05:00');
 
 -- ----------------------------
 -- 6. 课时表
@@ -145,8 +148,7 @@ CREATE TABLE class_hours (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='会员课时表';
 
 INSERT INTO class_hours (ch_id, user_id, hours, used_hours, remaining_hours, create_time, update_time) VALUES
-(1, 1, 30, 6, 24, '2026-04-07 11:00:00', '2026-04-07 12:00:00'),
-(2, 2, 20, 8, 12, '2026-04-07 11:05:00', '2026-04-07 12:05:00');
+(1, 1, 30, 6, 24, '2026-04-07 11:00:00', '2026-04-07 12:00:00');
 
 -- ----------------------------
 -- 7. 优惠券表
@@ -201,8 +203,7 @@ CREATE TABLE user_coupons (
 
 INSERT INTO user_coupons (user_coupon_id, user_id, coupon_id, status, used_order_id, claim_time, used_time) VALUES
 (1, 1, 1, '1', 1, '2026-03-18 14:00:00', '2026-03-18 16:00:00'),
-(2, 2, 2, '0', NULL, '2026-03-18 14:05:00', NULL),
-(3, 1, 3, '2', NULL, '2026-03-18 14:10:00', NULL);
+(2, 1, 3, '2', NULL, '2026-03-18 14:10:00', NULL);
 
 -- ----------------------------
 -- 9. 订单表
@@ -237,8 +238,7 @@ CREATE TABLE orders (
 
 INSERT INTO orders (order_id, order_no, user_id, store_id, product_type, quantity, unit_price, total_amount, discount_amount, pay_amount, coupon_id, status, pay_type, pay_time, transaction_id, cancel_time, cancel_reason, create_time, update_time) VALUES
 (1, 'ORD202603180001', 1, 1, '0', 10, 100.00, 1000.00, 50.00, 950.00, 1, '1', 'wechat', '2026-03-18 16:00:00', 'WXTXN0001', NULL, NULL, '2026-03-18 15:55:00', '2026-03-18 16:00:00'),
-(2, 'ORD202603180002', 2, 1, '0', 5, 100.00, 500.00, 0.00, 500.00, NULL, '0', NULL, NULL, NULL, NULL, NULL, '2026-03-18 16:05:00', '2026-03-18 16:05:00'),
-(3, 'ORD202603180003', 1, 2, '0', 8, 120.00, 960.00, 0.00, 960.00, NULL, '2', NULL, NULL, NULL, '2026-03-18 16:30:00', '用户取消', '2026-03-18 16:10:00', '2026-03-18 16:30:00');
+(2, 'ORD202603180003', 1, 2, '0', 8, 120.00, 960.00, 0.00, 960.00, NULL, '2', NULL, NULL, NULL, '2026-03-18 16:30:00', '用户取消', '2026-03-18 16:10:00', '2026-03-18 16:30:00');
 
 -- ----------------------------
 -- 10. 课程表
@@ -269,11 +269,6 @@ CREATE TABLE courses (
   KEY idx_course_date     (course_date)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='课程表';
 
-INSERT INTO courses (course_id, creator_id, store_id, court_id, course_date, start_time, total_hours, child_ids, coach_id, status, sign_in_photo, sign_in_time, sign_out_photo, sign_out_time, verify_status, create_time, update_time) VALUES
-(1, 2, 1, 1, '2026-04-10', '2026-04-10 09:00:00', 2, '[1,2]', 3, '0', NULL, NULL, NULL, NULL, '0', '2026-04-07 17:00:00', '2026-04-07 17:00:00'),
-(2, 2, 1, 2, '2026-04-10', '2026-04-10 14:00:00', 1, '[3]',   3, '0', NULL, NULL, NULL, NULL, '0', '2026-04-07 17:05:00', '2026-04-07 17:05:00'),
-(3, 3, 2, 3, '2026-04-11', '2026-04-11 10:00:00', 3, '[1,3]', 3, '2', '/pics/signs/sign_in_3.jpg', '2026-04-11 10:02:00', '/pics/signs/sign_out_3.jpg', '2026-04-11 13:05:00', '0', '2026-04-07 17:10:00', '2026-04-11 13:05:00');
-
 -- ----------------------------
 -- 11. 公告表
 -- ----------------------------
@@ -291,9 +286,9 @@ CREATE TABLE notices (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO notices (notice_id, title, content, status, create_by, create_time, update_by, update_time) VALUES
-(1, '节假日休馆通知', '法定节假日期间本馆暂停营业，请各位会员知悉。', '0', 'topadmin', '2026-03-18 18:00:00', 'topadmin', '2026-03-18 18:00:00'),
-(2, '春季优惠券上线', '春季优惠活动已开启，快来领取优惠券吧！', '0', 'store_admin_1', '2026-03-18 18:05:00', 'store_admin_1', '2026-03-18 18:05:00'),
-(3, '系统维护公告', '本周末将进行系统升级维护，届时暂停服务。', '1', 'topadmin', '2026-03-18 18:10:00', 'topadmin', '2026-03-18 18:10:00');
+(1, '节假日休馆通知', '法定节假日期间本馆暂停营业，请各位会员知悉。', '0', 'admin', '2026-03-18 18:00:00', 'admin', '2026-03-18 18:00:00'),
+(2, '春季优惠券上线', '春季优惠活动已开启，快来领取优惠券吧！', '0', 'manager1', '2026-03-18 18:05:00', 'manager1', '2026-03-18 18:05:00'),
+(3, '系统维护公告', '本周末将进行系统升级维护，届时暂停服务。', '1', 'admin', '2026-03-18 18:10:00', 'admin', '2026-03-18 18:10:00');
 
 -- ----------------------------
 -- 12. 登录日志表
@@ -309,11 +304,6 @@ CREATE TABLE loginLog (
   PRIMARY KEY (log_id),
   KEY idx_login_username (username)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-INSERT INTO loginLog (log_id, username, status, ip_addr, msg, access_time) VALUES
-(1, 'topadmin', '0', '10.0.0.1', '登录成功', '2026-03-18 19:00:00'),
-(2, 'topadmin', '0', '192.168.1.1', '登录成功', '2026-03-18 19:05:00'),
-(3, 'store_admin_1', '1', '10.0.0.2', '密码错误', '2026-03-18 19:10:00');
 
 -- ----------------------------
 -- 13. 操作日志表
@@ -340,11 +330,6 @@ CREATE TABLE operLog (
   KEY idx_operator_id (operator_id),
   KEY idx_operator_name (operator_name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-INSERT INTO operLog (oper_id, title, business_type, method, request_method, operator_type, operator_id, operator_name, oper_url, oper_ip, oper_param, json_result, status, error_msg, oper_time, cost_time) VALUES
-(1, '店铺管理', 1, 'StoreController.add', 'POST', 1, 2, 'store_admin_1', '/admin/store/add', '10.0.0.2', '{"storeName":"阳光羽毛球馆"}', '{"code":200}', 0, NULL, '2026-03-18 20:00:00', 120),
-(2, '优惠券管理', 2, 'CouponController.update', 'PUT', 1, 2, 'store_admin_1', '/admin/coupon/update', '10.0.0.2', '{"couponId":1}', '{"code":200}', 0, NULL, '2026-03-18 20:05:00', 95),
-(3, '课程查询', 4, 'CourseController.list', 'GET', 3, 1, 'member_1', '/user/course/list', '192.168.1.1', '{}', '{"code":200}', 0, NULL, '2026-03-18 20:10:00', 40);
 
 -- ----------------------------
 -- 14. 教案表
@@ -434,10 +419,3 @@ CREATE TABLE attendance_records (
   UNIQUE KEY uk_course_child (course_id, child_id),
   KEY idx_child_id (child_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='课程-孩子出勤记录表';
-
-INSERT INTO attendance_records (record_id, course_id, child_id, status, verify_admin_id, verify_time, remark, create_time, update_time) VALUES
-(1, 1, 1, '0', NULL, NULL, NULL, '2026-04-07 17:00:00', '2026-04-07 17:00:00'),
-(2, 1, 2, '0', NULL, NULL, NULL, '2026-04-07 17:00:00', '2026-04-07 17:00:00'),
-(3, 2, 3, '0', NULL, NULL, NULL, '2026-04-07 17:05:00', '2026-04-07 17:05:00'),
-(4, 3, 1, '1', 3, '2026-04-11 14:00:00', NULL, '2026-04-07 17:10:00', '2026-04-11 14:00:00'),
-(5, 3, 3, '3', 3, '2026-04-11 14:00:00', NULL, '2026-04-07 17:10:00', '2026-04-11 14:00:00');

@@ -11,7 +11,7 @@ public class LoginInfo {
     /**
      * 登录日志ID
      */
-    private Long infoId;
+    private Long logId;
 
     /**
      * 用户账号
@@ -35,7 +35,7 @@ public class LoginInfo {
     private LocalDateTime accessTime;
 
     public LoginInfo(LoginLog entity) {
-        this.infoId = entity.getLogId();
+        this.logId = entity.getLogId();
         this.username = entity.getUsername();
         this.status = entity.getStatus();
         this.ipAddr = entity.getIpAddr();
