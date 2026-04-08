@@ -92,6 +92,23 @@ public interface FileService {
     public void deleteTrainingMethod(String fileUrl) throws Exception;
 
     /**
+     * 教练照片上传接口（jpg/jpeg/png，限10MB）
+     *
+     * @param file 上传的照片
+     * @return 相对路径
+     * @throws Exception
+     */
+    public String uploadCoachPhoto(MultipartFile file) throws Exception;
+
+    /**
+     * 教练照片删除接口
+     *
+     * @param fileUrl 照片相对路径
+     * @throws Exception
+     */
+    public void deleteCoachPhoto(String fileUrl) throws Exception;
+
+    /**
      * 孩子照片上传接口（jpg/jpeg/png，限10MB）
      *
      * @param file 上传的照片

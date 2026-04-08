@@ -39,7 +39,6 @@ public class CourtController extends BaseController {
      * 
      * @return courtId
      */
-
     @RequiresType(UserTypes.MANAGER)
     @Log(title = "场地管理", businessType = BusinessType.INSERT, operatorType = UserTypes.MANAGER)
     @PostMapping
@@ -50,7 +49,6 @@ public class CourtController extends BaseController {
     /**
      * 修改场地信息
      */
-
     @RequiresType(UserTypes.MANAGER)
     @Log(title = "场地管理", businessType = BusinessType.UPDATE, operatorType = UserTypes.MANAGER)
     @PutMapping("/{courtId}")
@@ -62,7 +60,6 @@ public class CourtController extends BaseController {
     /**
      * 删除场地
      */
-
     @RequiresType(UserTypes.MANAGER)
     @Log(title = "场地管理", businessType = BusinessType.DELETE, operatorType = UserTypes.MANAGER)
     @DeleteMapping("/{courtId}")

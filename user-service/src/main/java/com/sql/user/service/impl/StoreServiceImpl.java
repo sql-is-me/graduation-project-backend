@@ -43,10 +43,11 @@ public class StoreServiceImpl implements StoreService {
             m.setAvatar(FileUtils.toAbsoluteUrl(FileUtils.TYPE_AVATAR, m.getAvatar()));
         });
 
-        // 查询教练列表并拼接头像 URL
+        // 查询教练列表并拼接头像 URL 和展示照片 URL
         List<CoachBriefInfo> coaches = storeMapper.selectCoachesByStoreId(storeId);
         coaches.forEach(c -> {
             c.setAvatar(FileUtils.toAbsoluteUrl(FileUtils.TYPE_AVATAR, c.getAvatar()));
+            c.setPhoto(FileUtils.toAbsoluteUrl(FileUtils.TYPE_COACH_PHOTO, c.getPhoto()));
         });
 
         return new StoreAndCoachInfo(brief, managers, coaches);

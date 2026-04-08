@@ -35,7 +35,8 @@ file:
   sign-path: ./assets/pics/signs
   tp-path: ./assets/tps
   tm-path: ./assets/tms
-  child-photo-path: ./assets/pics/children/photos
+  child-photo-path: ./assets/pics/photos/children
+  coach-photo-path: ./assets/pics/photos/coaches
 
 ---
 # Docker/Linux 部署环境
@@ -51,4 +52,5 @@ file:
   sign-path: /app/pics/signs
   tp-path: /app/tps
   tm-path: /app/tms
-  child-photo-path: /app/pics/children/photos
+  child-photo-path: /app/pics/photos/children
+  coach-photo-path: /app/pics/photos/coaches

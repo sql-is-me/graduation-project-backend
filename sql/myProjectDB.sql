@@ -74,6 +74,7 @@ CREATE TABLE users (
   phone VARCHAR(11) DEFAULT '',
   sex CHAR(1) DEFAULT '2',
   avatar VARCHAR(255) DEFAULT '/default_user.jpg',
+  photo VARCHAR(255) DEFAULT '/default_coach_photo.jpg' COMMENT '个人展示照片（仅教练使用）',
   store_id BIGINT DEFAULT NULL,
   status CHAR(1) DEFAULT '0',
   create_time DATETIME DEFAULT NULL,
@@ -82,6 +83,7 @@ CREATE TABLE users (
   UNIQUE KEY uk_users_open_id (open_id),
   KEY idx_user_store_id (store_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 -- ----------------------------
 -- 4. 场地表

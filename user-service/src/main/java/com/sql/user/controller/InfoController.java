@@ -73,7 +73,7 @@ public class InfoController {
      * 发送邮箱验证码
      */
     @Log(title = "邮箱验证码", businessType = BusinessType.UPDATE)
-    @PostMapping("/email-code")
+    @PostMapping("/emailCode")
     public R<?> sendEmailCode(@RequestParam String email) {
         String code = infoService.sendEmailCode(email);
         return R.ok(code, "验证码已发送");
@@ -87,6 +87,19 @@ public class InfoController {
     public R<?> updateAvatar(@RequestPart("avatarFile") MultipartFile mf) {
         infoService.updateAvatar(mf);
         return R.ok("头像更新成功");
+    }
+
+    // TODO:教练查询个人照片接口
+
+    /**
+     * 教练个人展示照片上传（仅教练可用）
+     */
+    @Log(title = "教练个人照片", businessType = BusinessType.UPDATE)
+    @RequiresType(UserTypes.COACH)
+    @PostMapping(value = "/updatePhoto", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public R<?> updatePhoto(@RequestPart("photoFile") MultipartFile mf) {
+        infoService.updatePhoto(mf);
+        return R.ok("个人照片更新成功");
     }
 
     /**

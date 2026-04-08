@@ -16,6 +16,7 @@ public class CoachInfo {
     private String email;
     private String sex;
     private String avatar;
+    private String photo;
     private String status;
 
     public CoachInfo(User user) {
@@ -25,6 +26,7 @@ public class CoachInfo {
         this.email = user.getEmail();
         this.sex = user.getSex();
         this.avatar = user.getAvatar();
+        this.photo = user.getPhoto();
         this.status = user.getStatus();
     }
 }

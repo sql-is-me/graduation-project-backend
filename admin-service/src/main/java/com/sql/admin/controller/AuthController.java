@@ -77,7 +77,7 @@ public class AuthController {
      * 店铺管理员生成时自动使用自身storeId
      */
     @Log(title = "生成管理员邀请码", businessType = BusinessType.OTHER)
-    @PostMapping("/invite")
+    @PostMapping("/managerInvite")
     @LoginRequired
     @RequiresType({ UserTypes.ADMIN, UserTypes.MANAGER })
     public R<?> generateInviteCode(@RequestParam(required = false) Long storeId,
@@ -117,7 +117,7 @@ public class AuthController {
      * 发送邮箱验证码
      */
     @Log(title = "邮箱验证码", businessType = BusinessType.UPDATE)
-    @PostMapping("/email-code")
+    @PostMapping("/emailCode")
     public R<?> sendEmailCode(@RequestParam String email) {
         String code = authService.sendEmailCode(email);
         return R.ok(code, "验证码已发送");

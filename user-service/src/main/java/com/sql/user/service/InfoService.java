@@ -32,6 +32,11 @@ public interface InfoService {
     void updateAvatar(MultipartFile mf);
 
     /**
+     * 上传教练个人展示照片（仅coach）
+     */
+    void updatePhoto(MultipartFile mf);
+
+    /**
      * 发送邮箱验证码
      */
     String sendEmailCode(String email);

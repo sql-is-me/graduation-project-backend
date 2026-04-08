@@ -172,6 +172,43 @@ public class InfoServiceImpl implements InfoService {
     }
 
     /**
+     * 上传教练个人展示照片
+     */
+    @Override
+    public void updatePhoto(MultipartFile mf) {
+        if (mf.isEmpty()) {
+            throw new ServiceException("上传文件不能为空");
+        }
+
+        UserOnline uo = ContextHolder.getUO();
+        String extension = FileTypeUtils.getExtension(mf);
+        if (!StringUtils.equalsAnyIgnoreCase(extension, MimeTypeUtils.IMAGE_EXTENSION)) {
+            throw new ServiceException("文件格式不正确，请上传" + Arrays.toString(MimeTypeUtils.IMAGE_EXTENSION) + "格式");
+        }
+
+        R<File> fileResult = remoteFileService.uploadCoachPhoto(mf);
+        if (StringUtils.isNull(fileResult) || StringUtils.isNull(fileResult.getData())) {
+            throw new ServiceException("文件服务异常，请联系管理员");
+        }
+
+        String fileUrl = fileResult.getData().getUrl();
+        // 原照片不是默认图时才删除
+        String oldPhoto = uo.getUserInfo().getPhoto();
+        if (StringUtils.isNotEmpty(oldPhoto)) {
+            remoteFileService.deleteCoachPhoto(oldPhoto);
+        }
+
+        int rows = userMapper.updatePhoto(uo.getUserInfo().getUserId(), fileUrl);
+        if (rows <= 0) {
+            throw new ServiceException("上传照片异常，请联系管理员");
+        }
+
+        // 更新缓存
+        uo.getUserInfo().setPhoto(fileUrl);
+        userTokenService.refreshCacheInfo(uo);
+    }
+
+    /**
      * 查询当前用户课时信息
      */
     @Override

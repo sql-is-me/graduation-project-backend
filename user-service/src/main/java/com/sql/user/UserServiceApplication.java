@@ -16,6 +16,8 @@ import com.sql.common.annotation.EnableCustomFeignClients;
 public class UserServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(UserServiceApplication.class, args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  用户/教练服务模块启动成功   ლ(´ڡ`ლ)ﾞ");
+        System.out.println("==================================" + "\n" +
+                "       用户服务模块启动成功" + "\n"
+                + "==================================");
     }
 }

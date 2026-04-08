@@ -14,6 +14,8 @@ import com.sql.common.annotation.EnableCustomFeignClients;
 public class TransactionServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run(TransactionServiceApplication.class, args);
-        System.out.println("(♥◠‿◠)ﾉﾞ  交易服务模块启动成功   ლ(´ڡ`ლ)ﾞ");
+        System.out.println("==================================" + "\n" +
+                "       交易服务模块启动成功" + "\n"
+                + "==================================");
     }
 }

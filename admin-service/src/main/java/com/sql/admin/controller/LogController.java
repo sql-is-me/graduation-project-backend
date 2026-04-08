@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,7 +40,7 @@ public class LogController extends BaseController {
     /**
      * 查询操作日志列表（支持按操作人、业务类型、操作状态筛选）
      */
-    @GetMapping("/oper")
+    @PostMapping("/oper")
     public TableDataInfo listOperLog(OperLogSelectDTO dto) {
         startPage();
         List<OperLogInfo> list = logService.listOperLog(dto);
@@ -77,7 +78,7 @@ public class LogController extends BaseController {
     /**
      * 查询登录日志列表（支持按用户名、IP地址、登录状态筛选）
      */
-    @GetMapping("/login")
+    @PostMapping("/login")
     public TableDataInfo listLoginLog(LoginLogSelectDTO dto) {
         startPage();
         List<LoginInfo> list = logService.listLoginLog(dto);

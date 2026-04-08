@@ -34,6 +34,7 @@ public class FileUtils {
     public static final String TYPE_SIGN = "sign";
     public static final String TYPE_TP = "tp";
     public static final String TYPE_TM = "tm";
+    public static final String TYPE_COACH_PHOTO = "coach_photo";
     public static final String TYPE_CHILD_PHOTO = "child_photo";
 
     /** 文件服务域名，从 file.properties 读取，默认值兜底 */
@@ -60,7 +61,8 @@ public class FileUtils {
             case TYPE_SIGN -> "/pics/signs";
             case TYPE_TP -> "/tps";
             case TYPE_TM -> "/tms";
-            case TYPE_CHILD_PHOTO -> "/pics/children/photos";
+            case TYPE_COACH_PHOTO -> "/pics/photos/coaches";
+            case TYPE_CHILD_PHOTO -> "/pics/photos/children";
             default -> throw new IllegalArgumentException("未知的文件类型：" + type);
         };
     }

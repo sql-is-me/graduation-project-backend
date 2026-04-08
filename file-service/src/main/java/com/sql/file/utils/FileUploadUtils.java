@@ -33,7 +33,7 @@ public class FileUploadUtils {
     /**
      * 孩子照片最大大小 10M
      */
-    public static final long CHILDREN_PHOTO_MAX_SIZE = 10 * 1024 * 1024L;
+    public static final long PHOTO_MAX_SIZE = 10 * 1024 * 1024L;
 
     /**
      * 签到/签退图片最大大小 20M
@@ -129,11 +129,24 @@ public class FileUploadUtils {
     }
 
     /**
+     * 教练照片上传（限制10MB，仅允许jpg/jpeg/png）
+     */
+    public static final String uploadCoachPhoto(String baseDir, MultipartFile file) throws IOException {
+        try {
+            return upload(baseDir, file, PHOTO_MAX_SIZE, MimeTypeUtils.AVATAR_EXTENSION);
+        } catch (FileException fe) {
+            throw new IOException(fe.getDefaultMessage(), fe);
+        } catch (Exception e) {
+            throw new IOException(e.getMessage(), e);
+        }
+    }
+
+    /**
      * 孩子照片上传（限制10MB，仅允许jpg/jpeg/png）
      */
     public static final String uploadChildPhoto(String baseDir, MultipartFile file) throws IOException {
         try {
-            return upload(baseDir, file, CHILDREN_PHOTO_MAX_SIZE, MimeTypeUtils.AVATAR_EXTENSION);
+            return upload(baseDir, file, PHOTO_MAX_SIZE, MimeTypeUtils.AVATAR_EXTENSION);
         } catch (FileException fe) {
             throw new IOException(fe.getDefaultMessage(), fe);
         } catch (Exception e) {

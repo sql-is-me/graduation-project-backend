@@ -237,6 +237,7 @@ public class StoreServiceImpl implements StoreService {
 
         CoachInfo coachInfo = new CoachInfo(coach);
         coachInfo.setAvatar(FileUtils.toAbsoluteUrl(FileUtils.TYPE_AVATAR, coach.getAvatar()));
+        coachInfo.setPhoto(FileUtils.toAbsoluteUrl(FileUtils.TYPE_COACH_PHOTO, coach.getPhoto()));
         return coachInfo;
     }
 

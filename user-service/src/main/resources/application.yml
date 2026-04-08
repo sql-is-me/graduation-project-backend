@@ -17,6 +17,19 @@ spring:
         file-extension: yml
         shared-configs:
           - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+  mail:
+    host: smtp.qq.com
+    port: 465
+    username: 2244509212@qq.com
+    password: olrxpjizyquweadh
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            enable: true
+          starttls:
+            enable: false
   config:
     import:
       - nacos:user-service-dev.yml

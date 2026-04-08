@@ -13,6 +13,9 @@ public class CoachBriefInfo {
     /** 性别（0男 1女 2未知） */
     private String sex;
 
-    /** 头像相对路径 */
+    /** 头像绝对路径 */
     private String avatar;
+
+    /** 个人展示照片绝对路径 */
+    private String photo;
 }

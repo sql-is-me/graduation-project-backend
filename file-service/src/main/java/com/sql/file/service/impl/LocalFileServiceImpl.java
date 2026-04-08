@@ -18,7 +18,8 @@ import com.sql.utils.file.FileUtils;
 public class LocalFileServiceImpl implements FileService {
     private static final String DEFAULT_ADMIN_AVATAR = "/default_admin.jpg";
     private static final String DEFAULT_USER_AVATAR = "/default_user.jpg";
-    private static final String DEFAULT_CHILD_AVATAR = "/default_child.jpg";
+    private static final String DEFAULT_COACH_PHOTO = "/default_coach_photo.jpg";
+    private static final String DEFAULT_CHILD_PHOTO = "/default_child_photo.jpg";
 
     /**
      * 通用文件存储在本地的根路径
@@ -49,6 +50,12 @@ public class LocalFileServiceImpl implements FileService {
      */
     @Value("${file.tm-path}")
     private String localTrainingMethodPath;
+
+    /**
+     * 教练照片存储在本地的根路径
+     */
+    @Value("${file.coach-photo-path}")
+    private String localCoachPhotoPath;
 
     /**
      * 孩子照片存储在本地的根路径
@@ -140,6 +147,25 @@ public class LocalFileServiceImpl implements FileService {
     }
 
     /**
+     * 教练照片上传
+     */
+    @Override
+    public String uploadCoachPhoto(MultipartFile file) throws Exception {
+        return FileUploadUtils.uploadCoachPhoto(localCoachPhotoPath, file);
+    }
+
+    /**
+     * 教练照片删除
+     */
+    @Override
+    public void deleteCoachPhoto(String fileUrl) throws Exception {
+        if (fileUrl.endsWith(DEFAULT_COACH_PHOTO)) {
+            return;
+        }
+        FileUtils.deleteFile(localCoachPhotoPath + fileUrl);
+    }
+
+    /**
      * 孩子照片上传
      */
     @Override
@@ -152,7 +178,7 @@ public class LocalFileServiceImpl implements FileService {
      */
     @Override
     public void deleteChildPhoto(String fileUrl) throws Exception {
-        if (fileUrl.endsWith(DEFAULT_CHILD_AVATAR)) {
+        if (fileUrl.endsWith(DEFAULT_CHILD_PHOTO)) {
             return;
         }
         FileUtils.deleteFile(localChildPhotoPath + fileUrl);

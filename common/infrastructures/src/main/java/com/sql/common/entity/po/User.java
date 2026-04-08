@@ -67,6 +67,11 @@ public class User {
     private String avatar = "/default_user.jpg";
 
     /**
+     * 个人展示照片（仅教练使用）
+     */
+    private String photo = "/default_coach_photo.jpg";
+
+    /**
      * 所属店铺ID
      */
     @TableField("store_id")

@@ -30,7 +30,7 @@ public interface StoreMapper extends BaseMapper<Store> {
     /**
      * 查询店铺下所有教练的简要信息
      */
-    @Select("SELECT nick_name AS nickName, sex, avatar FROM users " +
+    @Select("SELECT nick_name AS nickName, sex, avatar, photo FROM users " +
             "WHERE store_id = #{storeId} AND user_type = '1' AND status = '0'")
     List<CoachBriefInfo> selectCoachesByStoreId(@Param("storeId") Long storeId);
 
