@@ -28,6 +28,10 @@ spring:
     activate:
       on-profile: dev
 
+referer:
+  enabled: false
+  allowed-domains: http://127.0.0.1,http://localhost
+
 file:
   domain: http://127.0.0.1:9900
   path: ./assets/files
