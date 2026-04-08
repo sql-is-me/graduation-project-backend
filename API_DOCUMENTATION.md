@@ -44,13 +44,13 @@
 
 本项目为微服务架构，所有请求通过网关 **8080** 端口统一入口。
 
-| 服务 | 端口 | 说明 |
-|------|------|------|
-| Gateway | 8080 | 网关（统一入口） |
-| Admin Service | 9901 | 管理端接口 |
-| User Service | 9902 | 用户端（教练/会员）接口 |
-| Transaction Service | 9903 | 交易服务接口 |
-| File Service | 9900 | 文件服务（内部调用） |
+| 服务                | 端口 | 说明                    |
+| ------------------- | ---- | ----------------------- |
+| Gateway             | 8080 | 网关（统一入口）        |
+| Admin Service       | 9901 | 管理端接口              |
+| User Service        | 9902 | 用户端（教练/会员）接口 |
+| Transaction Service | 9903 | 交易服务接口            |
+| File Service        | 9900 | 文件服务（内部调用）    |
 
 **BaseURL（开发环境）：** `http://127.0.0.1:8080`
 
@@ -75,11 +75,11 @@
 }
 ```
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
+| 字段 | 类型    | 说明                         |
+| ---- | ------- | ---------------------------- |
 | code | Integer | 状态码，200 成功，其他为失败 |
-| msg | String | 提示消息 |
-| data | Any | 返回数据 |
+| msg  | String  | 提示消息                     |
+| data | Any     | 返回数据                     |
 
 ### 分页响应格式
 
@@ -98,12 +98,12 @@
 
 所有使用 PageHelper 的分页接口均支持以下查询参数（Query String）：
 
-| 参数名 | 类型 | 默认值 | 说明 |
-|--------|------|--------|------|
-| pageNum | Integer | 1 | 当前页码，从 1 开始 |
-| pageSize | Integer | 10 | 每页条数 |
-| orderByColumn | String | - | 排序字段名（驼峰命名，如 `createTime`） |
-| isAsc | String | desc | 排序方式，`asc` 升序 / `desc` 降序 |
+| 参数名        | 类型    | 默认值 | 说明                                    |
+| ------------- | ------- | ------ | --------------------------------------- |
+| pageNum       | Integer | 1      | 当前页码，从 1 开始                     |
+| pageSize      | Integer | 10     | 每页条数                                |
+| orderByColumn | String  | -      | 排序字段名（驼峰命名，如 `createTime`） |
+| isAsc         | String  | desc   | 排序方式，`asc` 升序 / `desc` 降序      |
 
 **示例：**
 ```
@@ -137,99 +137,99 @@ Authorization: Bearer <access_token>
 
 ### 用户类型（UserType）
 
-| 值 | 说明 |
-|----|------|
-| 0 | 系统管理员（ADMIN） |
-| 1 | 门店管理员（MANAGER） |
-| 2 | 教练（COACH） |
-| 3 | VIP 会员（VIP） |
+| 值  | 说明                  |
+| --- | --------------------- |
+| 0   | 系统管理员（ADMIN）   |
+| 1   | 门店管理员（MANAGER） |
+| 2   | 教练（COACH）         |
+| 3   | VIP 会员（VIP）       |
 
 ### 性别（sex）
 
-| 值 | 说明 |
-|----|------|
-| 0 | 男 |
-| 1 | 女 |
-| 2 | 未知 |
+| 值  | 说明 |
+| --- | ---- |
+| 0   | 男   |
+| 1   | 女   |
+| 2   | 未知 |
 
 ### 课程状态（course.status）
 
-| 值 | 说明 |
-|----|------|
-| 0 | 待开课 |
-| 1 | 进行中 |
-| 2 | 已完课 |
-| 3 | 已取消 |
+| 值  | 说明   |
+| --- | ------ |
+| 0   | 待开课 |
+| 1   | 进行中 |
+| 2   | 已完课 |
+| 3   | 已取消 |
 
 ### 课程验证状态（course.verifyStatus）
 
-| 值 | 说明 |
-|----|------|
-| 0 | 待审核 |
-| 1 | 已审核 |
+| 值  | 说明   |
+| --- | ------ |
+| 0   | 待审核 |
+| 1   | 已审核 |
 
 ### 考勤状态（verifyChild.status）
 
-| 值 | 说明 |
-|----|------|
-| 1 | 正常完课 |
-| 2 | 迟到 |
-| 3 | 早退 |
-| 4 | 缺勤 |
+| 值  | 说明     |
+| --- | -------- |
+| 1   | 正常完课 |
+| 2   | 迟到     |
+| 3   | 早退     |
+| 4   | 缺勤     |
 
 ### 优惠券类型（couponType）
 
-| 值 | 说明 |
-|----|------|
-| 0 | 满减券 |
-| 1 | 折扣券 |
+| 值  | 说明   |
+| --- | ------ |
+| 0   | 满减券 |
+| 1   | 折扣券 |
 
 ### 优惠券状态（coupon.status）
 
-| 值 | 说明 |
-|----|------|
-| 0 | 启用 |
-| 1 | 禁用 |
+| 值  | 说明 |
+| --- | ---- |
+| 0   | 启用 |
+| 1   | 禁用 |
 
 ### 订单产品类型（productType）
 
-| 值 | 说明 |
-|----|------|
-| 0 | 单课时 |
-| 1 | 套餐 |
+| 值  | 说明   |
+| --- | ------ |
+| 0   | 单课时 |
+| 1   | 套餐   |
 
 ### 套餐类型（packageType）
 
-| 值 | 说明 |
-|----|------|
+| 值  | 说明        |
+| --- | ----------- |
 | p10 | 10 课时套餐 |
 | p30 | 30 课时套餐 |
 | p50 | 50 课时套餐 |
 
 ### 订单状态（order.status）
 
-| 值 | 说明 |
-|----|------|
-| 0 | 待支付 |
-| 1 | 已支付 |
-| 2 | 已取消 |
-| 3 | 退款中 |
-| 4 | 已退款 |
+| 值  | 说明   |
+| --- | ------ |
+| 0   | 待支付 |
+| 1   | 已支付 |
+| 2   | 已取消 |
+| 3   | 退款中 |
+| 4   | 已退款 |
 
 ### 申请状态（request.status）
 
-| 值 | 说明 |
-|----|------|
-| 0 | 待审核 |
-| 1 | 已通过 |
-| 2 | 已拒绝 |
+| 值  | 说明   |
+| --- | ------ |
+| 0   | 待审核 |
+| 1   | 已通过 |
+| 2   | 已拒绝 |
 
 ### 场地状态（court.status）
 
-| 值 | 说明 |
-|----|------|
-| 0 | 正常 |
-| 1 | 停用 |
+| 值  | 说明 |
+| --- | ---- |
+| 0   | 正常 |
+| 1   | 停用 |
 
 ---
 
@@ -256,10 +256,10 @@ POST /admin/auth/login
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| username | String | 是 | 用户名 |
-| password | String | 是 | 密码 |
+| 字段     | 类型   | 必填 | 说明   |
+| -------- | ------ | ---- | ------ |
+| username | String | 是   | 用户名 |
+| password | String | 是   | 密码   |
 
 **响应示例：**
 
@@ -314,12 +314,12 @@ POST /admin/auth/register
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| username | String | 是 | 用户名 |
-| password | String | 是 | 密码 |
-| inviteCode | String | 是 | 管理员邀请码 |
-| storeId | Long | 否 | 门店 ID（可选） |
+| 字段       | 类型   | 必填 | 说明            |
+| ---------- | ------ | ---- | --------------- |
+| username   | String | 是   | 用户名          |
+| password   | String | 是   | 密码            |
+| inviteCode | String | 是   | 管理员邀请码    |
+| storeId    | Long   | 否   | 门店 ID（可选） |
 
 **响应示例：**
 
@@ -343,9 +343,9 @@ POST /admin/auth/managerInvite?storeId=1
 
 **Query 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| storeId | Long | 否 | 绑定门店 ID |
+| 参数    | 类型 | 必填 | 说明        |
+| ------- | ---- | ---- | ----------- |
+| storeId | Long | 否   | 绑定门店 ID |
 
 **响应示例：**
 
@@ -387,9 +387,9 @@ POST /admin/auth/emailCode?email=admin@example.com
 
 **Query 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| email | String | 是 | 目标邮箱 |
+| 参数  | 类型   | 必填 | 说明     |
+| ----- | ------ | ---- | -------- |
+| email | String | 是   | 目标邮箱 |
 
 **响应示例：**
 
@@ -419,11 +419,11 @@ PUT /admin/auth/resetPassword
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| email | String | 是 | 绑定邮箱 |
-| emailCode | String | 是 | 邮箱验证码 |
-| newPassword | String | 是 | 新密码 |
+| 字段        | 类型   | 必填 | 说明       |
+| ----------- | ------ | ---- | ---------- |
+| email       | String | 是   | 绑定邮箱   |
+| emailCode   | String | 是   | 邮箱验证码 |
+| newPassword | String | 是   | 新密码     |
 
 **响应示例：**
 
@@ -486,11 +486,11 @@ PUT /admin/info/updateInfo
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| nickName | String | 是 | 昵称 |
-| phone | String | 是 | 手机号 |
-| sex | String | 是 | 性别（0男/1女/2未知） |
+| 字段     | 类型   | 必填 | 说明                  |
+| -------- | ------ | ---- | --------------------- |
+| nickName | String | 是   | 昵称                  |
+| phone    | String | 是   | 手机号                |
+| sex      | String | 是   | 性别（0男/1女/2未知） |
 
 ---
 
@@ -509,10 +509,10 @@ PUT /admin/info/updateEmail
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| email | String | 是 | 新邮箱 |
-| emailCode | String | 是 | 邮箱验证码 |
+| 字段      | 类型   | 必填 | 说明       |
+| --------- | ------ | ---- | ---------- |
+| email     | String | 是   | 新邮箱     |
+| emailCode | String | 是   | 邮箱验证码 |
 
 ---
 
@@ -531,10 +531,10 @@ PUT /admin/info/updatePassword
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| oldPassword | String | 是 | 旧密码 |
-| newPassword | String | 是 | 新密码 |
+| 字段        | 类型   | 必填 | 说明   |
+| ----------- | ------ | ---- | ------ |
+| oldPassword | String | 是   | 旧密码 |
+| newPassword | String | 是   | 新密码 |
 
 ---
 
@@ -547,9 +547,9 @@ Content-Type: multipart/form-data
 
 **Form 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| file | File | 是 | 图片文件（jpg/jpeg/png，≤5MB） |
+| 参数 | 类型 | 必填 | 说明                           |
+| ---- | ---- | ---- | ------------------------------ |
+| file | File | 是   | 图片文件（jpg/jpeg/png，≤5MB） |
 
 **响应示例：**
 
@@ -581,9 +581,9 @@ POST /admin/court/
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| courtName | String | 是 | 场地名称 |
+| 字段      | 类型   | 必填 | 说明     |
+| --------- | ------ | ---- | -------- |
+| courtName | String | 是   | 场地名称 |
 
 **响应示例：**
 
@@ -618,10 +618,10 @@ PUT /admin/court/{courtId}
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| courtName | String | 否 | 场地名称 |
-| status | String | 否 | 状态（0正常/1停用） |
+| 字段      | 类型   | 必填 | 说明                |
+| --------- | ------ | ---- | ------------------- |
+| courtName | String | 否   | 场地名称            |
+| status    | String | 否   | 状态（0正常/1停用） |
 
 ---
 
@@ -647,13 +647,13 @@ GET /admin/court/list?pageNum=1&pageSize=10&orderByColumn=createTime&isAsc=desc&
 
 **Query 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| pageNum | Integer | 否 | 页码，默认 1 |
-| pageSize | Integer | 否 | 每页条数，默认 10 |
-| orderByColumn | String | 否 | 排序字段 |
-| isAsc | String | 否 | asc/desc |
-| storeId | Long | 否 | 按门店过滤（ADMIN 使用） |
+| 参数          | 类型    | 必填 | 说明                     |
+| ------------- | ------- | ---- | ------------------------ |
+| pageNum       | Integer | 否   | 页码，默认 1             |
+| pageSize      | Integer | 否   | 每页条数，默认 10        |
+| orderByColumn | String  | 否   | 排序字段                 |
+| isAsc         | String  | 否   | asc/desc                 |
+| storeId       | Long    | 否   | 按门店过滤（ADMIN 使用） |
 
 **响应示例：**
 
@@ -707,12 +707,12 @@ POST /admin/course/
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| courtId | Long | 是 | 场地 ID |
-| courseDate | String | 是 | 上课日期，格式 `yyyy-MM-dd` |
-| startTime | String | 是 | 开始时间，格式 `HH:mm:ss` |
-| totalHours | Integer | 是 | 课时数，范围 1-3 |
+| 字段       | 类型    | 必填 | 说明                        |
+| ---------- | ------- | ---- | --------------------------- |
+| courtId    | Long    | 是   | 场地 ID                     |
+| courseDate | String  | 是   | 上课日期，格式 `yyyy-MM-dd` |
+| startTime  | String  | 是   | 开始时间，格式 `HH:mm:ss`   |
+| totalHours | Integer | 是   | 课时数，范围 1-3            |
 
 **响应示例：**
 
@@ -788,14 +788,14 @@ GET /admin/course/list?pageNum=1&pageSize=10&orderByColumn=courseDate&isAsc=asc&
 
 **Query 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| pageNum | Integer | 否 | 页码，默认 1 |
-| pageSize | Integer | 否 | 每页条数，默认 10 |
-| orderByColumn | String | 否 | 排序字段 |
-| isAsc | String | 否 | asc/desc |
-| courseDate | String | 否 | 按日期过滤，格式 `yyyy-MM-dd` |
-| storeId | Long | 否 | 按门店过滤（ADMIN 使用） |
+| 参数          | 类型    | 必填 | 说明                          |
+| ------------- | ------- | ---- | ----------------------------- |
+| pageNum       | Integer | 否   | 页码，默认 1                  |
+| pageSize      | Integer | 否   | 每页条数，默认 10             |
+| orderByColumn | String  | 否   | 排序字段                      |
+| isAsc         | String  | 否   | asc/desc                      |
+| courseDate    | String  | 否   | 按日期过滤，格式 `yyyy-MM-dd` |
+| storeId       | Long    | 否   | 按门店过滤（ADMIN 使用）      |
 
 **响应示例：**
 
@@ -915,10 +915,10 @@ POST /admin/course/{courseId}/verify
 ]
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| childId | Long | 是 | 孩子 ID |
-| status | String | 是 | 1正常完课 / 2迟到 / 3早退 / 4缺勤 |
+| 字段    | 类型   | 必填 | 说明                              |
+| ------- | ------ | ---- | --------------------------------- |
+| childId | Long   | 是   | 孩子 ID                           |
+| status  | String | 是   | 1正常完课 / 2迟到 / 3早退 / 4缺勤 |
 
 ---
 
@@ -948,17 +948,17 @@ POST /admin/coupon/
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| couponName | String | 是 | 优惠券名称 |
-| couponType | String | 是 | 0满减券 / 1折扣券 |
-| discountValue | BigDecimal | 是 | 折扣值（满减券：减免金额；折扣券：折扣率如0.9代表九折），最小0.01 |
-| minAmount | BigDecimal | 是 | 使用门槛金额，最小0 |
-| totalCount | Integer | 是 | 总发放数量，最小1 |
-| claimLimit | Integer | 是 | 每人领取上限，最小1 |
-| startTime | String | 是 | 生效时间，格式 `yyyy-MM-ddTHH:mm:ss` |
-| endTime | String | 是 | 过期时间，格式 `yyyy-MM-ddTHH:mm:ss` |
-| linkToken | String | 否 | 活动链接 token（可通过链接领取） |
+| 字段          | 类型       | 必填 | 说明                                                              |
+| ------------- | ---------- | ---- | ----------------------------------------------------------------- |
+| couponName    | String     | 是   | 优惠券名称                                                        |
+| couponType    | String     | 是   | 0满减券 / 1折扣券                                                 |
+| discountValue | BigDecimal | 是   | 折扣值（满减券：减免金额；折扣券：折扣率如0.9代表九折），最小0.01 |
+| minAmount     | BigDecimal | 是   | 使用门槛金额，最小0                                               |
+| totalCount    | Integer    | 是   | 总发放数量，最小1                                                 |
+| claimLimit    | Integer    | 是   | 每人领取上限，最小1                                               |
+| startTime     | String     | 是   | 生效时间，格式 `yyyy-MM-ddTHH:mm:ss`                              |
+| endTime       | String     | 是   | 过期时间，格式 `yyyy-MM-ddTHH:mm:ss`                              |
+| linkToken     | String     | 否   | 活动链接 token（可通过链接领取）                                  |
 
 **响应示例：**
 
@@ -1140,12 +1140,12 @@ POST /admin/log/oper?pageNum=1&pageSize=10&orderByColumn=operTime&isAsc=desc
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| operatorType | Integer | 否 | 操作者类型 |
-| operatorName | String | 否 | 操作者用户名（模糊查询） |
-| operIp | String | 否 | 操作 IP |
-| status | String | 否 | 操作状态 |
+| 字段         | 类型    | 必填 | 说明                     |
+| ------------ | ------- | ---- | ------------------------ |
+| operatorType | Integer | 否   | 操作者类型               |
+| operatorName | String  | 否   | 操作者用户名（模糊查询） |
+| operIp       | String  | 否   | 操作 IP                  |
+| status       | String  | 否   | 操作状态                 |
 
 **响应示例：**
 
@@ -1188,9 +1188,9 @@ DELETE /admin/log/oper?operIds=1,2,3
 
 **Query 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| operIds | List\<Long\> | 是 | 日志 ID 列表，逗号分隔 |
+| 参数    | 类型         | 必填 | 说明                   |
+| ------- | ------------ | ---- | ---------------------- |
+| operIds | List\<Long\> | 是   | 日志 ID 列表，逗号分隔 |
 
 ---
 
@@ -1218,11 +1218,11 @@ POST /admin/log/login?pageNum=1&pageSize=10&orderByColumn=accessTime&isAsc=desc
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| username | String | 否 | 用户名（模糊） |
-| status | String | 否 | 登录状态（0成功/1失败） |
-| ipAddr | String | 否 | IP 地址 |
+| 字段     | 类型   | 必填 | 说明                    |
+| -------- | ------ | ---- | ----------------------- |
+| username | String | 否   | 用户名（模糊）          |
+| status   | String | 否   | 登录状态（0成功/1失败） |
+| ipAddr   | String | 否   | IP 地址                 |
 
 ---
 
@@ -1383,10 +1383,10 @@ PUT /admin/notice/publish
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| title | String | 是 | 公告标题 |
-| content | String | 是 | 公告内容 |
+| 字段    | 类型   | 必填 | 说明     |
+| ------- | ------ | ---- | -------- |
+| title   | String | 是   | 公告标题 |
+| content | String | 是   | 公告内容 |
 
 ---
 
@@ -1407,10 +1407,10 @@ PUT /admin/notice/edit/{noticeId}
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| title | String | 否 | 公告标题 |
-| content | String | 否 | 公告内容 |
+| 字段    | 类型   | 必填 | 说明     |
+| ------- | ------ | ---- | -------- |
+| title   | String | 否   | 公告标题 |
+| content | String | 否   | 公告内容 |
 
 ---
 
@@ -1436,14 +1436,14 @@ GET /admin/order/all?pageNum=1&pageSize=10&orderByColumn=createTime&isAsc=desc&s
 
 **Query 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| pageNum | Integer | 否 | 页码 |
-| pageSize | Integer | 否 | 每页条数 |
-| orderByColumn | String | 否 | 排序字段 |
-| isAsc | String | 否 | asc/desc |
-| storeId | Long | 否 | 按门店过滤 |
-| status | String | 否 | 订单状态 |
+| 参数          | 类型    | 必填 | 说明       |
+| ------------- | ------- | ---- | ---------- |
+| pageNum       | Integer | 否   | 页码       |
+| pageSize      | Integer | 否   | 每页条数   |
+| orderByColumn | String  | 否   | 排序字段   |
+| isAsc         | String  | 否   | asc/desc   |
+| storeId       | Long    | 否   | 按门店过滤 |
+| status        | String  | 否   | 订单状态   |
 
 ---
 
@@ -1557,9 +1557,9 @@ POST /admin/request/{requestId}/reject?rejectReason=不符合请假条件
 
 **Query 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| rejectReason | String | 否 | 拒绝原因 |
+| 参数         | 类型   | 必填 | 说明     |
+| ------------ | ------ | ---- | -------- |
+| rejectReason | String | 否   | 拒绝原因 |
 
 ---
 
@@ -1582,10 +1582,10 @@ POST /admin/store/
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| storeName | String | 是 | 门店名称 |
-| address | String | 否 | 门店地址 |
+| 字段      | 类型   | 必填 | 说明     |
+| --------- | ------ | ---- | -------- |
+| storeName | String | 是   | 门店名称 |
+| address   | String | 否   | 门店地址 |
 
 **响应示例：**
 
@@ -1648,13 +1648,13 @@ GET /admin/store/list?pageNum=1&pageSize=10&orderByColumn=createTime&isAsc=desc&
 
 **Query 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| pageNum | Integer | 否 | 页码 |
-| pageSize | Integer | 否 | 每页条数 |
-| orderByColumn | String | 否 | 排序字段 |
-| isAsc | String | 否 | asc/desc |
-| status | String | 否 | 门店状态 |
+| 参数          | 类型    | 必填 | 说明     |
+| ------------- | ------- | ---- | -------- |
+| pageNum       | Integer | 否   | 页码     |
+| pageSize      | Integer | 否   | 每页条数 |
+| orderByColumn | String  | 否   | 排序字段 |
+| isAsc         | String  | 否   | asc/desc |
+| status        | String  | 否   | 门店状态 |
 
 ---
 
@@ -1761,9 +1761,9 @@ POST /user/auth/login
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| code | String | 是 | 微信小程序 `wx.login()` 返回的临时登录凭证 |
+| 字段 | 类型   | 必填 | 说明                                       |
+| ---- | ------ | ---- | ------------------------------------------ |
+| code | String | 是   | 微信小程序 `wx.login()` 返回的临时登录凭证 |
 
 **响应示例（已注册）：**
 
@@ -1805,11 +1805,11 @@ POST /user/auth/register
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| code | String | 是 | 微信小程序 `wx.login()` 返回的临时登录凭证 |
-| userType | String | 是 | 注册身份：2=教练 / 3=VIP会员 |
-| inviteCode | String | 否 | 教练注册时需要邀请码 |
+| 字段       | 类型   | 必填 | 说明                                       |
+| ---------- | ------ | ---- | ------------------------------------------ |
+| code       | String | 是   | 微信小程序 `wx.login()` 返回的临时登录凭证 |
+| userType   | String | 是   | 注册身份：2=教练 / 3=VIP会员               |
+| inviteCode | String | 否   | 教练注册时需要邀请码                       |
 
 **响应示例：**
 
@@ -1883,9 +1883,9 @@ POST /user/info/emailCode?email=user@example.com
 
 **Query 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| email | String | 是 | 目标邮箱 |
+| 参数  | 类型   | 必填 | 说明     |
+| ----- | ------ | ---- | -------- |
+| email | String | 是   | 目标邮箱 |
 
 ---
 
@@ -1915,11 +1915,21 @@ Content-Type: multipart/form-data
 
 **Form 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| file | File | 是 | 图片文件（jpg/jpeg/png，≤5MB） |
+| 参数 | 类型 | 必填 | 说明                           |
+| ---- | ---- | ---- | ------------------------------ |
+| file | File | 是   | 图片文件（jpg/jpeg/png，≤5MB） |
 
 ---
+
+**响应示例：**
+
+```json
+{
+  "code": 200,
+  "msg": "上传成功",
+  "data": null
+}
+```
 
 #### 6. 上传教练照片（仅教练）
 
@@ -1932,9 +1942,9 @@ Content-Type: multipart/form-data
 
 **Form 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| file | File | 是 | 图片文件（jpg/jpeg/png，≤5MB） |
+| 参数 | 类型 | 必填 | 说明                           |
+| ---- | ---- | ---- | ------------------------------ |
+| file | File | 是   | 图片文件（jpg/jpeg/png，≤5MB） |
 
 **响应示例：**
 
@@ -1946,9 +1956,27 @@ Content-Type: multipart/form-data
 }
 ```
 
+#### 7. 获取教练照片（仅教练）
+
+```
+GET /user/info/photo
+```
+
+**权限：** COACH
+
+**响应示例：**
+
+```json
+{
+  "code": 200,
+  "msg": "上传成功",
+  "data": "./photoPath"
+}
+```
+
 ---
 
-#### 7. 获取课时信息（仅VIP）
+#### 8. 获取课时信息（仅VIP）
 
 ```
 GET /user/info/classHour
@@ -2027,12 +2055,12 @@ POST /user/children/
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| childName | String | 否 | 孩子姓名 |
-| birthday | String | 否 | 出生日期，格式 `yyyy-MM-dd` |
-| sex | String | 否 | 性别（0男/1女/2未知） |
-| photo | String | 否 | 照片 URL（一般通过上传接口获取） |
+| 字段      | 类型   | 必填 | 说明                             |
+| --------- | ------ | ---- | -------------------------------- |
+| childName | String | 否   | 孩子姓名                         |
+| birthday  | String | 否   | 出生日期，格式 `yyyy-MM-dd`      |
+| sex       | String | 否   | 性别（0男/1女/2未知）            |
+| photo     | String | 否   | 照片 URL（一般通过上传接口获取） |
 
 ---
 
@@ -2053,12 +2081,12 @@ PUT /user/children/
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| childId | Long | 是（更新时） | 孩子 ID |
-| childName | String | 否 | 孩子姓名 |
-| birthday | String | 否 | 出生日期 |
-| sex | String | 否 | 性别 |
+| 字段      | 类型   | 必填         | 说明     |
+| --------- | ------ | ------------ | -------- |
+| childId   | Long   | 是（更新时） | 孩子 ID  |
+| childName | String | 否           | 孩子姓名 |
+| birthday  | String | 否           | 出生日期 |
+| sex       | String | 否           | 性别     |
 
 ---
 
@@ -2071,9 +2099,9 @@ Content-Type: multipart/form-data
 
 **Form 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| file | File | 是 | 图片文件（jpg/jpeg/png，≤10MB） |
+| 参数 | 类型 | 必填 | 说明                            |
+| ---- | ---- | ---- | ------------------------------- |
+| file | File | 是   | 图片文件（jpg/jpeg/png，≤10MB） |
 
 ---
 
@@ -2159,11 +2187,11 @@ GET /user/coupon/my?pageNum=1&pageSize=10&status=0
 
 **Query 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| pageNum | Integer | 否 | 页码 |
-| pageSize | Integer | 否 | 每页条数 |
-| status | String | 否 | 状态过滤（0未使用/1已使用/2已过期） |
+| 参数     | 类型    | 必填 | 说明                                |
+| -------- | ------- | ---- | ----------------------------------- |
+| pageNum  | Integer | 否   | 页码                                |
+| pageSize | Integer | 否   | 每页条数                            |
+| status   | String  | 否   | 状态过滤（0未使用/1已使用/2已过期） |
 
 **响应示例：**
 
@@ -2202,13 +2230,13 @@ GET /user/order/my?pageNum=1&pageSize=10&orderByColumn=createTime&isAsc=desc&sta
 
 **Query 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| pageNum | Integer | 否 | 页码 |
-| pageSize | Integer | 否 | 每页条数 |
-| orderByColumn | String | 否 | 排序字段 |
-| isAsc | String | 否 | asc/desc |
-| status | String | 否 | 订单状态过滤 |
+| 参数          | 类型    | 必填 | 说明         |
+| ------------- | ------- | ---- | ------------ |
+| pageNum       | Integer | 否   | 页码         |
+| pageSize      | Integer | 否   | 每页条数     |
+| orderByColumn | String  | 否   | 排序字段     |
+| isAsc         | String  | 否   | asc/desc     |
+| status        | String  | 否   | 订单状态过滤 |
 
 ---
 
@@ -2233,9 +2261,9 @@ Content-Type: multipart/form-data
 
 **Form 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| file | File | 是 | 签到照片（jpg/jpeg/png，≤20MB） |
+| 参数 | 类型 | 必填 | 说明                            |
+| ---- | ---- | ---- | ------------------------------- |
+| file | File | 是   | 签到照片（jpg/jpeg/png，≤20MB） |
 
 ---
 
@@ -2248,9 +2276,9 @@ Content-Type: multipart/form-data
 
 **Form 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| file | File | 是 | 签退照片（jpg/jpeg/png，≤20MB） |
+| 参数 | 类型 | 必填 | 说明                            |
+| ---- | ---- | ---- | ------------------------------- |
+| file | File | 是   | 签退照片（jpg/jpeg/png，≤20MB） |
 
 ---
 
@@ -2262,13 +2290,13 @@ GET /user/course/coach/list?pageNum=1&pageSize=10&orderByColumn=courseDate&isAsc
 
 **Query 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| pageNum | Integer | 否 | 页码 |
-| pageSize | Integer | 否 | 每页条数 |
-| orderByColumn | String | 否 | 排序字段 |
-| isAsc | String | 否 | asc/desc |
-| courseDate | String | 否 | 按日期过滤，格式 `yyyy-MM-dd` |
+| 参数          | 类型    | 必填 | 说明                          |
+| ------------- | ------- | ---- | ----------------------------- |
+| pageNum       | Integer | 否   | 页码                          |
+| pageSize      | Integer | 否   | 每页条数                      |
+| orderByColumn | String  | 否   | 排序字段                      |
+| isAsc         | String  | 否   | asc/desc                      |
+| courseDate    | String  | 否   | 按日期过滤，格式 `yyyy-MM-dd` |
 
 ---
 
@@ -2365,11 +2393,11 @@ Content-Type: multipart/form-data
 
 **Form 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| file | File | 是 | 文档（pdf/doc，≤30MB） |
-| title | String | 是 | 标题 |
-| description | String | 否 | 描述 |
+| 参数        | 类型   | 必填 | 说明                   |
+| ----------- | ------ | ---- | ---------------------- |
+| file        | File   | 是   | 文档（pdf/doc，≤30MB） |
+| title       | String | 是   | 标题                   |
+| description | String | 否   | 描述                   |
 
 ---
 
@@ -2398,11 +2426,11 @@ Content-Type: multipart/form-data
 
 **Form 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| file | File | 是 | 文档（pdf/doc/docx/ppt/pptx，≤30MB） |
-| title | String | 是 | 标题 |
-| description | String | 否 | 描述 |
+| 参数        | 类型   | 必填 | 说明                                 |
+| ----------- | ------ | ---- | ------------------------------------ |
+| file        | File   | 是   | 文档（pdf/doc/docx/ppt/pptx，≤30MB） |
+| title       | String | 是   | 标题                                 |
+| description | String | 否   | 描述                                 |
 
 ---
 
@@ -2450,11 +2478,11 @@ POST /user/request/leave
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| courseId | Long | 是 | 课程 ID |
-| childId | Long | 是 | 请假孩子 ID |
-| message | String | 否 | 请假说明 |
+| 字段     | 类型   | 必填 | 说明        |
+| -------- | ------ | ---- | ----------- |
+| courseId | Long   | 是   | 课程 ID     |
+| childId  | Long   | 是   | 请假孩子 ID |
+| message  | String | 否   | 请假说明    |
 
 ---
 
@@ -2475,10 +2503,10 @@ POST /user/request/bindStore
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| inviteCode | String | 是 | 门店邀请码 |
-| message | String | 否 | 申请说明 |
+| 字段       | 类型   | 必填 | 说明       |
+| ---------- | ------ | ---- | ---------- |
+| inviteCode | String | 是   | 门店邀请码 |
+| message    | String | 否   | 申请说明   |
 
 ---
 
@@ -2564,11 +2592,11 @@ GET /user/store/search?keyword=北京&pageNum=1&pageSize=10
 
 **Query 参数：**
 
-| 参数 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| keyword | String | 是 | 搜索关键词（门店名称模糊查询） |
-| pageNum | Integer | 否 | 页码 |
-| pageSize | Integer | 否 | 每页条数 |
+| 参数     | 类型    | 必填 | 说明                           |
+| -------- | ------- | ---- | ------------------------------ |
+| keyword  | String  | 是   | 搜索关键词（门店名称模糊查询） |
+| pageNum  | Integer | 否   | 页码                           |
+| pageSize | Integer | 否   | 每页条数                       |
 
 **响应示例：**
 
@@ -2623,12 +2651,12 @@ POST /transaction/order/create
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| productType | String | 是 | 0=单课时 / 1=套餐，默认"0" |
-| quantity | Integer | 条件必填 | productType="0" 时必填，购买课时数 |
-| packageType | String | 条件必填 | productType="1" 时必填，p10/p30/p50 |
-| userCouponId | Long | 否 | 用户优惠券 ID（我的优惠券中的 userCouponId） |
+| 字段         | 类型    | 必填     | 说明                                         |
+| ------------ | ------- | -------- | -------------------------------------------- |
+| productType  | String  | 是       | 0=单课时 / 1=套餐，默认"0"                   |
+| quantity     | Integer | 条件必填 | productType="0" 时必填，购买课时数           |
+| packageType  | String  | 条件必填 | productType="1" 时必填，p10/p30/p50          |
+| userCouponId | Long    | 否       | 用户优惠券 ID（我的优惠券中的 userCouponId） |
 
 **响应示例：**
 
@@ -2669,9 +2697,9 @@ PUT /transaction/order/{orderId}/cancel
 }
 ```
 
-| 字段 | 类型 | 必填 | 说明 |
-|------|------|------|------|
-| cancelReason | String | 否 | 取消原因 |
+| 字段         | 类型   | 必填 | 说明     |
+| ------------ | ------ | ---- | -------- |
+| cancelReason | String | 否   | 取消原因 |
 
 > 只有状态为"待支付（0）"的订单可以取消
 
@@ -2757,16 +2785,16 @@ GET /transaction/classHour/list?pageNum=1&pageSize=10&orderByColumn=createTime&i
 
 ## 错误码说明
 
-| 错误码 | 说明 |
-|--------|------|
-| 200 | 操作成功 |
-| 201 | 自定义状态（如用户未注册） |
-| 400 | 请求参数错误 |
-| 401 | 未登录或 Token 已过期 |
-| 403 | 无权限访问 |
-| 404 | 资源不存在 |
-| 429 | 请求过于频繁（Sentinel 限流） |
-| 500 | 服务器内部错误 |
+| 错误码 | 说明                          |
+| ------ | ----------------------------- |
+| 200    | 操作成功                      |
+| 201    | 自定义状态（如用户未注册）    |
+| 400    | 请求参数错误                  |
+| 401    | 未登录或 Token 已过期         |
+| 403    | 无权限访问                    |
+| 404    | 资源不存在                    |
+| 429    | 请求过于频繁（Sentinel 限流） |
+| 500    | 服务器内部错误                |
 
 ---
 

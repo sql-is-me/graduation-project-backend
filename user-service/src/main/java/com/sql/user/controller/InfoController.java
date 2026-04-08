@@ -89,7 +89,15 @@ public class InfoController {
         return R.ok("头像更新成功");
     }
 
-    // TODO:教练查询个人照片接口
+    /**
+     * 教练查询个人照片
+     */
+    @RequiresType(UserTypes.COACH)
+    @GetMapping("/photo")
+    public R<?> getCoachPhoto() {
+        String url = infoService.getCoachPhoto();
+        return R.ok(url);
+    }
 
     /**
      * 教练个人展示照片上传（仅教练可用）

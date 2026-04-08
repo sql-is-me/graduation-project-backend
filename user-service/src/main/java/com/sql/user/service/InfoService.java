@@ -32,6 +32,11 @@ public interface InfoService {
     void updateAvatar(MultipartFile mf);
 
     /**
+     * 获取个人展示照片（仅coach）
+     */
+    String getCoachPhoto();
+
+    /**
      * 上传教练个人展示照片（仅coach）
      */
     void updatePhoto(MultipartFile mf);

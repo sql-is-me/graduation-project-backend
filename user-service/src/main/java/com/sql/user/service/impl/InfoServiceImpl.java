@@ -172,6 +172,24 @@ public class InfoServiceImpl implements InfoService {
     }
 
     /**
+     * 获取教练个人展示照片
+     */
+    @Override
+    public String getCoachPhoto() {
+        UserOnline uo = ContextHolder.getUO();
+        User user = uo.getUserInfo();
+        if (!"1".equals(user.getUserType())) {
+            throw new ServiceException("该用户不是教练");
+        }
+        
+        String photoUrl = user.getPhoto();
+        if (StringUtils.isEmpty(photoUrl)) {
+            throw new ServiceException("该教练暂无个人展示照片");
+        }
+        return FileUtils.toAbsoluteUrl(FileUtils.TYPE_COACH_PHOTO, photoUrl);
+    }
+
+    /**
      * 上传教练个人展示照片
      */
     @Override
