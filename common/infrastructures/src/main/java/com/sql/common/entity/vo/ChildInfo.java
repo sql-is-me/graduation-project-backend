@@ -1,5 +1,7 @@
 package com.sql.common.entity.vo;
 
+import java.time.LocalDate;
+
 import com.sql.common.entity.po.Child;
 
 import lombok.Data;
@@ -17,6 +19,11 @@ public class ChildInfo {
     private Long parentId;
 
     /**
+     * 家长姓名
+     */
+    private String parentName;
+
+    /**
      * 孩子姓名
      */
     private String childName;
@@ -32,6 +39,11 @@ public class ChildInfo {
     private String sex;
 
     /**
+     * 孩子生日
+     */
+    private LocalDate birthday;
+
+    /**
      * 孩子状态（0正常 1关闭）
      */
     private String status;
@@ -42,6 +54,7 @@ public class ChildInfo {
         this.childName = child.getChildName();
         this.photo = child.getPhoto();
         this.sex = child.getSex();
+        this.birthday = child.getBirthday();
         this.status = child.getStatus();
     }
 }

@@ -5,9 +5,12 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sql.admin.mapper.UserMapper;
 import com.sql.admin.service.MonitorService;
 import com.sql.common.constants.HttpStatusConstants;
@@ -18,6 +21,7 @@ import com.sql.common.constants.TokenConstants;
 import com.sql.common.entity.vo.OnlineAdminInfo;
 import com.sql.common.entity.vo.OnlineUserInfo;
 import com.sql.common.entity.vo.TableDataInfo;
+import com.sql.common.entity.vo.UserInfo;
 import com.sql.common.enums.AccountStatus;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.exception.ServiceException;
@@ -61,7 +65,7 @@ public class MonitorServiceImpl implements MonitorService {
             online.setIpaddr(ao.getIpaddr());
             online.setLoginTime(ao.getLoginTime());
 
-            UserTypes userType = UserTypes.fromCode(ao.getAdminInfo().getAdminType());
+            UserTypes userType = UserTypes.adminFromCode(ao.getAdminInfo().getAdminType());
             online.setUserType(userType != null ? userType.name() : null);
 
             onlineList.add(online);
@@ -88,7 +92,7 @@ public class MonitorServiceImpl implements MonitorService {
             online.setIpaddr(uo.getIpaddr());
             online.setLoginTime(uo.getLoginTime());
 
-            UserTypes userType = UserTypes.fromCode(uo.getUserInfo().getUserType());
+            UserTypes userType = UserTypes.userFromCode(uo.getUserInfo().getUserType());
             online.setUserType(userType != null ? userType.name() : null);
 
             onlineList.add(online);
@@ -162,5 +166,14 @@ public class MonitorServiceImpl implements MonitorService {
         }
 
         userMapper.updateStatus(userId, AccountStatus.OK.getCode());
+    }
+
+    @Override
+    public List<UserInfo> getBannedUsers() {
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(User::getStatus, "1");
+        List<User> bannedUsers = userMapper.selectList(wrapper);
+
+        return bannedUsers.stream().map(UserInfo::new).collect(Collectors.toList());
     }
 }

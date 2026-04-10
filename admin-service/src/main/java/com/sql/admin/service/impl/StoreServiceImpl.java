@@ -2,6 +2,7 @@ package com.sql.admin.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -133,6 +134,13 @@ public class StoreServiceImpl implements StoreService {
             throw new ServiceException("仅可将MANAGER类型的管理员设置为店铺所有人");
         }
 
+        // 检验所指定的管理员是否已绑定店铺（一个管理员只能管理一个店铺），已经注销的店铺不算
+        LambdaQueryWrapper<Store> ownerCheck = new LambdaQueryWrapper<>();
+        ownerCheck.eq(Store::getOwnerId, ownerId).eq(Store::getStatus, "0");
+        if (storeMapper.selectCount(ownerCheck) > 0) {
+            throw new ServiceException("目标管理员已绑定其他店铺");
+        }
+
         int rows = storeMapper.updateOwnerId(storeId, ownerId);
         if (rows <= 0) {
             throw new ServiceException("店铺所有人更新失败");
@@ -251,23 +259,33 @@ public class StoreServiceImpl implements StoreService {
             throw new ServiceException("当前管理员未绑定店铺");
         }
 
-        // 先查本店所有会员ID
+        // 先查本店所有会员ID和姓名
         LambdaQueryWrapper<User> userWrapper = new LambdaQueryWrapper<>();
-        userWrapper.eq(User::getStoreId, storeId).eq(User::getUserType, "0").select(User::getUserId);
-        List<Long> parentIds = userMapper.selectList(userWrapper)
-                .stream()
-                .map(User::getUserId)
-                .collect(Collectors.toList());
+        userWrapper.eq(User::getStoreId, storeId).eq(User::getUserType, "0").select(User::getUserId, User::getNickName);
+        List<User> parents = userMapper.selectList(userWrapper);
 
-        if (parentIds.isEmpty()) {
+        if (parents.isEmpty()) {
             return new ArrayList<>();
         }
+
+        Map<Long, String> parentNameMap = parents.stream()
+                .collect(Collectors.toMap(User::getUserId, User::getNickName));
+        List<Long> parentIds = new ArrayList<>(parentNameMap.keySet());
 
         // 查这些会员旗下的所有孩子
         LambdaQueryWrapper<Child> childWrapper = new LambdaQueryWrapper<>();
         childWrapper.in(Child::getParentId, parentIds).orderByAsc(Child::getParentId);
         List<Child> children = childMapper.selectList(childWrapper);
 
-        return children.stream().map(ChildInfo::new).collect(Collectors.toList());
+        List<ChildInfo> list = new ArrayList<>();
+        for (Child child : children) {
+            ChildInfo childInfo = new ChildInfo(child);
+            childInfo.setPhoto(FileUtils.toAbsoluteUrl(FileUtils.TYPE_CHILD_PHOTO, child.getPhoto()));
+            childInfo.setParentName(parentNameMap.get(child.getParentId()));
+
+            list.add(childInfo);
+        }
+
+        return list;
     }
 }

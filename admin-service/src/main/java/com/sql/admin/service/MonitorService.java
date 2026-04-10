@@ -1,6 +1,9 @@
 package com.sql.admin.service;
 
+import java.util.List;
+
 import com.sql.common.entity.vo.TableDataInfo;
+import com.sql.common.entity.vo.UserInfo;
 
 public interface MonitorService {
     /**
@@ -32,4 +35,9 @@ public interface MonitorService {
      * 解禁用户（会员或教练）
      */
     public void unbanUser(Long userId);
+
+    /**
+     * 获取封禁用户列表
+     */
+    public List<UserInfo> getBannedUsers();
 }

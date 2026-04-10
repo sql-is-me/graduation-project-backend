@@ -1,5 +1,7 @@
 package com.sql.admin.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +15,8 @@ import com.sql.admin.service.MonitorService;
 import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.result.R;
+import com.sql.common.entity.vo.TableDataInfo;
+import com.sql.common.entity.vo.UserInfo;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;
 import com.sql.common.log.enums.BusinessType;
@@ -96,5 +100,15 @@ public class MonitorController extends BaseController {
     public R<?> unbanUser(@PathVariable Long userId) {
         monitorService.unbanUser(userId);
         return R.ok("解禁成功");
+    }
+
+    /**
+     * 封禁用户名单（会员或教练）
+     */
+    @GetMapping("/banned/list")
+    public TableDataInfo getBannedUsers() {
+        startPage();
+        List<UserInfo> list = monitorService.getBannedUsers();
+        return getDataTable(list);
     }
 }

@@ -92,13 +92,13 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public LoginLog getLoginLog(Long infoId) {
-        return loginLogMapper.selectById(infoId);
+    public LoginLog getLoginLog(Long logId) {
+        return loginLogMapper.selectById(logId);
     }
 
     @Override
-    public void deleteLoginLog(List<Long> infoIds) {
-        int rows = loginLogMapper.deleteByIds(infoIds);
+    public void deleteLoginLog(List<Long> logIds) {
+        int rows = loginLogMapper.deleteByIds(logIds);
         if (rows <= 0) {
             throw new ServiceException("删除登录日志失败，请联系工作人员");
         }

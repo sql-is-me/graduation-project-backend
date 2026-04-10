@@ -6,6 +6,7 @@ import lombok.Data;
 
 @Data
 public class UserInfo {
+    private Long userId;
     /**
      * 用户账号
      */
@@ -47,6 +48,7 @@ public class UserInfo {
     private Long storeId;
 
     public UserInfo(User user) {
+        this.userId = user.getUserId();
         this.openId = user.getOpenId();
         this.nickName = user.getNickName();
         this.userType = user.getUserType();
