@@ -44,6 +44,7 @@ public class UserTokenService {
         uo.setLoginTime(LocalDateTime.now().withNano(0));
         uo.setExpireTime(uo.getLoginTime().plusMinutes(CacheConstants.TOKEN_EXPIRE_TIME));
 
+        checkAndDeleteCacheObject(user.getUserId());
         createAndSetCacheObject(uo);
 
         // Jwt存储信息

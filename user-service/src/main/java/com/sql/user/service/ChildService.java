@@ -5,7 +5,8 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.sql.common.entity.po.Child;
-import com.sql.user.dto.ChildrenDTO;
+import com.sql.user.dto.ChildrenCreateDTO;
+import com.sql.user.dto.ChildrenUpdateDTO;
 
 /**
  * 孩子信息管理服务
@@ -24,17 +25,17 @@ public interface ChildService {
     /**
      * 新增孩子信息
      */
-    void add(ChildrenDTO dto);
+    void add(ChildrenCreateDTO dto);
 
     /**
      * 修改孩子信息
      */
-    void update(ChildrenDTO dto);
+    void update(Long childId, ChildrenUpdateDTO dto);
 
     /**
      * 上传/更换孩子照片
      */
-    void updatePhoto(Long childId, MultipartFile file);
+    void updatePhoto(Long childId, MultipartFile childPhoto);
 
     /**
      * 删除孩子信息

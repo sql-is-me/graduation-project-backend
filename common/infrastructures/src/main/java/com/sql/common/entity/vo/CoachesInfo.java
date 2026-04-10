@@ -10,6 +10,7 @@ import lombok.Data;
 @Data
 public class CoachesInfo {
     /* 教练信息 */
+    private Long userId;
     private String nickName;
     private String phone;
     private String sex;
@@ -17,6 +18,7 @@ public class CoachesInfo {
     private String status;
 
     public CoachesInfo(User user) {
+        this.userId = user.getUserId();
         this.nickName = user.getNickName();
         this.phone = user.getPhone();
         this.sex = user.getSex();

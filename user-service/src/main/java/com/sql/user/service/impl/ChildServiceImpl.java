@@ -14,7 +14,8 @@ import com.sql.common.entity.po.Child;
 import com.sql.common.entity.result.R;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
-import com.sql.user.dto.ChildrenDTO;
+import com.sql.user.dto.ChildrenCreateDTO;
+import com.sql.user.dto.ChildrenUpdateDTO;
 import com.sql.user.mapper.ChildMapper;
 import com.sql.user.service.ChildService;
 import com.sql.utils.StringUtils;
@@ -67,7 +68,7 @@ public class ChildServiceImpl implements ChildService {
      * 新增孩子信息
      */
     @Override
-    public void add(ChildrenDTO dto) {
+    public void add(ChildrenCreateDTO dto) {
         if (dto.getChildName() == null || dto.getChildName().isEmpty()) {
             throw new ServiceException("孩子姓名不能为空");
         }
@@ -79,7 +80,6 @@ public class ChildServiceImpl implements ChildService {
         child.setParentId(parentId);
         child.setChildName(dto.getChildName());
         child.setBirthday(dto.getBirthday());
-        child.setPhoto(dto.getPhoto() != null ? dto.getPhoto() : "");
         child.setSex(dto.getSex() != null ? dto.getSex() : "0");
         child.setCreateTime(LocalDateTime.now());
 
@@ -93,13 +93,13 @@ public class ChildServiceImpl implements ChildService {
      * 修改孩子信息
      */
     @Override
-    public void update(ChildrenDTO dto) {
-        if (dto.getChildId() == null) {
+    public void update(Long childId, ChildrenUpdateDTO dto) {
+        if (childId == null) {
             throw new ServiceException("孩子ID不能为空");
         }
 
         // 校验归属权
-        Child existChild = childMapper.selectById(dto.getChildId());
+        Child existChild = childMapper.selectById(childId);
         if (existChild == null) {
             throw new ServiceException("孩子信息不存在");
         }
@@ -116,9 +116,6 @@ public class ChildServiceImpl implements ChildService {
         if (dto.getBirthday() != null) {
             existChild.setBirthday(dto.getBirthday());
         }
-        if (dto.getPhoto() != null) {
-            existChild.setPhoto(dto.getPhoto());
-        }
         if (dto.getSex() != null) {
             existChild.setSex(dto.getSex());
         }
@@ -134,7 +131,7 @@ public class ChildServiceImpl implements ChildService {
      * 上传/更换孩子照片
      */
     @Override
-    public void updatePhoto(Long childId, MultipartFile file) {
+    public void updatePhoto(Long childId, MultipartFile childPhoto) {
         Child child = childMapper.selectById(childId);
         if (child == null) {
             throw new ServiceException("孩子信息不存在");
@@ -145,7 +142,7 @@ public class ChildServiceImpl implements ChildService {
             throw new ServiceException("无权修改该孩子照片");
         }
 
-        R<File> result = remoteFileService.uploadChildPhoto(file);
+        R<File> result = remoteFileService.uploadChildPhoto(childPhoto);
         if (StringUtils.isNull(result) || StringUtils.isNull(result.getData())) {
             throw new ServiceException("文件服务异常，请联系管理员");
         }

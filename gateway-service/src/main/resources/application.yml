@@ -9,6 +9,9 @@ spring:
   profiles:
     active: dev
   cloud:
+    gateway:
+      httpclient:
+        max-content-length: 52428800
     nacos:
       discovery:
         server-addr: 127.0.0.1:8848
@@ -29,6 +32,10 @@ spring:
             groupId: DEFAULT_GROUP
             data-type: json
             rule-type: gw-flow
+  webflux:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
   config:
     import:
       - nacos:gateway-dev.yml

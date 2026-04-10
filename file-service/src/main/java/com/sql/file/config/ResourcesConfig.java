@@ -26,6 +26,9 @@ public class ResourcesConfig implements WebMvcConfigurer {
     @Value("${file.tm-path}")
     private String tmPath;
 
+    @Value("${file.coach-photo-path}")
+    private String coachPhotoPath;
+
     @Value("${file.child-photo-path}")
     private String childPhotoPath;
 
@@ -46,8 +49,11 @@ public class ResourcesConfig implements WebMvcConfigurer {
         // 训练方法文件
         registry.addResourceHandler("/tms/**")
                 .addResourceLocations("file:" + tmPath + File.separator);
+        // 教练照片
+        registry.addResourceHandler("/pics/photos/coaches/**")
+                .addResourceLocations("file:" + coachPhotoPath + File.separator);
         // 孩子照片
-        registry.addResourceHandler("/pics/children/photos/**")
+        registry.addResourceHandler("/pics/photos/children/**")
                 .addResourceLocations("file:" + childPhotoPath + File.separator);
         // 通用文件
         registry.addResourceHandler("/files/**")

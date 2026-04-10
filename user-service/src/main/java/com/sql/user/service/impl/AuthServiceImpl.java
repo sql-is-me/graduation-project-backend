@@ -8,6 +8,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+
 import lombok.extern.slf4j.Slf4j;
 
 import com.sql.api.RemoteLoginLogService;
@@ -80,21 +82,26 @@ public class AuthServiceImpl implements AuthService {
         String openId = "unknown";
         String session_key;
         try {
+            // TODO:先取消微信登录，进行用户测试
             // 请求微信接口获取 openId 和 session_key
-            Map<String, String> wxResult = getWxSession(dto.getCode());
-            openId = wxResult.get("openid");
-            session_key = wxResult.get("session_key");
+            // Map<String, String> wxResult = getWxSession(dto.getCode());
+            // openId = wxResult.get("openid");
+            // session_key = wxResult.get("session_key");
 
-            String errcode = wxResult.get("errcode");
+            // String errcode = wxResult.get("errcode");
 
-            if (StringUtils.isNotEmpty(errcode) && !"0".equals(errcode)) {
-                String errmsg = wxResult.getOrDefault("errmsg", "微信登录失败");
-                throw new ServiceException("微信登录失败：" + errmsg);
-            }
+            // if (StringUtils.isNotEmpty(errcode) && !"0".equals(errcode)) {
+            // String errmsg = wxResult.getOrDefault("errmsg", "微信登录失败");
+            // throw new ServiceException("微信登录失败：" + errmsg);
+            // }
 
-            if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(session_key)) {
-                throw new ServiceException("获取微信校验返回字段失败");
-            }
+            // if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(session_key)) {
+            // throw new ServiceException("获取微信校验返回字段失败");
+            // }
+
+            // FIXME:临时测试
+            openId = dto.getCode();
+            session_key = UUID.randomUUID().toString().substring(0, 8);
 
             // 根据 openId 查询用户
             user = userMapper.selectByOpenId(openId);
@@ -129,19 +136,25 @@ public class AuthServiceImpl implements AuthService {
         String openId = "unknown";
         String session_key;
         try {
+            // FIXME:临时测试
             // 请求微信接口获取 openId 和 session_key
-            Map<String, String> wxResult = getWxSession(dto.getCode());
-            openId = wxResult.get("openid");
-            session_key = wxResult.get("session_key");
+            // Map<String, String> wxResult = getWxSession(dto.getCode());
+            // openId = wxResult.get("openid");
+            // session_key = wxResult.get("session_key");
 
-            String errcode = wxResult.get("errcode");
-            if (StringUtils.isNotEmpty(errcode) && !"0".equals(errcode)) {
-                String errmsg = wxResult.getOrDefault("errmsg", "微信登录失败");
-                throw new ServiceException("微信认证失败：" + errmsg);
-            }
-            if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(session_key)) {
-                throw new ServiceException("获取微信校验返回字段失败");
-            }
+            // String errcode = wxResult.get("errcode");
+            // if (StringUtils.isNotEmpty(errcode) && !"0".equals(errcode)) {
+            // String errmsg = wxResult.getOrDefault("errmsg", "微信登录失败");
+            // throw new ServiceException("微信认证失败：" + errmsg);
+            // }
+            // if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(session_key)) {
+            // throw new ServiceException("获取微信校验返回字段失败");
+            // }
+
+            // FIXME:测试结束后删除
+            openId = dto.getCode();
+            session_key = UUID.randomUUID().toString().substring(0, 8);
+
 
             // 校验用户是否已存在
             User existUser = userMapper.selectByOpenId(openId);
@@ -162,7 +175,7 @@ public class AuthServiceImpl implements AuthService {
 
             // 教练注册：校验邀请码并绑定店铺
             if ("1".equals(userType)) {
-                // 确立默认照片
+                // 默认照片
                 user.setPhoto("/default_coach_photo.jpg");
 
                 String inviteCode = dto.getInviteCode();

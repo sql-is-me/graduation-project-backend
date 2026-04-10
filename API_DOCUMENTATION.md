@@ -1687,11 +1687,9 @@ GET /admin/store/list/vip?pageNum=1&pageSize=10&orderByColumn=createTime&isAsc=d
     {
       "userId": 100,
       "nickName": "小王",
-      "avatar": "http://...",
       "phone": "138...",
-      "classHourTotal": 30,
-      "classHourUsed": 10,
-      "classHourRemaining": 20
+      "sex": "0",
+      "status": "0"
     }
   ]
 }
@@ -2055,38 +2053,37 @@ POST /user/children/
 }
 ```
 
-| 字段      | 类型   | 必填 | 说明                             |
-| --------- | ------ | ---- | -------------------------------- |
-| childName | String | 否   | 孩子姓名                         |
-| birthday  | String | 否   | 出生日期，格式 `yyyy-MM-dd`      |
-| sex       | String | 否   | 性别（0男/1女/2未知）            |
-| photo     | String | 否   | 照片 URL（一般通过上传接口获取） |
+| 字段      | 类型   | 必填 | 说明                        |
+| --------- | ------ | ---- | --------------------------- |
+| childName | String | 是   | 孩子姓名                    |
+| birthday  | String | 否   | 出生日期，格式 `yyyy-MM-dd` |
+| sex       | String | 否   | 性别（0男/1女/2未知）       |
 
 ---
 
 #### 4. 更新孩子信息
 
 ```
-PUT /user/children/
+PUT /user/children/{childId}
 ```
+
+**路径参数：** `childId`（Long）孩子ID
 
 **请求体：**
 
 ```json
 {
-  "childId": 1,
   "childName": "小明修改",
   "birthday": "2018-05-20",
   "sex": "0"
 }
 ```
 
-| 字段      | 类型   | 必填         | 说明     |
-| --------- | ------ | ------------ | -------- |
-| childId   | Long   | 是（更新时） | 孩子 ID  |
-| childName | String | 否           | 孩子姓名 |
-| birthday  | String | 否           | 出生日期 |
-| sex       | String | 否           | 性别     |
+| 字段      | 类型   | 必填 | 说明     |
+| --------- | ------ | ---- | -------- |
+| childName | String | 否   | 孩子姓名 |
+| birthday  | String | 否   | 出生日期 |
+| sex       | String | 否   | 性别     |
 
 ---
 
@@ -2099,9 +2096,9 @@ Content-Type: multipart/form-data
 
 **Form 参数：**
 
-| 参数 | 类型 | 必填 | 说明                            |
-| ---- | ---- | ---- | ------------------------------- |
-| file | File | 是   | 图片文件（jpg/jpeg/png，≤10MB） |
+| 参数       | 类型 | 必填 | 说明                            |
+| ---------- | ---- | ---- | ------------------------------- |
+| childPhoto | File | 是   | 图片文件（jpg/jpeg/png，≤10MB） |
 
 ---
 
@@ -2564,10 +2561,12 @@ GET /user/store/info
     "status": "0",
     "coaches": [
       {
-        "coachId": 5,
+        "userId": 5,
         "nickName": "张教练",
-        "avatar": "http://...",
-        "phone": "138..."
+        "phone": "138...",
+        "sex": "0",
+        "photo": "http://...",
+        "status": "0"
       }
     ]
   }

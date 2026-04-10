@@ -20,6 +20,10 @@ spring:
   config:
     import:
       - nacos:file-service-dev.yml
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 
 ---
 # Windows 开发环境

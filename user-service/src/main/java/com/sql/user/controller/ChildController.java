@@ -3,6 +3,7 @@ package com.sql.user.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,7 +22,8 @@ import com.sql.common.entity.result.R;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;
 import com.sql.common.log.enums.BusinessType;
-import com.sql.user.dto.ChildrenDTO;
+import com.sql.user.dto.ChildrenCreateDTO;
+import com.sql.user.dto.ChildrenUpdateDTO;
 import com.sql.user.service.ChildService;
 
 /**
@@ -60,7 +62,7 @@ public class ChildController {
      */
     @Log(title = "孩子信息", businessType = BusinessType.INSERT)
     @PostMapping
-    public R<?> add(@RequestBody ChildrenDTO dto) {
+    public R<?> add(@Validated @RequestBody ChildrenCreateDTO dto) {
         childrenService.add(dto);
         return R.ok("新增孩子信息成功");
     }
@@ -69,9 +71,9 @@ public class ChildController {
      * 修改孩子信息
      */
     @Log(title = "孩子信息", businessType = BusinessType.UPDATE)
-    @PutMapping
-    public R<?> update(@RequestBody ChildrenDTO dto) {
-        childrenService.update(dto);
+    @PutMapping("/{childId}")
+    public R<?> update(@PathVariable Long childId, @Validated @RequestBody ChildrenUpdateDTO dto) {
+        childrenService.update(childId, dto);
         return R.ok("修改孩子信息成功");
     }
 
@@ -81,8 +83,8 @@ public class ChildController {
     @Log(title = "孩子照片", businessType = BusinessType.UPDATE)
     @PostMapping("/{childId}/photo")
     public R<?> updatePhoto(@PathVariable Long childId,
-            @RequestPart("file") MultipartFile file) {
-        childrenService.updatePhoto(childId, file);
+            @RequestPart("childPhoto") MultipartFile childPhoto) {
+        childrenService.updatePhoto(childId, childPhoto);
         return R.ok("上传孩子照片成功");
     }
 
