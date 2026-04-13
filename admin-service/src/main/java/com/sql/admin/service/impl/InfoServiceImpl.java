@@ -103,7 +103,7 @@ public class InfoServiceImpl implements InfoService {
         String email = dto.getEmail();
 
         // 校验新邮箱与旧邮箱不能相同
-        if (ao.getAdminInfo().getEmail() != null) {
+        if (StringUtils.isNotEmpty(ao.getAdminInfo().getEmail())) {
             mailService.sendWarningEmail(ao.getAdminInfo().getEmail());
 
             if (ao.getAdminInfo().getEmail().equals(email))

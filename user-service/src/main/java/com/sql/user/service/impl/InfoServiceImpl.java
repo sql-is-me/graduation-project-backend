@@ -106,7 +106,7 @@ public class InfoServiceImpl implements InfoService {
         String email = dto.getEmail();
 
         // 校验新邮箱与旧邮箱不能相同
-        if (currentUser.getEmail() != null) {
+        if (StringUtils.isNotEmpty(currentUser.getEmail())) {
             if (currentUser.getEmail().equals(email))
                 throw new ServiceException("新邮箱不能与旧邮箱相同");
             mailService.sendWarningEmail(currentUser.getEmail());
@@ -181,7 +181,7 @@ public class InfoServiceImpl implements InfoService {
         if (!"1".equals(user.getUserType())) {
             throw new ServiceException("该用户不是教练");
         }
-        
+
         String photoUrl = user.getPhoto();
         if (StringUtils.isEmpty(photoUrl)) {
             throw new ServiceException("该教练暂无个人展示照片");

@@ -17,7 +17,6 @@ import com.sql.common.entity.po.Child;
 import com.sql.common.entity.po.Course;
 import com.sql.common.entity.po.User;
 import com.sql.common.entity.vo.ChildAndAttendanceInfo;
-import com.sql.common.entity.vo.CourseAttendanceInfo;
 import com.sql.common.entity.vo.CourseDetailedInfo;
 import com.sql.common.entity.vo.CourseInfo;
 import com.sql.common.exception.ServiceException;
@@ -166,7 +165,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CourseAttendanceInfo getVipCourseDetail(Long courseId) {
+    public CourseDetailedInfo getVipCourseDetail(Long courseId) {
         Long parentId = ContextHolder.getUO().getUserInfo().getUserId();
 
         Course course = courseMapper.selectById(courseId);
@@ -192,10 +191,20 @@ public class CourseServiceImpl implements CourseService {
 
         List<ChildAndAttendanceInfo> caInfos = buildChildAttendanceInfos(courseId, filteredChildIds, null);
 
-        CourseAttendanceInfo info = new CourseAttendanceInfo(course);
+        String coachName = null;
+        String coachAvatar = null;
+        if (course.getCoachId() != null) {
+            User coach = userMapper.selectById(course.getCoachId());
+            coachName = coach != null ? coach.getNickName() : null;
+            coachAvatar = coach != null ? FileUtils.toAbsoluteUrl(FileUtils.TYPE_AVATAR, coach.getAvatar()) : null;
+        }
+        CourseDetailedInfo info = new CourseDetailedInfo(course);
         info.setSignInPhoto(FileUtils.toAbsoluteUrl(FileUtils.TYPE_SIGN, course.getSignInPhoto()));
         info.setSignOutPhoto(FileUtils.toAbsoluteUrl(FileUtils.TYPE_SIGN, course.getSignOutPhoto()));
         info.setChildAndAttendanceInfos(caInfos);
+        info.setCoachName(coachName);
+        info.setCoachAvatar(coachAvatar);
+
         return info;
     }
 

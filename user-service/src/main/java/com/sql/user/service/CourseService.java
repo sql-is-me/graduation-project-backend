@@ -3,7 +3,6 @@ package com.sql.user.service;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.sql.common.entity.vo.CourseAttendanceInfo;
 import com.sql.common.entity.vo.CourseDetailedInfo;
 import com.sql.common.entity.vo.CourseInfo;
 
@@ -44,5 +43,5 @@ public interface CourseService {
      * 查询课程详情（VIP视角）
      * 含签到签退照片绝对URL，孩子出勤信息仅限当前VIP名下的孩子
      */
-    CourseAttendanceInfo getVipCourseDetail(Long courseId);
+    CourseDetailedInfo getVipCourseDetail(Long courseId);
 }
