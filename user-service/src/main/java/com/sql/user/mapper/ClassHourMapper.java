@@ -10,6 +10,6 @@ import com.sql.common.entity.po.ClassHour;
 @Mapper
 public interface ClassHourMapper extends BaseMapper<ClassHour> {
 
-    @Select("SELECT * FROM class_hour WHERE user_id = #{userId}")
+    @Select("SELECT * FROM class_hours WHERE user_id = #{userId}")
     ClassHour getClassHourByUserId(@Param("userId") Long userId);
 }

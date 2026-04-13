@@ -7,18 +7,23 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sql.common.constants.AuthConstants;
 import com.sql.common.constants.RequestConstants;
 import com.sql.common.entity.bo.CoachInviteBody;
 import com.sql.common.entity.bo.UserOnline;
+import com.sql.common.entity.po.AttendanceRecord;
 import com.sql.common.entity.po.Child;
+import com.sql.common.entity.po.Course;
 import com.sql.common.entity.po.Request;
 import com.sql.common.entity.po.User;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 import com.sql.common.redis.service.RedisService;
 import com.sql.common.tokens.UserTokenService;
+import com.sql.user.mapper.AttendanceRecordMapper;
 import com.sql.user.mapper.ChildMapper;
+import com.sql.user.mapper.CourseMapper;
 import com.sql.user.mapper.RequestMapper;
 import com.sql.user.mapper.UserMapper;
 import com.sql.user.service.RequestService;
@@ -37,6 +42,12 @@ public class RequestServiceImpl implements RequestService {
 
     @Autowired
     private ChildMapper childMapper;
+
+    @Autowired
+    private CourseMapper courseMapper;
+
+    @Autowired
+    private AttendanceRecordMapper attendanceRecordMapper;
 
     @Autowired
     private RedisService redisService;
@@ -59,6 +70,26 @@ public class RequestServiceImpl implements RequestService {
         Child child = childMapper.selectById(childId);
         if (child == null || !child.getParentId().equals(user.getUserId())) {
             throw new ServiceException("孩子信息不存在或不属于您");
+        }
+
+        // TODO:查询该课程是否不在准备中，除准备中外的状态不让请假
+        Course course = courseMapper.selectById(courseId);
+        if (course == null) {
+            throw new ServiceException("课程不存在");
+        }
+
+        if (!"0".equals(course.getStatus())) {
+            throw new ServiceException("课程不处于准备状态，无法请假");
+        }
+
+        LambdaQueryWrapper<AttendanceRecord> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(AttendanceRecord::getCourseId, courseId)
+                .eq(AttendanceRecord::getChildId, childId)
+                .eq(AttendanceRecord::getStatus, "5");
+
+        AttendanceRecord record = attendanceRecordMapper.selectOne(wrapper);
+        if (record != null) {
+            throw new ServiceException("孩子已经请假，请勿重复提交");
         }
 
         // 构建 payload: {"courseId":1, "childId":2}
