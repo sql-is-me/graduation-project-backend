@@ -85,6 +85,7 @@ public class LogServiceImpl implements LogService {
                 .like(StringUtils.isNotEmpty(dto.getIpAddr()), LoginLog::getIpAddr, dto.getIpAddr())
                 .eq(StringUtils.isNotEmpty(dto.getStatus()), LoginLog::getStatus, dto.getStatus())
                 .orderByDesc(LoginLog::getLogId);
+                
         return loginLogMapper.selectList(wrapper)
                 .stream()
                 .map(LoginInfo::new)

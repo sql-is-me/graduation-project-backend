@@ -17,6 +17,7 @@ import com.sql.common.entity.po.User;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 import com.sql.common.redis.service.RedisService;
+import com.sql.common.tokens.UserTokenService;
 import com.sql.user.mapper.ChildMapper;
 import com.sql.user.mapper.RequestMapper;
 import com.sql.user.mapper.UserMapper;
@@ -39,6 +40,9 @@ public class RequestServiceImpl implements RequestService {
 
     @Autowired
     private RedisService redisService;
+
+    @Autowired
+    private UserTokenService userTokenService;
 
     @Override
     public void submitLeave(Long courseId, Long childId, String message) {
@@ -113,7 +117,14 @@ public class RequestServiceImpl implements RequestService {
         if (user.getStoreId() == null) {
             // 未绑定店铺 → 直接绑定，无需审批
             user.setStoreId(targetStoreId);
-            userMapper.updateById(user);
+            int rows = userMapper.updateById(user);
+            if (rows <= 0) {
+                throw new ServiceException("绑定店铺失败");
+            }
+
+            UserOnline uo = ContextHolder.getUO();
+            uo.setUserInfo(user);
+            userTokenService.refreshCacheInfo(uo);
             return;
         }
 

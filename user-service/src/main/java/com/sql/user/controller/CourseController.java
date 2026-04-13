@@ -26,7 +26,10 @@ import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;
 import com.sql.common.log.enums.BusinessType;
 import com.sql.user.service.CourseService;
+import com.sql.common.constants.HttpStatusConstants;
+import com.sql.common.entity.vo.Page;
 import com.sql.utils.BaseController;
+import com.sql.utils.PageUtils;
 
 @RestController
 @RequestMapping("/user/course")
@@ -99,14 +102,27 @@ public class CourseController extends BaseController {
 
     /**
      * 查询VIP自己孩子的课程列表（可按日期筛选）
+     *
+     * 不使用 startPage()：service 内部会先查 children 表，若 PageHelper 处于激活状态，
+     * 该辅助查询会被错误分页（children 表无 course_date 列 → 42S22）。
+     * 改为 service 返回完整过滤结果，控制层做内存 subList 分页。
      */
     @RequiresType(UserTypes.VIP)
     @GetMapping("/vip/list")
     public TableDataInfo listVipCourses(
             @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate courseDate) {
-        startPage();
-        List<CourseInfo> list = courseService.listVipCourses(courseDate);
-        return getDataTable(list);
+        Page page = PageUtils.getPage();
+        List<CourseInfo> all = courseService.listVipCourses(courseDate);
+        int total = all.size();
+        int pageNum = page.getPageNum() != null ? page.getPageNum() : 1;
+        int pageSize = page.getPageSize() != null ? page.getPageSize() : 10;
+        int from = (pageNum - 1) * pageSize;
+        int to = Math.min(from + pageSize, total);
+        List<CourseInfo> pageData = from >= total ? List.of() : all.subList(from, to);
+        TableDataInfo result = new TableDataInfo(pageData, total);
+        result.setCode(HttpStatusConstants.SUCCESS);
+        result.setMsg("查询成功");
+        return result;
     }
 
     /**

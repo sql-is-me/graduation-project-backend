@@ -39,5 +39,5 @@ spring:
       - nacos:user-service-dev.yml
 
 wechat:
-  app-id: wx1234567890abcdef
-  app-secret: abcdef123
+  app-id: wxec253319064722ad
+  app-secret: 3364249864405979c03493f460b7e496

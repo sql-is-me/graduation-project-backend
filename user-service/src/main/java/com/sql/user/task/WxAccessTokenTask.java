@@ -1,5 +1,6 @@
 package com.sql.user.task;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -8,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -52,22 +55,25 @@ public class WxAccessTokenTask {
         fetchAndStore();
     }
 
-    /**
-     * 调用微信 stable_token 接口获取 access_token 并存入 Redis
-     */
     private void fetchAndStore() {
         try {
-            Map<String, Object> body = Map.of(
-                    "grant_type", "client_credential",
-                    "appid", appId,
-                    "secret", appSecret,
-                    "force_refresh", false);
+            // body 用 String，由 StringHttpMessageConverter 直接写入（排在 Jackson 前面）
+            // Jackson 不会拦截 String，避免被加外层引号或 Base64 编码
+            String body = String.format(
+                    "{\"grant_type\":\"client_credential\",\"appid\":\"%s\",\"secret\":\"%s\"}",
+                    appId, appSecret);
 
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setContentLength(body.getBytes(StandardCharsets.UTF_8).length);
+
+            HttpEntity<String> request = new HttpEntity<>(body, headers);
             Map<String, Object> result = restTemplate.exchange(
                     STABLE_TOKEN_URL,
                     HttpMethod.POST,
-                    new HttpEntity<>(body),
-                    new ParameterizedTypeReference<Map<String, Object>>() {}).getBody();
+                    request,
+                    new ParameterizedTypeReference<Map<String, Object>>() {
+                    }).getBody();
 
             if (result == null || result.containsKey("errcode")) {
                 log.error("获取微信 access_token 失败: {}", result);
@@ -87,13 +93,10 @@ public class WxAccessTokenTask {
             log.info("微信 access_token 已刷新，有效期 {} 秒", expiresIn);
 
         } catch (Exception e) {
-            log.error("刷新微信 access_token 异常", e);
+            log.error("刷新微信 access_token 异常: {}", e);
         }
     }
 
-    /**
-     * 获取当前有效的 access_token，供其他服务调用
-     */
     public String getAccessToken() {
         return redisService.getCacheObject(TokenConstants.WX_ACCESS_TOKEN);
     }

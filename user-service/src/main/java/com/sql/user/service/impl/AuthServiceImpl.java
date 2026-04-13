@@ -8,7 +8,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -82,26 +81,24 @@ public class AuthServiceImpl implements AuthService {
         String openId = "unknown";
         String session_key;
         try {
-            // TODO:先取消微信登录，进行用户测试
             // 请求微信接口获取 openId 和 session_key
-            // Map<String, String> wxResult = getWxSession(dto.getCode());
-            // openId = wxResult.get("openid");
-            // session_key = wxResult.get("session_key");
+            Map<String, Object> wxResult = getWxSession(dto.getCode());
 
-            // String errcode = wxResult.get("errcode");
+            log.error("微信登录接口返回: {}", wxResult);
 
-            // if (StringUtils.isNotEmpty(errcode) && !"0".equals(errcode)) {
-            // String errmsg = wxResult.getOrDefault("errmsg", "微信登录失败");
-            // throw new ServiceException("微信登录失败：" + errmsg);
-            // }
+            openId = (String) wxResult.get("openid");
+            session_key = (String) wxResult.get("session_key");
 
-            // if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(session_key)) {
-            // throw new ServiceException("获取微信校验返回字段失败");
-            // }
+            Number errcode = (Number) wxResult.get("expires_in");
 
-            // FIXME:临时测试
-            openId = dto.getCode();
-            session_key = UUID.randomUUID().toString().substring(0, 8);
+            if (errcode != null && errcode.intValue() != 0) {
+                String errmsg = (String) wxResult.getOrDefault("errmsg", "微信登录失败");
+                throw new ServiceException("微信登录失败：" + errmsg);
+            }
+
+            if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(session_key)) {
+                throw new ServiceException("获取微信校验返回字段失败");
+            }
 
             // 根据 openId 查询用户
             user = userMapper.selectByOpenId(openId);
@@ -136,25 +133,19 @@ public class AuthServiceImpl implements AuthService {
         String openId = "unknown";
         String session_key;
         try {
-            // FIXME:临时测试
             // 请求微信接口获取 openId 和 session_key
-            // Map<String, String> wxResult = getWxSession(dto.getCode());
-            // openId = wxResult.get("openid");
-            // session_key = wxResult.get("session_key");
+            Map<String, Object> wxResult = getWxSession(dto.getCode());
+            openId = (String) wxResult.get("openid");
+            session_key = (String) wxResult.get("session_key");
 
-            // String errcode = wxResult.get("errcode");
-            // if (StringUtils.isNotEmpty(errcode) && !"0".equals(errcode)) {
-            // String errmsg = wxResult.getOrDefault("errmsg", "微信登录失败");
-            // throw new ServiceException("微信认证失败：" + errmsg);
-            // }
-            // if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(session_key)) {
-            // throw new ServiceException("获取微信校验返回字段失败");
-            // }
-
-            // FIXME:测试结束后删除
-            openId = dto.getCode();
-            session_key = UUID.randomUUID().toString().substring(0, 8);
-
+            Number errcode = (Number) wxResult.get("errcode");
+            if (errcode != null && errcode.intValue() != 0) {
+                String errmsg = (String) wxResult.getOrDefault("errmsg", "微信登录失败");
+                throw new ServiceException("微信认证失败：" + errmsg);
+            }
+            if (StringUtils.isEmpty(openId) || StringUtils.isEmpty(session_key)) {
+                throw new ServiceException("获取微信校验返回字段失败");
+            }
 
             // 校验用户是否已存在
             User existUser = userMapper.selectByOpenId(openId);
@@ -228,14 +219,14 @@ public class AuthServiceImpl implements AuthService {
      * 请求微信 jscode2session 接口，返回包含 openId、session_key、unionid 等字段的 Map
      */
     @SuppressWarnings("unchecked")
-    private Map<String, String> getWxSession(String code) {
+    private Map<String, Object> getWxSession(String code) {
         String url = UriComponentsBuilder.fromUri(java.net.URI.create(WECHAT_LOGIN_URL))
                 .queryParam("appid", appId)
                 .queryParam("secret", appSecret)
                 .queryParam("js_code", code)
                 .queryParam("grant_type", "authorization_code")
                 .toUriString();
-        Map<String, String> result = restTemplate.getForObject(url, Map.class);
+        Map<String, Object> result = restTemplate.getForObject(url, Map.class);
         return result != null ? result : new HashMap<>();
     }
 
