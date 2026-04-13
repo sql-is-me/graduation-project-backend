@@ -1,4 +1,4 @@
-package com.sql.transaction.controller;
+package com.sql.admin.controller;
 
 import java.util.List;
 
@@ -12,14 +12,14 @@ import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.po.ClassHour;
 import com.sql.common.entity.vo.TableDataInfo;
 import com.sql.common.enums.UserTypes;
-import com.sql.transaction.service.ClassHourService;
+import com.sql.admin.service.ClassHourService;
 import com.sql.utils.BaseController;
 
 /**
  * 课时管理接口
  */
 @RestController
-@RequestMapping("/transaction/classHour")
+@RequestMapping("/admin/classHour")
 @LoginRequired
 public class ClassHourController extends BaseController {
 

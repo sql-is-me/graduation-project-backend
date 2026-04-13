@@ -1,4 +1,4 @@
-package com.sql.transaction.service.impl;
+package com.sql.admin.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,13 +8,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.sql.admin.service.ClassHourService;
 import com.sql.common.entity.po.ClassHour;
 import com.sql.common.entity.po.User;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
-import com.sql.transaction.mapper.ClassHourMapper;
-import com.sql.transaction.mapper.UserMapper;
-import com.sql.transaction.service.ClassHourService;
+import com.sql.admin.mapper.ClassHourMapper;
+import com.sql.admin.mapper.UserMapper;
 
 @Service
 public class ClassHourServiceImpl implements ClassHourService {

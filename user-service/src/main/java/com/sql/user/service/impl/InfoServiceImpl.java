@@ -232,7 +232,7 @@ public class InfoServiceImpl implements InfoService {
     @Override
     public ClassHourInfo getClassHour() {
         Long userId = ContextHolder.getUO().getUserInfo().getUserId();
-        ClassHour classHour = classHourMapper.selectById(userId);
+        ClassHour classHour = classHourMapper.getClassHourByUserId(userId);
         if (classHour == null) {
             throw new ServiceException("暂无课时记录");
         }

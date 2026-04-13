@@ -12,8 +12,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.sql.common.entity.bo.UserOnline;
+import com.sql.common.entity.po.ClassHour;
 import com.sql.common.entity.po.Coupon;
 import com.sql.common.entity.po.Order;
 import com.sql.common.entity.po.UserCoupon;
@@ -22,10 +24,10 @@ import com.sql.common.header.ContextHolder;
 import com.sql.transaction.constants.PackageType;
 import com.sql.transaction.dto.OrderCancelDTO;
 import com.sql.transaction.dto.OrderCreateDTO;
+import com.sql.transaction.mapper.ClassHourMapper;
 import com.sql.transaction.mapper.CouponMapper;
 import com.sql.transaction.mapper.OrderMapper;
 import com.sql.transaction.mapper.UserCouponMapper;
-import com.sql.transaction.service.ClassHourService;
 import com.sql.transaction.service.OrderService;
 
 @Service
@@ -44,7 +46,7 @@ public class OrderServiceImpl implements OrderService {
     private CouponMapper couponMapper;
 
     @Autowired
-    private ClassHourService classHourService;
+    private ClassHourMapper classHourMapper;
 
     @Autowired
     private RestTemplate restTemplate;
@@ -246,8 +248,19 @@ public class OrderServiceImpl implements OrderService {
         userCouponMapper.update(null, ucWrapper);
     }
 
+    @Transactional
     private void creditClassHours(Long userId, int hours) {
-        classHourService.addClassHours(userId, hours);
+        LambdaQueryWrapper<ClassHour> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(ClassHour::getUserId, userId);
+        ClassHour classHour = classHourMapper.selectOne(wrapper);
+
+        classHour.setHours(classHour.getHours() + hours);
+        classHour.setRemainingHours(classHour.getRemainingHours() + hours);
+
+        int rows = classHourMapper.updateById(classHour);
+        if (rows <= 0) {
+            throw new ServiceException("课时到账失败，请联系管理员");
+        }
     }
 
     private String generateOrderNo() {
