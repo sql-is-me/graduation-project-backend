@@ -2,7 +2,7 @@ package com.sql.admin.service;
 
 import java.util.List;
 
-import com.sql.common.entity.po.ClassHour;
+import com.sql.common.entity.vo.ClassHoursInfo;
 
 public interface ClassHourService {
 
@@ -17,5 +17,5 @@ public interface ClassHourService {
     /**
      * 查看当前店铺旗下会员的课时余额
      */
-    List<ClassHour> listClassHours();
+    List<ClassHoursInfo> listClassHours();
 }

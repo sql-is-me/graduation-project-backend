@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
-import com.sql.common.entity.po.ClassHour;
+import com.sql.common.entity.vo.ClassHoursInfo;
 import com.sql.common.entity.vo.TableDataInfo;
 import com.sql.common.enums.UserTypes;
 import com.sql.admin.service.ClassHourService;
@@ -33,7 +33,7 @@ public class ClassHourController extends BaseController {
     @RequiresType(UserTypes.MANAGER)
     public TableDataInfo listClassHours() {
         startPage();
-        List<ClassHour> list = classHourService.listClassHours();
+        List<ClassHoursInfo> list = classHourService.listClassHours();
         return getDataTable(list);
     }
 }
