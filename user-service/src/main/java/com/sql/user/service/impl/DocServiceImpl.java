@@ -202,10 +202,14 @@ public class DocServiceImpl implements DocService {
         if (tm == null) {
             throw new ServiceException("训练方法不存在");
         }
-        // 需审核通过且属于同一店铺
-        if (!"1".equals(tm.getStatus())) {
+
+        // 需审核通过或本人查看
+        Long coachId = uo.getUserInfo().getUserId();
+        if (!"1".equals(tm.getStatus()) && tm.getCoachId() != coachId) {
             throw new ServiceException("该训练方法尚未审核通过");
         }
+
+        // 需属于同一店铺
         Long storeId = uo.getUserInfo().getStoreId();
         if (!tm.getStoreId().equals(storeId)) {
             throw new ServiceException("无权访问该训练方法");

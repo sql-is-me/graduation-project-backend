@@ -83,7 +83,7 @@ public class DocController extends BaseController {
     @GetMapping("/tp/{tpId}/url")
     public R<?> getTeachingPlanUrl(@PathVariable Long tpId) {
         String url = docService.getTeachingPlanFileUrl(tpId);
-        return R.ok(url);
+        return R.ok(url, null);
     }
 
     /**
@@ -137,6 +137,6 @@ public class DocController extends BaseController {
     @GetMapping("/tm/{tmId}/url")
     public R<?> getTrainingMethodUrl(@PathVariable Long tmId) {
         String url = docService.getTrainingMethodFileUrl(tmId);
-        return R.ok(url);
+        return R.ok(url, null);
     }
 }
