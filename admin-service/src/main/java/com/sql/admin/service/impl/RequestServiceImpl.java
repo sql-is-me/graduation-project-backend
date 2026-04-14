@@ -21,8 +21,10 @@ import com.sql.common.entity.po.Admin;
 import com.sql.common.entity.po.Course;
 import com.sql.common.entity.po.AttendanceRecord;
 import com.sql.common.entity.po.Request;
+import com.sql.common.entity.po.User;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
+import com.sql.common.tokens.UserTokenService;
 
 /**
  * 审批服务实现（管理员端）
@@ -48,14 +50,22 @@ public class RequestServiceImpl implements RequestService {
     @Autowired
     private UserMapper userMapper;
 
+    @Autowired
+    private UserTokenService userTokenService;
+
     @Override
     public List<Request> listPendingRequests() {
         Admin admin = currentAdmin();
+        LambdaQueryWrapper<Request> wrapper = new LambdaQueryWrapper<>();
         if (admin.isSysAdmin()) {
-            return requestMapper.selectPendingSysAdmin();
+            wrapper.eq(Request::getApprover2Status, RequestConstants.APPROVER_PENDING);
+        } else {
+            Long storeId = requireStoreId(admin);
+            wrapper.eq(Request::getApprover1Id, storeId)
+                    .eq(Request::getApprover1Status, RequestConstants.APPROVER_PENDING);
         }
-        Long storeId = requireStoreId(admin);
-        return requestMapper.selectPendingByStore(storeId);
+        wrapper.orderByAsc(Request::getCreateTime);
+        return requestMapper.selectList(wrapper);
     }
 
     @Override
@@ -177,12 +187,18 @@ public class RequestServiceImpl implements RequestService {
     private void handleBindStoreApproved(Request req) {
         Long targetStoreId = toLong(req.getPayload().get("targetStoreId"));
 
-        com.sql.common.entity.po.User user = userMapper.selectById(req.getSenderId());
+        User user = userMapper.selectById(req.getSenderId());
         if (user == null) {
             throw new ServiceException("用户不存在");
         }
         user.setStoreId(targetStoreId);
-        userMapper.updateById(user);
+        int rows = userMapper.updateById(user);
+        if (rows == 0) {
+            throw new ServiceException("更新用户店铺信息失败");
+        }
+
+        // 若该用户在线，同步更新 Redis 缓存；不在线则跳过，下次登录会加载最新数据
+        userTokenService.refreshUserInfoCacheByUpdatedUser(user);
     }
 
     // ============ 审批拒绝后的业务处理 ============

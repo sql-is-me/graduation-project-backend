@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sql.admin.service.DocService;
 import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
-import com.sql.common.entity.po.TeachingPlan;
-import com.sql.common.entity.po.TrainingMethod;
 import com.sql.common.entity.vo.TableDataInfo;
 import com.sql.common.entity.vo.TeachingPlanInfo;
+import com.sql.common.entity.vo.TeachingPlansInfo;
 import com.sql.common.entity.vo.TrainingMethodInfo;
+import com.sql.common.entity.vo.TrainingMethodsInfo;
 import com.sql.common.entity.result.R;
 import com.sql.common.enums.UserTypes;
 import com.sql.utils.BaseController;
@@ -41,7 +41,7 @@ public class DocController extends BaseController {
     @GetMapping("/tp/list")
     public TableDataInfo listTeachingPlans() {
         startPage();
-        List<TeachingPlanInfo> list = docService.listTeachingPlans();
+        List<TeachingPlansInfo> list = docService.listTeachingPlans();
         return getDataTable(list);
     }
 
@@ -50,7 +50,7 @@ public class DocController extends BaseController {
      */
     @GetMapping("/tp/{tpId}")
     public R<?> getTeachingPlan(@PathVariable Long tpId) {
-        TeachingPlan tp = docService.getTeachingPlan(tpId);
+        TeachingPlanInfo tp = docService.getTeachingPlan(tpId);
         return R.ok(tp);
     }
 
@@ -63,7 +63,7 @@ public class DocController extends BaseController {
     @GetMapping("/tp/{tpId}/url")
     public R<?> getTeachingPlanUrl(@PathVariable Long tpId) {
         String url = docService.getTeachingPlanFileUrl(tpId);
-        return R.ok(url);
+        return R.ok(url, null);
     }
 
     // ─────────────── 训练方法 ───────────────
@@ -74,7 +74,7 @@ public class DocController extends BaseController {
     @GetMapping("/tm/list")
     public TableDataInfo listTrainingMethods() {
         startPage();
-        List<TrainingMethodInfo> list = docService.listTrainingMethods();
+        List<TrainingMethodsInfo> list = docService.listTrainingMethods();
         return getDataTable(list);
     }
 
@@ -83,7 +83,7 @@ public class DocController extends BaseController {
      */
     @GetMapping("/tm/{tmId}")
     public R<?> getTrainingMethod(@PathVariable Long tmId) {
-        TrainingMethod tm = docService.getTrainingMethod(tmId);
+        TrainingMethodInfo tm = docService.getTrainingMethod(tmId);
         return R.ok(tm);
     }
 
@@ -93,6 +93,6 @@ public class DocController extends BaseController {
     @GetMapping("/tm/{tmId}/url")
     public R<?> getTrainingMethodUrl(@PathVariable Long tmId) {
         String url = docService.getTrainingMethodFileUrl(tmId);
-        return R.ok(url);
+        return R.ok(url, null);
     }
 }

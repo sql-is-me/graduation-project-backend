@@ -7,12 +7,16 @@ import org.springframework.stereotype.Service;
 
 import com.sql.admin.mapper.TeachingPlanMapper;
 import com.sql.admin.mapper.TrainingMethodMapper;
+import com.sql.admin.mapper.UserMapper;
 import com.sql.admin.service.DocService;
 import com.sql.common.entity.bo.AdminOnline;
 import com.sql.common.entity.po.TeachingPlan;
 import com.sql.common.entity.po.TrainingMethod;
+import com.sql.common.entity.po.User;
 import com.sql.common.entity.vo.TeachingPlanInfo;
+import com.sql.common.entity.vo.TeachingPlansInfo;
 import com.sql.common.entity.vo.TrainingMethodInfo;
+import com.sql.common.entity.vo.TrainingMethodsInfo;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 import com.sql.utils.file.FileUtils;
@@ -29,6 +33,8 @@ public class DocServiceImpl implements DocService {
     @Autowired
     private TrainingMethodMapper trainingMethodMapper;
 
+    @Autowired
+    private UserMapper userMapper;
 
     /**
      * 获取当前管理员所属店铺ID，系统管理员不允许直接调用文档接口
@@ -43,12 +49,12 @@ public class DocServiceImpl implements DocService {
     }
 
     @Override
-    public List<TeachingPlanInfo> listTeachingPlans() {
+    public List<TeachingPlansInfo> listTeachingPlans() {
         return teachingPlanMapper.selectByStoreId(currentStoreId());
     }
 
     @Override
-    public TeachingPlan getTeachingPlan(Long tpId) {
+    public TeachingPlanInfo getTeachingPlan(Long tpId) {
         TeachingPlan tp = teachingPlanMapper.selectById(tpId);
         if (tp == null) {
             throw new ServiceException("教案不存在");
@@ -56,23 +62,24 @@ public class DocServiceImpl implements DocService {
         if (!tp.getStoreId().equals(currentStoreId())) {
             throw new ServiceException("无权查看该教案");
         }
-        return tp;
+        User coach = userMapper.selectById(tp.getCoachId());
+        return new TeachingPlanInfo(tp, coach.getNickName());
     }
 
     @Override
     public String getTeachingPlanFileUrl(Long tpId) {
-        TeachingPlan tp = getTeachingPlan(tpId);
+        TeachingPlan tp = teachingPlanMapper.selectById(tpId);
         // fileUrl 为相对路径如 /xxx.pdf，拼接对应 url 返回完整可访问地址
         return FileUtils.toAbsoluteUrl(FileUtils.TYPE_TP, tp.getFileUrl());
     }
 
     @Override
-    public List<TrainingMethodInfo> listTrainingMethods() {
+    public List<TrainingMethodsInfo> listTrainingMethods() {
         return trainingMethodMapper.selectByStoreId(currentStoreId());
     }
 
     @Override
-    public TrainingMethod getTrainingMethod(Long tmId) {
+    public TrainingMethodInfo getTrainingMethod(Long tmId) {
         TrainingMethod tm = trainingMethodMapper.selectById(tmId);
         if (tm == null) {
             throw new ServiceException("训练方法不存在");
@@ -80,12 +87,13 @@ public class DocServiceImpl implements DocService {
         if (!tm.getStoreId().equals(currentStoreId())) {
             throw new ServiceException("无权查看该训练方法");
         }
-        return tm;
+        User coach = userMapper.selectById(tm.getCoachId());
+        return new TrainingMethodInfo(tm, coach.getNickName());
     }
 
     @Override
     public String getTrainingMethodFileUrl(Long tmId) {
-        TrainingMethod tm = getTrainingMethod(tmId);
+        TrainingMethod tm = trainingMethodMapper.selectById(tmId);
         return FileUtils.toAbsoluteUrl(FileUtils.TYPE_TM, tm.getFileUrl());
     }
 }

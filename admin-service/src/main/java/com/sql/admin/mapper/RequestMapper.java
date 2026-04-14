@@ -1,10 +1,7 @@
 package com.sql.admin.mapper;
 
-import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
@@ -12,18 +9,6 @@ import com.sql.common.entity.po.Request;
 
 @Mapper
 public interface RequestMapper extends BaseMapper<Request> {
-
-    /**
-     * 查询某店铺待审批的请求（approver1 为 storeId，approver1_status 待审）
-     */
-    @Select("SELECT * FROM requests WHERE approver1_id = #{storeId} AND approver1_status = '0' ORDER BY create_time DESC")
-    List<Request> selectPendingByStore(@Param("storeId") Long storeId);
-
-    /**
-     * 查询所有待系统管理员审批的请求（approver2_status 待审）
-     */
-    @Select("SELECT * FROM requests WHERE approver2_status = '0' ORDER BY create_time DESC")
-    List<Request> selectPendingSysAdmin();
 
     /**
      * 更新 approver1 状态

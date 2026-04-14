@@ -118,6 +118,30 @@ public class UserTokenService {
     }
 
     /**
+     * 根据 userId 更新 Redis 中缓存的用户信息
+     * 若用户未在线（无 session 映射）则直接返回 false，由调用方决定是否处理
+     *
+     * @param updatedUser 已更新字段后的 User 对象（需包含 userId）
+     * @return 是否成功刷新缓存
+     */
+    public boolean refreshUserInfoCacheByUpdatedUser(User updatedUser) {
+        Long userId = updatedUser.getUserId();
+        String mappingKey = TokenConstants.USER_SESSION_KEY_MAPPING + userId;
+        String session_key = redisService.getCacheObject(mappingKey);
+        if (session_key == null) {
+            return false; // 用户未登录，无需更新
+        }
+        String uoKey = TokenConstants.USER_SESSION_KEYS + session_key;
+        UserOnline uo = redisService.getCacheObject(uoKey);
+        if (uo == null) {
+            return false;
+        }
+        uo.setUserInfo(updatedUser);
+        createAndSetCacheObject(uo);
+        return true;
+    }
+
+    /**
      * 获取当前登录用户的access_token
      * 
      * @return access_token

@@ -19,7 +19,7 @@ import com.sql.common.entity.po.User;
 import com.sql.common.entity.result.R;
 import com.sql.common.entity.vo.MyTeachingPlanInfo;
 import com.sql.common.entity.vo.MyTrainingMethodInfo;
-import com.sql.common.entity.vo.TrainingMethodInfo;
+import com.sql.common.entity.vo.TrainingMethodsInfo;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 import com.sql.user.dto.TeachingPlanUploadDTO;
@@ -179,7 +179,7 @@ public class DocServiceImpl implements DocService {
     }
 
     @Override
-    public List<TrainingMethodInfo> listStoreTrainingMethods() {
+    public List<TrainingMethodsInfo> listStoreTrainingMethods() {
         UserOnline uo = ContextHolder.getUO();
         Long storeId = uo.getUserInfo().getStoreId();
         if (storeId == null) {

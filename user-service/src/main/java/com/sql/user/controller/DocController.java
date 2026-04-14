@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,8 +19,9 @@ import com.sql.common.entity.result.R;
 import com.sql.common.entity.vo.MyTeachingPlanInfo;
 import com.sql.common.entity.vo.MyTrainingMethodInfo;
 import com.sql.common.entity.vo.TableDataInfo;
-import com.sql.common.entity.vo.TrainingMethodInfo;
+import com.sql.common.entity.vo.TrainingMethodsInfo;
 import com.sql.common.enums.UserTypes;
+import com.sql.common.exception.ServiceException;
 import com.sql.common.log.annotation.Log;
 import com.sql.common.log.enums.BusinessType;
 import com.sql.user.dto.TeachingPlanUploadDTO;
@@ -47,8 +48,17 @@ public class DocController extends BaseController {
     @Log(title = "上传教案", businessType = BusinessType.INSERT)
     @PostMapping(value = "/tp/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public R<?> uploadTeachingPlan(
-            @Validated @RequestPart("dto") TeachingPlanUploadDTO dto,
+            @RequestParam("title") String title,
+            @RequestParam(value = "description", required = false) String description,
             @RequestPart("file") MultipartFile file) {
+        if (title == null || title.trim().isEmpty()) {
+            throw new ServiceException("教案标题不能为空");
+        }
+
+        TeachingPlanUploadDTO dto = new TeachingPlanUploadDTO();
+        dto.setTitle(title);
+        dto.setDescription(description);
+
         docService.uploadTeachingPlan(dto, file);
         return R.ok("教案上传成功，等待店铺管理员审核");
     }
@@ -83,8 +93,17 @@ public class DocController extends BaseController {
     @Log(title = "上传训练方法", businessType = BusinessType.INSERT)
     @PostMapping(value = "/tm/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public R<?> uploadTrainingMethod(
-            @Validated @RequestPart("dto") TrainingMethodUploadDTO dto,
+            @RequestParam("title") String title,
+            @RequestParam(value = "description", required = false) String description,
             @RequestPart("file") MultipartFile file) {
+        if (title == null || title.trim().isEmpty()) {
+            throw new ServiceException("训练方法标题不能为空");
+        }
+
+        TrainingMethodUploadDTO dto = new TrainingMethodUploadDTO();
+        dto.setTitle(title);
+        dto.setDescription(description);
+
         docService.uploadTrainingMethod(dto, file);
         return R.ok("训练方法上传成功，等待店铺管理员审核");
     }
@@ -95,7 +114,7 @@ public class DocController extends BaseController {
     @GetMapping("/tm/store")
     public TableDataInfo listStoreTrainingMethods() {
         startPage();
-        List<TrainingMethodInfo> list = docService.listStoreTrainingMethods();
+        List<TrainingMethodsInfo> list = docService.listStoreTrainingMethods();
         return getDataTable(list);
     }
 
