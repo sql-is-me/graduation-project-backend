@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sql.common.constants.AuthConstants;
 import com.sql.common.constants.RequestConstants;
-import com.sql.common.entity.bo.CoachInviteBody;
+import com.sql.common.entity.bo.BindStoreBody;
 import com.sql.common.entity.bo.UserOnline;
 import com.sql.common.entity.po.AttendanceRecord;
 import com.sql.common.entity.po.Child;
@@ -72,7 +72,6 @@ public class RequestServiceImpl implements RequestService {
             throw new ServiceException("孩子信息不存在或不属于您");
         }
 
-        // TODO:查询该课程是否不在准备中，除准备中外的状态不让请假
         Course course = courseMapper.selectById(courseId);
         if (course == null) {
             throw new ServiceException("课程不存在");
@@ -117,8 +116,8 @@ public class RequestServiceImpl implements RequestService {
         User user = currentUser();
 
         // 验证邀请码并获取目标店铺ID
-        String inviteKey = AuthConstants.INVITE_COACH_CODE + inviteCode;
-        CoachInviteBody inviteBody = redisService.getCacheObject(inviteKey);
+        String inviteKey = AuthConstants.BIND_STORE_CODE + inviteCode;
+        BindStoreBody inviteBody = redisService.getCacheObject(inviteKey);
         if (inviteBody == null) {
             throw new ServiceException("邀请码无效或已过期");
         }

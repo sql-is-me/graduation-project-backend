@@ -32,6 +32,8 @@ import com.sql.common.log.annotation.Log;
 import com.sql.common.log.enums.BusinessType;
 import com.sql.utils.BaseController;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 @RestController
 @RequestMapping("/admin/store")
 @LoginRequired
@@ -160,5 +162,21 @@ public class StoreController extends BaseController {
         startPage();
         List<ChildInfo> list = storeService.listStoreChildren();
         return getDataTable(list);
+    }
+
+    /**
+     * 生成绑定店铺邀请码
+     *
+     * 仅店铺管理员可调用，自动使用自身storeId
+     * 用户（微信小程序端）凭此邀请码可申请绑定到对应门店
+     */
+    @Log(title = "生成绑定店铺邀请码", businessType = BusinessType.OTHER)
+    @PostMapping("/bindStoreInvite")
+    @LoginRequired
+    @RequiresType({ UserTypes.MANAGER })
+    public R<?> generateBindStoreCode(HttpServletRequest request) {
+        String code = storeService.generateBindStoreCode(request);
+
+        return R.ok(code, "绑定店铺邀请码生成成功");
     }
 }

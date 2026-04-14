@@ -12,6 +12,8 @@ import com.sql.common.entity.vo.StoreInfo;
 import com.sql.common.entity.vo.VIPInfo;
 import com.sql.common.entity.vo.VIPsInfo;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 public interface StoreService {
     /**
      * 创建店铺
@@ -70,4 +72,10 @@ public interface StoreService {
      * 查看当前店铺旗下所有孩子信息（含所属家长ID）
      */
     List<ChildInfo> listStoreChildren();
+
+    /**
+     * 生成绑定店铺邀请码
+     * 用以提供给vip或coach通过邀请码申请绑定店铺
+     */
+    String generateBindStoreCode(HttpServletRequest request);
 }

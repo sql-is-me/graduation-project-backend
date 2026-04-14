@@ -3,6 +3,8 @@ package com.sql.admin.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +17,9 @@ import com.sql.admin.mapper.ClassHourMapper;
 import com.sql.admin.mapper.StoreMapper;
 import com.sql.admin.mapper.UserMapper;
 import com.sql.admin.service.StoreService;
+import com.sql.common.constants.AuthConstants;
+import com.sql.common.entity.bo.AdminOnline;
+import com.sql.common.entity.bo.BindStoreBody;
 import com.sql.common.entity.dto.StoreCreateDTO;
 import com.sql.common.entity.dto.StoreUpdateDTO;
 import com.sql.common.entity.po.Admin;
@@ -30,8 +35,12 @@ import com.sql.common.entity.vo.VIPInfo;
 import com.sql.common.entity.vo.VIPsInfo;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
+import com.sql.common.redis.service.RedisService;
+import com.sql.common.tokens.AdminTokenService;
 import com.sql.utils.StringUtils;
 import com.sql.utils.file.FileUtils;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 @Service
 public class StoreServiceImpl implements StoreService {
@@ -50,6 +59,12 @@ public class StoreServiceImpl implements StoreService {
 
     @Autowired
     private ClassHourMapper classHourMapper;
+
+    @Autowired
+    private AdminTokenService adminTokenService;
+
+    @Autowired
+    private RedisService redisService;
 
     @Override
     public Long createStore(StoreCreateDTO dto) {
@@ -288,4 +303,46 @@ public class StoreServiceImpl implements StoreService {
 
         return list;
     }
+
+    /**
+     * 生成绑定店铺邀请码
+     * 用以提供给vip或coach通过邀请码申请绑定店铺
+     */
+    @Override
+    public String generateBindStoreCode(HttpServletRequest request) {
+        AdminOnline ao = adminTokenService.getAO(adminTokenService.getAOToken(request));
+        Admin admin = ao.getAdminInfo();
+
+        Long storeId = admin.getStoreId();
+        if (storeId == null) {
+            throw new ServiceException("未绑定门店，无法生成绑定店铺邀请码");
+        }
+
+        // 校验门店营业状态
+        Store store = storeMapper.selectById(storeId);
+        if (store == null) {
+            throw new ServiceException("所属门店不存在");
+        }
+        if ("1".equals(store.getStatus())) {
+            throw new ServiceException("所属门店已停业，无法生成绑定店铺邀请码");
+        }
+
+        // 防重复生成：同一管理员+门店若已有有效邀请码则直接复用
+        String bindStoreInviteKey = AuthConstants.BIND_STORE_CODE + admin.getAdminId() + ":" + storeId;
+        String existingCode = redisService.getCacheObject(bindStoreInviteKey);
+        if (existingCode != null) {
+            return existingCode;
+        }
+
+        // 生成8位大写邀请码
+        String inviteCode = UUID.randomUUID().toString().replace("-", "").substring(0, 8).toUpperCase();
+        String inviteKey = AuthConstants.BIND_STORE_CODE + inviteCode;
+        BindStoreBody inviteBody = new BindStoreBody(admin.getAdminId(), storeId);
+
+        redisService.setCacheObject(inviteKey, inviteBody, AuthConstants.BIND_STORE_EXPIRE, TimeUnit.MINUTES);
+        redisService.setCacheObject(bindStoreInviteKey, inviteCode, AuthConstants.BIND_STORE_EXPIRE, TimeUnit.MINUTES);
+
+        return inviteCode;
+    }
+
 }

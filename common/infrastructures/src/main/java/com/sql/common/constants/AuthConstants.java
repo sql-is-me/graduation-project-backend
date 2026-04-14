@@ -79,6 +79,22 @@ public class AuthConstants {
     public static final Long COACH_INVITE_EXPIRE = 30L;
 
     /**
+     * 绑定店铺邀请码缓存前缀
+     */
+    public static final String BIND_STORE_CODE = "bindStoreCode:";
+
+    /**
+     * 绑定店铺邀请码反查前缀（防重复生成）
+     * key: bindStore:{adminId}:{storeId}
+     */
+    public static final String BIND_STORE = "bindStore:";
+
+    /**
+     * 绑定店铺邀请码过期时间 30min
+     */
+    public static final Long BIND_STORE_EXPIRE = 30L;
+
+    /**
      * 用户名长度限制
      */
     public static final int USERNAME_MIN_LENGTH = 2;
