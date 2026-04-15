@@ -1,8 +1,17 @@
 # 说明文件
 .explain
 
-# 头像和文件
-assets
+# 本地存储的头像和文件
+assets/pics/avatars/*
+!assets/pics/avatars/default_admin.jpg
+!assets/pics/avatars/default_user.jpg
+assets/pics/photos/children/*
+!assets/pics/photos/children/default_child_photo.jpg
+assets/pics/photos/coaches/*
+!assets/pics/photos/coaches/default_coach_photo.jpg
+assets/pics/signs/*
+assets/tms
+assets/tps
 
 ######################################################################
 # Build Tools

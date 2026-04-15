@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,18 +28,25 @@ import lombok.Data;
  * <p>
  * 端点说明：
  * <ul>
- *   <li>{@code /unified-order}：商户后端调用，对应真实微信 JSAPI 下单，{@code @InnerAuth} 保护，仅允许 Feign 调用</li>
- *   <li>{@code /query-order/{outTradeNo}}：商户后端查单，{@code @InnerAuth} 保护，仅允许 Feign 调用</li>
- *   <li>{@code /do-pay}：模拟用户在微信客户端里"确认支付"，前端直接调用，需加入网关白名单放行</li>
+ * <li>{@code /unified-order}：商户后端调用，对应真实微信 JSAPI 下单，{@code @InnerAuth} 保护，仅允许
+ * Feign 调用</li>
+ * <li>{@code /query-order/{outTradeNo}}：商户后端查单，{@code @InnerAuth} 保护，仅允许 Feign
+ * 调用</li>
+ * <li>{@code /do-pay}：模拟用户在微信客户端里"确认支付"，前端直接调用，需加入网关白名单放行</li>
  * </ul>
  * </p>
  */
 @RestController
 @RequestMapping("/transaction/mock/wechat/pay")
 public class MockWechatPayController {
+    /**
+     * APPID
+     */
+    @Value("${wechat.app-id}")
+    private String APPID;
 
-    private static final String APPID = "wx_mock_appid";
-    private static final String MCHID = "1600000001";
+    @Value("${wechat.mch-id}")
+    private String MCHID;
 
     /** 模拟的预支付订单存储：prepay_id -> 记录 */
     private final ConcurrentHashMap<String, PrepayRecord> prepayStore = new ConcurrentHashMap<>();

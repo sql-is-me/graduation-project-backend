@@ -20,3 +20,7 @@ spring:
   config:
     import:
       - nacos:transaction-service-dev.yml
+
+wechat:
+  app-id: wxec253319064722ad
+  mch-id: 1600000001
