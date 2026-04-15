@@ -80,17 +80,18 @@ public class CouponServiceImpl implements CouponService {
             throw new ServiceException("优惠券不在有效期内");
         }
 
-        // 每人每张优惠券只能领取一次
-        LambdaQueryWrapper<UserCoupon> countWrapper = new LambdaQueryWrapper<>();
-        countWrapper.eq(UserCoupon::getUserId, userId)
-                .eq(UserCoupon::getCouponId, couponId);
-        if (userCouponMapper.selectCount(countWrapper) > 0) {
-            throw new ServiceException("您已领取过该优惠券");
+        // 校验每人领取次数上限（FOR UPDATE 行锁，事务内串行，防并发超领）
+        long claimed = userCouponMapper.countForUpdate(userId, couponId);
+        int claimLimit = coupon.getClaimLimit() != null ? coupon.getClaimLimit() : 1;
+        if (claimed >= claimLimit) {
+            throw new ServiceException("您已达到该优惠券的领取上限（" + claimLimit + "张）");
         }
 
-        // 减少优惠券库存
-        coupon.setRemainingCount(coupon.getRemainingCount() - 1);
-        couponMapper.updateById(coupon);
+        // 减少优惠券库存（原子 SQL，WHERE remaining_count > 0 防超扣）
+        int rows = couponMapper.decrementRemainingCount(couponId);
+        if (rows == 0) {
+            throw new ServiceException("优惠券已领完");
+        }
 
         // 创建用户优惠券记录
         UserCoupon userCoupon = new UserCoupon();
@@ -127,17 +128,18 @@ public class CouponServiceImpl implements CouponService {
             throw new ServiceException("优惠券不在有效期内");
         }
 
-        // 每人每张优惠券只能领取一次
-        LambdaQueryWrapper<UserCoupon> countWrapper = new LambdaQueryWrapper<>();
-        countWrapper.eq(UserCoupon::getUserId, userId)
-                .eq(UserCoupon::getCouponId, coupon.getCouponId());
-        if (userCouponMapper.selectCount(countWrapper) > 0) {
-            throw new ServiceException("您已领取过该优惠券");
+        // 校验每人领取次数上限（FOR UPDATE 行锁，事务内串行，防并发超领）
+        long claimed = userCouponMapper.countForUpdate(userId, coupon.getCouponId());
+        int claimLimit = coupon.getClaimLimit() != null ? coupon.getClaimLimit() : 1;
+        if (claimed >= claimLimit) {
+            throw new ServiceException("您已达到该优惠券的领取上限（" + claimLimit + "张）");
         }
 
-        // 减少优惠券库存
-        coupon.setRemainingCount(coupon.getRemainingCount() - 1);
-        couponMapper.updateById(coupon);
+        // 减少优惠券库存（原子 SQL，WHERE remaining_count > 0 防超扣）
+        int rows = couponMapper.decrementRemainingCount(coupon.getCouponId());
+        if (rows == 0) {
+            throw new ServiceException("优惠券已领完");
+        }
 
         // 创建用户优惠券记录
         UserCoupon userCoupon = new UserCoupon();

@@ -42,6 +42,13 @@ public class CouponCreateDTO {
      */
     @NotNull(message = "发放总量不能为空")
     @Min(value = 1, message = "发放总量至少为1")
+    private Integer claimLimit;
+
+    /**
+     * 每人限制领取次数
+     */
+    @NotNull(message = "限制领取次数不能为空")
+    @Min(value = 1, message = "限制领取次数至少为1")
     private Integer totalCount;
 
     /**

@@ -53,7 +53,7 @@ public class CouponServiceImpl implements CouponService {
         coupon.setMinAmount(dto.getMinAmount());
         coupon.setTotalCount(dto.getTotalCount());
         coupon.setRemainingCount(dto.getTotalCount());
-        coupon.setClaimLimit(1); // 固定每人每券只能领一次
+        coupon.setClaimLimit(dto.getClaimLimit());
         coupon.setStartTime(dto.getStartTime());
         coupon.setEndTime(dto.getEndTime());
         coupon.setStatus("0");
