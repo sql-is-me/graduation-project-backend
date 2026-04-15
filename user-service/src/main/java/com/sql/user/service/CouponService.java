@@ -3,7 +3,7 @@ package com.sql.user.service;
 import java.util.List;
 
 import com.sql.common.entity.po.Coupon;
-import com.sql.common.entity.po.UserCoupon;
+import com.sql.common.entity.vo.UserCouponInfo;
 
 public interface CouponService {
 
@@ -25,5 +25,10 @@ public interface CouponService {
     /**
      * 查询我的优惠券列表
      */
-    List<UserCoupon> listMyCoupons(String status);
+    List<UserCouponInfo> listMyCoupons(String status);
+
+    /**
+     * 查询优惠券详情
+     */
+    Coupon getCoupon(Long couponId);
 }

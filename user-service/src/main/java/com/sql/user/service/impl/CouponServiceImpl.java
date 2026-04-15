@@ -1,7 +1,12 @@
 package com.sql.user.service.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -11,6 +16,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.sql.common.entity.bo.UserOnline;
 import com.sql.common.entity.po.Coupon;
 import com.sql.common.entity.po.UserCoupon;
+import com.sql.common.entity.vo.UserCouponInfo;
 import com.sql.common.exception.ServiceException;
 import com.sql.common.header.ContextHolder;
 import com.sql.user.mapper.CouponMapper;
@@ -144,7 +150,7 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public List<UserCoupon> listMyCoupons(String status) {
+    public List<UserCouponInfo> listMyCoupons(String status) {
         UserOnline uo = ContextHolder.getUO();
         Long userId = uo.getUserInfo().getUserId();
 
@@ -154,6 +160,37 @@ public class CouponServiceImpl implements CouponService {
             wrapper.eq(UserCoupon::getStatus, status);
         }
         wrapper.orderByDesc(UserCoupon::getClaimTime);
-        return userCouponMapper.selectList(wrapper);
+        List<UserCoupon> userCoupons = userCouponMapper.selectList(wrapper);
+        if (userCoupons == null || userCoupons.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        // 批量加载优惠券模板信息
+        List<Long> couponIds = userCoupons.stream()
+                .map(UserCoupon::getCouponId)
+                .distinct()
+                .collect(Collectors.toList());
+        Map<Long, Coupon> couponMap = couponMapper.selectByIds(couponIds).stream()
+                .collect(Collectors.toMap(Coupon::getCouponId, Function.identity()));
+
+        List<UserCouponInfo> result = new ArrayList<>(userCoupons.size());
+        for (UserCoupon uc : userCoupons) {
+            Coupon coupon = couponMap.get(uc.getCouponId());
+            UserCouponInfo info = new UserCouponInfo(uc, coupon);
+            // 若传入 status 过滤参数是 '0'（未使用），但 VO 计算为已过期，则不展示
+            if ("0".equals(status) && !"0".equals(info.getStatus())) {
+                continue;
+            }
+            if ("2".equals(status) && !"2".equals(info.getStatus())) {
+                continue;
+            }
+            result.add(info);
+        }
+        return result;
+    }
+
+    @Override
+    public Coupon getCoupon(Long couponId) {
+        return couponMapper.selectById(couponId);
     }
 }

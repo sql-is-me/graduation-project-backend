@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sql.common.auth.annotation.LoginRequired;
 import com.sql.common.auth.annotation.RequiresType;
 import com.sql.common.entity.po.Coupon;
-import com.sql.common.entity.po.UserCoupon;
 import com.sql.common.entity.result.R;
 import com.sql.common.entity.vo.TableDataInfo;
+import com.sql.common.entity.vo.UserCouponInfo;
 import com.sql.common.enums.UserTypes;
 import com.sql.common.log.annotation.Log;
 import com.sql.common.log.enums.BusinessType;
@@ -68,7 +68,15 @@ public class CouponController extends BaseController {
     @GetMapping("/my")
     public TableDataInfo listMyCoupons(@RequestParam(required = false) String status) {
         startPage();
-        List<UserCoupon> list = couponService.listMyCoupons(status);
+        List<UserCouponInfo> list = couponService.listMyCoupons(status);
         return getDataTable(list);
+    }
+
+    /**
+     * 查询优惠券详情
+     */
+    @GetMapping("/{couponId}")
+    public Coupon getCoupon(@PathVariable Long couponId) {
+        return couponService.getCoupon(couponId);
     }
 }
