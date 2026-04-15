@@ -7,13 +7,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
+import com.sql.api.RemoteMockWechatPayService;
 import com.sql.common.entity.bo.UserOnline;
 import com.sql.common.entity.po.ClassHour;
 import com.sql.common.entity.po.Coupon;
@@ -33,8 +32,8 @@ import com.sql.transaction.service.OrderService;
 @Service
 public class OrderServiceImpl implements OrderService {
 
-    /** 单课时单价：1元 = 1课时 */
-    private static final BigDecimal UNIT_PRICE = BigDecimal.ONE;
+    /** 单课时单价：50元 = 1课时 */
+    private static final BigDecimal UNIT_PRICE = BigDecimal.valueOf(50);
 
     @Autowired
     private OrderMapper orderMapper;
@@ -49,15 +48,7 @@ public class OrderServiceImpl implements OrderService {
     private ClassHourMapper classHourMapper;
 
     @Autowired
-    private RestTemplate restTemplate;
-
-    @Value("${server.port}")
-    private int serverPort;
-
-    /** 模拟微信支付服务地址（本服务内部） */
-    private String mockPayBase() {
-        return "http://localhost:" + serverPort + "/mock/wechat/pay";
-    }
+    private RemoteMockWechatPayService remoteMockWechatPayService;
 
     @Override
     @Transactional
@@ -151,7 +142,6 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.updateById(order);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     @Transactional
     public Object prepay(Long orderId) {
@@ -161,14 +151,13 @@ public class OrderServiceImpl implements OrderService {
             throw new ServiceException("该订单状态不允许支付");
         }
 
-        // 调用模拟微信统一下单接口
+        // 通过 Feign 调用模拟微信统一下单接口（内部调用，自动携带 from-source=inner 请求头）
         Map<String, Object> request = new HashMap<>();
         request.put("out_trade_no", order.getOrderNo());
-        // request.put("description", "课时购买-" + order.getQuantity() + "课时");
+        request.put("description", "课时购买-" + order.getQuantity() + "课时");
         request.put("total", order.getPayAmount().multiply(BigDecimal.valueOf(100)).intValue()); // 元转分
 
-        Map<String, Object> response = restTemplate.postForObject(
-                mockPayBase() + "/unified-order", request, Map.class);
+        Map<String, Object> response = remoteMockWechatPayService.unifiedOrder(request);
 
         if (response == null || !"SUCCESS".equals(response.get("code"))) {
             throw new ServiceException("预支付失败：" + (response != null ? response.get("message") : "无响应"));
@@ -198,10 +187,8 @@ public class OrderServiceImpl implements OrderService {
             throw new ServiceException("该订单状态不允许支付");
         }
 
-        // 调用模拟微信订单查询接口，验证支付结果（对应微信官方按商户订单号查单）
-        @SuppressWarnings("unchecked")
-        Map<String, Object> response = restTemplate.getForObject(
-                mockPayBase() + "/query-order/" + order.getOrderNo(), Map.class);
+        // 通过 Feign 调用模拟微信订单查询接口（内部调用）
+        Map<String, Object> response = remoteMockWechatPayService.queryOrder(order.getOrderNo());
 
         if (response == null || !"SUCCESS".equals(response.get("code"))) {
             throw new ServiceException("查询支付状态失败");

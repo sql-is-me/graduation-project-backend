@@ -37,7 +37,7 @@ public class OrderController extends BaseController {
 
     /**
      * 创建订单
-     * productType=0：按量购买课时（1元/课时）
+     * productType=0：按量购买课时（50元/课时）
      * productType=1：套餐购买（packageType: p10/p30/p50，含折扣）
      */
     @Log(title = "订单管理", businessType = BusinessType.INSERT)

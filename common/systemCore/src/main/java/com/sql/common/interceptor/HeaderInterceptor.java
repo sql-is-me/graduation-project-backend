@@ -48,7 +48,7 @@ public class HeaderInterceptor implements AsyncHandlerInterceptor {
         ContextHolder.setType(type);
 
         String token = TokenUtils.getToken();
-        if (Integer.parseInt(type) == 0) {
+        if ("0".equals(type)) {
             AdminOnline ao = adminTokenService.getAO(token);
             adminTokenService.verifyToken(ao);
 
