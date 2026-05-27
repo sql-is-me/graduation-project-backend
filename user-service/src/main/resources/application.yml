@@ -15,9 +15,13 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: 127.0.0.1:8848
+        server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PASSWORD:nacos}
       config:
-        server-addr: 127.0.0.1:8848
+        server-addr: ${NACOS_SERVER_ADDR:127.0.0.1:8848}
+        username: ${NACOS_USERNAME:nacos}
+        password: ${NACOS_PASSWORD:nacos}
         file-extension: yml
         shared-configs:
           - application-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
@@ -25,7 +29,7 @@ spring:
     host: smtp.qq.com
     port: 465
     username: 2244509212@qq.com
-    password: olrxpjizyquweadh
+    password: ${MAIL_PASSWORD}
     properties:
       mail:
         smtp:
@@ -39,5 +43,5 @@ spring:
       - nacos:user-service-dev.yml
 
 wechat:
-  app-id: wxec253319064722ad
-  app-secret: 3364249864405979c03493f460b7e496
+  app-id: ${WECHAT_APP_ID:wxec253319064722ad}
+  app-secret: ${WECHAT_APP_SECRET:3364249864405979c03493f460b7e496}

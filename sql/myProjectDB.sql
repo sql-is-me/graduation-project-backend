@@ -26,9 +26,16 @@ CREATE TABLE stores (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO stores (store_id, creator_id, store_name, address, owner_id, status, create_time, update_time) VALUES
-(1, 1, '1号排球训练馆', '中心路1号', 2, '0', '2026-03-18 07:00:00', '2026-03-18 07:00:00'),
-(2, 1, '2号排球训练馆', '滨河大道88号', 3, '0', '2026-03-18 07:05:00', '2026-03-18 07:05:00'),
-(3, 1, '3号排球训练馆', '东大街66号', 2, '1', '2026-03-18 07:10:00', '2026-03-18 07:10:00');
+(1, 1,'排球训练馆No.1','北京市海淀区排球路1号',2,'0','2026-03-18 07:00:00','2026-03-18 07:00:00'),
+(2, 1,'排球训练馆No.2','北京市朝阳区排球路666号',3,'0','2026-03-18 07:05:00','2026-03-18 07:05:00'),
+(3, 1,'排球训练馆No.3','北京市西城区排球路233号',4,'0','2026-03-18 07:10:00','2026-03-18 07:10:00'),
+(4, 1,'爱健身排球训练馆','上海市宝山区排球路1号',5,'0','2026-03-18 07:15:00','2026-03-18 07:15:00'),
+(5, 1,'爱锻炼排球训练馆','上海市静安区排球路1号',6,'0','2026-03-18 07:20:00','2026-03-18 07:20:00'),
+(6, 1,'加油排球训练馆','上海市嘉定区排球路1号',7,'0','2026-03-18 07:25:00','2026-03-18 07:25:00'),
+(7, 1,'排球小队排球训练馆','上海市浦东新区排球路1号',8,'0','2026-03-18 07:30:00','2026-03-18 07:30:00'),
+(8, 1,'二传手培训基地','上海市虹口区排球路1号',9,'1','2026-03-18 07:35:00','2026-03-18 07:35:00'),
+(9, 1,'发球排球培训基地','上海市普陀区排球路1号',9,'1','2026-03-18 07:40:00','2026-03-18 07:40:00'),
+(10, 1,'三传手排球培训基地','上海市金山区排球路1号',9,'1','2026-03-18 07:45:00','2026-03-18 07:45:00');
 
 -- ----------------------------
 -- 2. 管理员表
@@ -56,9 +63,20 @@ CREATE TABLE admins (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 INSERT INTO admins (admin_id, username, password, nick_name, email, phone, sex, avatar, store_id, admin_type, referrer_id, status, create_time, update_time) VALUES
-(1, 'admin', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '系统管理员', '2244509212@qq.com', '13900000001', '0', '/default_admin.jpg', NULL, '0', NULL, '0', '2026-03-18 08:00:00', '2026-03-18 08:00:00'),
-(2, 'manager1', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '店铺管理员1', 'store1@example.com', '13900000002', '0', '/default_admin.jpg', 1, '1', 1, '0', '2026-03-18 08:05:00', '2026-03-18 08:05:00'),
-(3, 'manager2', '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2', '店铺管理员2', 'store2@example.com', '13900000003', '1', '/default_admin.jpg', 2, '1', 1, '0', '2026-03-18 08:10:00', '2026-03-18 08:10:00');
+(1,'admin','$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2','系统管理员','2244509212@qq.com','18513993431','0','/default_admin.jpg',NULL,'0',NULL,'0','2026-03-18 08:00:00','2026-03-18 08:00:00'),
+(2, 'manager1','$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2','1号店铺店长','1store@example.com','18513993432','0','/default_admin.jpg',1,'1',1,'0','2026-03-18 08:05:00','2026-05-26 15:52:14'),
+(3, 'manager2','$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2','2号店铺店长','2store@example.com','18513993433','0','/default_admin.jpg',2,'1',1,'0','2026-03-18 08:10:00','2026-03-18 08:10:00'),
+(4, 'manager3','$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2','3号店铺店长','3store@example.com','18513993434','0','/default_admin.jpg',3,'1',1,'0','2026-03-18 08:15:00','2026-03-18 08:15:00'),
+(5, 'manager4','$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2','4号店铺店长','4store@example.com','18513993435','0','/default_admin.jpg',4,'1',1,'0','2026-03-18 08:20:00','2026-03-18 08:20:00'),
+(6, 'manager5','$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2','5号店铺店长','5store@example.com','18513993436','0','/default_admin.jpg',5,'1',1,'0','2026-03-18 08:25:00','2026-03-18 08:25:00'),
+(7, 'manager6','$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2','6号店铺店长','6store@example.com','18513993437','0','/default_admin.jpg',6,'1',1,'0','2026-03-18 08:30:00','2026-03-18 08:30:00'),
+(8, 'manager7','$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2','7号店铺店长','7store@example.com','18513993438','0','/default_admin.jpg',7,'1',1,'0','2026-03-18 08:35:00','2026-03-18 08:35:00'),
+(9, 'manager8','$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2','8号店铺店长','8store@example.com','18513993439','0','/default_admin.jpg',8,'1',1,'0','2026-03-18 08:40:00','2026-03-18 08:40:00'),
+(10, 'manager9','$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2','9号店铺店长','9store@example.com','18513993440','0','/default_admin.jpg',9,'1',1,'0','2026-03-18 08:45:00','2026-03-18 08:45:00'),
+(11, 'manager10','$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2','10号店铺店长','10store@example.com','18513993441','0','/default_admin.jpg',10,'1',1,'0','2026-03-18 08:50:00','2026-03-18 08:50:00'),
+(12, 'manager1-1','$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2','小郑','111@example.com','18513993431','0','/default_admin.jpg',1,'1',1,'0','2026-03-18 08:55:00','2026-03-18 08:55:00'),
+(13, 'manager1-2','$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2','小王','222@example.com','12345678902','0','/default_admin.jpg',1,'1',1,'0','2026-03-18 09:00:00','2026-03-18 09:00:00'),
+(14, 'manager1-3','$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2','小赵','333@example.com','12345678903','0','/default_admin.jpg',1,'1',1,'0','2026-03-18 09:05:00','2026-03-18 09:05:00');
 
 -- ----------------------------
 -- 3. 用户表（会员+教练）
@@ -177,11 +195,6 @@ CREATE TABLE coupons (
   UNIQUE KEY uk_coupon_link_token (link_token)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT INTO coupons (coupon_id, coupon_name, store_id, creator_id, coupon_type, discount_value, min_amount, total_count, remaining_count, claim_limit, start_time, end_time, status, create_time, update_time) VALUES
-(1, '满300减50', 1, 2, '0', 50.00, 300.00, 100, 80, 1, '2026-03-01 00:00:00', '2026-04-01 23:59:59', '0', '2026-03-18 13:00:00', '2026-03-18 13:00:00'),
-(2, '满100减20', 1, 2, '0', 20.00, 100.00, 200, 150, 2, '2026-03-01 00:00:00', '2026-04-01 23:59:59', '0', '2026-03-18 13:05:00', '2026-03-18 13:05:00'),
-(3, '九折优惠券', 2, 3, '1', 9.00, 0.00, 120, 100, 1, '2026-03-05 00:00:00', '2026-04-05 23:59:59', '0', '2026-03-18 13:10:00', '2026-03-18 13:10:00');
-
 -- ----------------------------
 -- 8. 用户优惠券关联表
 -- ----------------------------
@@ -199,10 +212,6 @@ CREATE TABLE user_coupons (
   KEY idx_uc_coupon_id (coupon_id),
   KEY idx_uc_used_order_id (used_order_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-INSERT INTO user_coupons (user_coupon_id, user_id, coupon_id, status, used_order_id, claim_time, used_time) VALUES
-(1, 1, 1, '1', 1, '2026-03-18 14:00:00', '2026-03-18 16:00:00'),
-(2, 1, 3, '2', NULL, '2026-03-18 14:10:00', NULL);
 
 -- ----------------------------
 -- 9. 订单表
@@ -234,10 +243,6 @@ CREATE TABLE orders (
   KEY idx_order_store_id (store_id),
   KEY idx_order_coupon_id (coupon_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-INSERT INTO orders (order_id, order_no, user_id, store_id, product_type, quantity, unit_price, total_amount, discount_amount, pay_amount, coupon_id, status, pay_type, pay_time, transaction_id, cancel_time, cancel_reason, create_time, update_time) VALUES
-(1, 'ORD202603180001', 1, 1, '0', 10, 100.00, 1000.00, 50.00, 950.00, 1, '1', 'wechat', '2026-03-18 16:00:00', 'WXTXN0001', NULL, NULL, '2026-03-18 15:55:00', '2026-03-18 16:00:00'),
-(2, 'ORD202603180003', 1, 2, '0', 8, 120.00, 960.00, 0.00, 960.00, NULL, '2', NULL, NULL, NULL, '2026-03-18 16:30:00', '用户取消', '2026-03-18 16:10:00', '2026-03-18 16:30:00');
 
 -- ----------------------------
 -- 10. 课程表

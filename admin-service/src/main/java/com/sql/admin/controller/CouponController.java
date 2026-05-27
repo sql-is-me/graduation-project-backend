@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sql.admin.service.CouponService;
@@ -57,11 +58,15 @@ public class CouponController extends BaseController {
 
     /**
      * 查询当前店铺优惠券列表
+     *
+     * @param couponType 可选，按类型筛选：0-满减券 1-折扣券
+     * @param status     可选，按状态筛选：0-正常 1-已停用
      */
     @GetMapping("/list")
-    public TableDataInfo listCoupons() {
+    public TableDataInfo listCoupons(@RequestParam(required = false) String couponType,
+                                     @RequestParam(required = false) String status) {
         startPage();
-        List<Coupon> list = couponService.listCoupons();
+        List<Coupon> list = couponService.listCoupons(couponType, status);
         return getDataTable(list);
     }
 

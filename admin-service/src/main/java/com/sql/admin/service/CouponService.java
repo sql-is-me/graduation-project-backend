@@ -19,8 +19,11 @@ public interface CouponService {
 
     /**
      * 查询当前店铺的优惠券列表
+     *
+     * @param couponType 优惠券类型，可选：0-满减券 1-折扣券
+     * @param status     优惠券状态，可选：0-正常 1-已停用
      */
-    List<Coupon> listCoupons();
+    List<Coupon> listCoupons(String couponType, String status);
 
     /**
      * 查询优惠券详情

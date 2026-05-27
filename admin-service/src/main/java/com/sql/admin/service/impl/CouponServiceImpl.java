@@ -81,10 +81,12 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public List<Coupon> listCoupons() {
+    public List<Coupon> listCoupons(String couponType, String status) {
         Long storeId = getStoreId();
         LambdaQueryWrapper<Coupon> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Coupon::getStoreId, storeId)
+                .eq(couponType != null && !couponType.isBlank(), Coupon::getCouponType, couponType)
+                .eq(status != null && !status.isBlank(), Coupon::getStatus, status)
                 .orderByDesc(Coupon::getCreateTime);
         return couponMapper.selectList(wrapper);
     }
