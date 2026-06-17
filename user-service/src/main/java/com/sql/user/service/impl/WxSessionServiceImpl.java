@@ -27,8 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class WxSessionServiceImpl {
-    // TODO:待审查
-
     private static final String CHECK_SESSION_URL = "https://api.weixin.qq.com/wxa/checksession";
     private static final String RESET_SESSION_KEY_URL = "https://api.weixin.qq.com/wxa/resetusersessionkey";
 

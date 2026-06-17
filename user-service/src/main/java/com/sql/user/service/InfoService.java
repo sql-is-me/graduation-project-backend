@@ -44,7 +44,7 @@ public interface InfoService {
     /**
      * 发送邮箱验证码
      */
-    String sendEmailCode(String email);
+    void sendEmailCode(String email);
 
     /**
      * 查询当前用户课时信息（总课时、已用、剩余）

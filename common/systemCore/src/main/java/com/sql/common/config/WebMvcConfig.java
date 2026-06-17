@@ -16,7 +16,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public static final String[] excludeUrls = { "/admin/auth/login", "/admin/auth/register",
             "/admin/auth/resetPassword",
             "/admin/auth/emailCode",
-            "/user/auth/login", "/user/auth/register" }; // TODO: 其他不需要拦截的地址
+            "/user/auth/login", "/user/auth/register" };
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {

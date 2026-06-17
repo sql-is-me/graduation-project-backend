@@ -119,7 +119,7 @@ public class AuthController {
     @Log(title = "邮箱验证码", businessType = BusinessType.UPDATE)
     @PostMapping("/emailCode")
     public R<?> sendEmailCode(@RequestParam String email) {
-        String code = authService.sendEmailCode(email);
-        return R.ok(code, "验证码已发送");
+        authService.sendEmailCode(email);
+        return R.ok("验证码已发送");
     }
 }

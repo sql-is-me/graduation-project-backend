@@ -295,7 +295,7 @@ public class AuthServiceImpl implements AuthService {
      * 发送邮箱验证码
      */
     @Override
-    public String sendEmailCode(String email) {
+    public void sendEmailCode(String email) {
         if (StringUtils.isEmpty(email)) {
             throw new ServiceException("邮箱不能为空");
         }
@@ -303,8 +303,6 @@ public class AuthServiceImpl implements AuthService {
         String emailCode = mailService.setEmailCode2Cache(email);
 
         mailService.sendEmailCode(email, emailCode);
-
-        return emailCode;// FIXME:自动化测试使用，正式环境不应返回验证码
     }
 
     /**

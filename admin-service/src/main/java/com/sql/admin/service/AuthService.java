@@ -42,5 +42,5 @@ public interface AuthService {
     /**
      * 发送邮箱验证码
      */
-    public String sendEmailCode(String email);
+    public void sendEmailCode(String email);
 }
